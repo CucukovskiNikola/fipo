@@ -19,41 +19,49 @@
       <!-- Partners Grid -->
       <div v-if="partners.data.length > 0" class="grid gap-6 lg:grid-cols-2 xl:grid-cols-3">
         <div v-for="partner in partners.data" :key="partner.id"
-          class="rounded-lg bg-white p-6 shadow-[inset_0px_0px_0px_1px_rgba(26,26,0,0.16)] dark:bg-[#161615] dark:shadow-[inset_0px_0px_0px_1px_#fffaed2d]">
-          <!-- Category and Actions -->
-          <div class="mb-4 flex items-start justify-between">
-            <span
-              class="inline-flex items-center rounded-full bg-[#FDFDFC] px-2.5 py-0.5 text-xs font-medium text-[#1b1b18] border border-[#e3e3e0] dark:bg-[#0a0a0a] dark:text-[#EDEDEC] dark:border-[#3E3E3A]">
-              {{ getCategoryName(partner.category) }}
-            </span>
-            <div class="flex space-x-2">
-              <Link :href="route('partners.edit', partner.id)"
-                class="text-[#706f6c] hover:text-[#1b1b18] dark:text-[#A1A09A] dark:hover:text-[#EDEDEC]">
-              <Icon name="pencil" class="h-4 w-4" />
-              </Link>
-              <button @click="confirmDelete(partner)"
-                class="text-red-600 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300">
-                <Icon name="trash" class="h-4 w-4" />
-              </button>
-            </div>
+          class="rounded-lg bg-white shadow-[inset_0px_0px_0px_1px_rgba(26,26,0,0.16)] dark:bg-[#161615] dark:shadow-[inset_0px_0px_0px_1px_#fffaed2d] overflow-hidden">
+          <!-- Partner Image -->
+          <div v-if="partner.image">
+            <img :src="getImageUrl(partner.image)" :alt="partner.title" 
+              class="w-full h-48 object-cover">
           </div>
 
-          <!-- Partner Info -->
-          <h3 class="mb-2 text-lg font-semibold text-[#1b1b18] dark:text-[#EDEDEC]">{{ partner.title }}</h3>
-          <p v-if="partner.name_of_owner" class="mb-2 text-sm text-[#706f6c] dark:text-[#A1A09A]">
-            Owner: {{ partner.name_of_owner }}
-          </p>
-          <p class="mb-3 text-sm text-[#706f6c] dark:text-[#A1A09A] line-clamp-2">{{ partner.description }}</p>
-
-          <!-- Partner Details -->
-          <div class="space-y-1 text-xs text-[#706f6c] dark:text-[#A1A09A]">
-            <div class="flex items-center">
-              <Icon name="map-pin" class="mr-1 h-3 w-3" />
-              {{ partner.city }}, {{ partner.zip_code }}
+          <div class="p-6">
+            <!-- Category and Actions -->
+            <div class="mb-4 flex items-start justify-between">
+              <span
+                class="inline-flex items-center rounded-full bg-[#FDFDFC] px-2.5 py-0.5 text-xs font-medium text-[#1b1b18] border border-[#e3e3e0] dark:bg-[#0a0a0a] dark:text-[#EDEDEC] dark:border-[#3E3E3A]">
+                {{ getCategoryName(partner.category) }}
+              </span>
+              <div class="flex space-x-2">
+                <Link :href="route('partners.edit', partner.id)"
+                  class="text-[#706f6c] hover:text-[#1b1b18] dark:text-[#A1A09A] dark:hover:text-[#EDEDEC]">
+                <Icon name="pencil" class="h-4 w-4" />
+                </Link>
+                <button @click="confirmDelete(partner)"
+                  class="text-red-600 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300">
+                  <Icon name="trash" class="h-4 w-4" />
+                </button>
+              </div>
             </div>
-            <div class="flex items-center">
-              <Icon name="user" class="mr-1 h-3 w-3" />
-              Created by {{ partner.user?.name }} on {{ formatDate(partner.created_at) }}
+
+            <!-- Partner Info -->
+            <h3 class="mb-2 text-lg font-semibold text-[#1b1b18] dark:text-[#EDEDEC]">{{ partner.title }}</h3>
+            <p v-if="partner.name_of_owner" class="mb-2 text-sm text-[#706f6c] dark:text-[#A1A09A]">
+              Owner: {{ partner.name_of_owner }}
+            </p>
+            <p class="mb-3 text-sm text-[#706f6c] dark:text-[#A1A09A] line-clamp-2">{{ partner.description }}</p>
+
+            <!-- Partner Details -->
+            <div class="space-y-1 text-xs text-[#706f6c] dark:text-[#A1A09A]">
+              <div class="flex items-center">
+                <Icon name="map-pin" class="mr-1 h-3 w-3" />
+                {{ partner.city }}, {{ partner.zip_code }}
+              </div>
+              <div class="flex items-center">
+                <Icon name="user" class="mr-1 h-3 w-3" />
+                Created by {{ partner.user?.name }} on {{ formatDate(partner.created_at) }}
+              </div>
             </div>
           </div>
         </div>
@@ -160,6 +168,7 @@ interface Partner {
   name_of_owner: string | null
   category: string
   description: string
+  image: string | null
   city: string
   zip_code: string
   longitude: number
@@ -228,5 +237,14 @@ const cleanLabel = (label: string): string => {
     .replace(/&lt;/g, '<')
     .replace(/&gt;/g, '>')
     .replace(/&amp;/g, '&')
+}
+
+const getImageUrl = (imagePath: string): string => {
+  // If it's an external URL (starts with http/https), return as is
+  if (imagePath.startsWith('http://') || imagePath.startsWith('https://')) {
+    return imagePath
+  }
+  // Otherwise, treat as local storage path
+  return `/storage/${imagePath}`
 }
 </script>

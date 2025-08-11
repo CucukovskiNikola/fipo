@@ -6,7 +6,7 @@
           class="text-[#706f6c] hover:text-[#1b1b18] dark:text-[#A1A09A] dark:hover:text-[#EDEDEC]">
         <Icon name="arrow-left" class="h-5 w-5" />
         </Link>
-        <Heading>Edit Partner</Heading>
+        <Heading title="Edit Partner" />
       </div>
     </template>
 
@@ -63,6 +63,27 @@
               <Textarea id="description" v-model="form.description" rows="4" required
                 placeholder="Enter partner description" class="w-full" :invalid="!!errors.description" />
               <InputError :message="errors.description" class="mt-1" />
+            </div>
+
+            <!-- Image Upload -->
+            <div class="md:col-span-2">
+              <label for="image" class="block text-sm font-medium text-[#706f6c] dark:text-[#A1A09A] mb-2">
+                Partner Image
+              </label>
+
+              <!-- Current Image Display -->
+              <div v-if="partner.image">
+                <p class="text-sm text-[#706f6c] dark:text-[#A1A09A] mb-2">Current Image:</p>
+                <img :src="getImageUrl(partner.image)" :alt="partner.title"
+                  class="w-32 h-32 object-cover rounded-lg border border-[#e3e3e0] dark:border-[#3E3E3A]">
+              </div>
+
+              <input type="file" id="image" @change="handleImageUpload" accept="image/*"
+                class="block w-full text-sm text-[#706f6c] dark:text-[#A1A09A] file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-[#FDFDFC] file:text-[#1b1b18] hover:file:bg-[#f8f8f7] dark:file:bg-[#0a0a0a] dark:file:text-[#EDEDEC] dark:hover:file:bg-[#1a1a19]" />
+              <p class="mt-1 text-xs text-[#706f6c] dark:text-[#A1A09A]">
+                Optional: Upload a new image to replace the current one (JPEG, PNG, JPG, GIF, max 2MB)
+              </p>
+              <InputError :message="errors.image" class="mt-1" />
             </div>
           </div>
         </div>
@@ -158,6 +179,7 @@
 <script setup lang="ts">
 import { ref, watch, onMounted } from 'vue'
 import { useForm, Link } from '@inertiajs/vue3'
+import { route } from 'ziggy-js'
 import AppLayout from '@/layouts/AppLayout.vue'
 import Heading from '@/components/Heading.vue'
 import Icon from '@/components/Icon.vue'
@@ -184,6 +206,7 @@ interface Partner {
   name_of_owner: string | null
   category: string
   description: string
+  image: string | null
   city: string
   zip_code: string
   longitude: number
@@ -212,6 +235,7 @@ const form = useForm({
   name_of_owner: props.partner.name_of_owner || '',
   category: props.partner.category,
   description: props.partner.description,
+  image: null as File | null,
   city: props.partner.city,
   zip_code: props.partner.zip_code,
   latitude: props.partner.latitude,
@@ -258,8 +282,25 @@ const formatDate = (dateString: string): string => {
   return new Date(dateString).toLocaleDateString()
 }
 
+const handleImageUpload = (event: Event) => {
+  const target = event.target as HTMLInputElement
+  if (target.files && target.files[0]) {
+    form.image = target.files[0]
+  }
+}
+
+const getImageUrl = (imagePath: string): string => {
+  // If it's an external URL (starts with http/https), return as is
+  if (imagePath.startsWith('http://') || imagePath.startsWith('https://')) {
+    return imagePath
+  }
+  // Otherwise, treat as local storage path
+  return `/storage/${imagePath}`
+}
+
 const submit = () => {
   form.put(route('partners.update', props.partner.id), {
+    forceFormData: true,
     onSuccess: () => {
       // Form will redirect on success
     },

@@ -12,6 +12,7 @@ class Partner extends Model
         'name_of_owner',
         'category',
         'description',
+        'image',
         'city',
         'zip_code',
         'longitude',

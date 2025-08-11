@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Partner;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
 
 class PartnerController extends Controller
@@ -41,11 +42,18 @@ class PartnerController extends Controller
             'name_of_owner' => 'nullable|string|max:255',
             'category' => 'required|string|max:255',
             'description' => 'required|string',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             'city' => 'required|string|max:255',
             'zip_code' => 'required|string|max:20',
             'longitude' => 'required|numeric|between:-180,180',
             'latitude' => 'required|numeric|between:-90,90',
         ]);
+
+        // Handle image upload
+        if ($request->hasFile('image')) {
+            $imagePath = $request->file('image')->store('partners', 'public');
+            $validated['image'] = $imagePath;
+        }
 
         $validated['created_by'] = Auth::id();
 
@@ -87,11 +95,23 @@ class PartnerController extends Controller
             'name_of_owner' => 'nullable|string|max:255',
             'category' => 'required|string|max:255',
             'description' => 'required|string',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             'city' => 'required|string|max:255',
             'zip_code' => 'required|string|max:20',
             'longitude' => 'required|numeric|between:-180,180',
             'latitude' => 'required|numeric|between:-90,90',
         ]);
+
+        // Handle image upload
+        if ($request->hasFile('image')) {
+            // Delete old image if it exists
+            if ($partner->image) {
+                Storage::disk('public')->delete($partner->image);
+            }
+            
+            $imagePath = $request->file('image')->store('partners', 'public');
+            $validated['image'] = $imagePath;
+        }
 
         $partner->update($validated);
 
@@ -104,6 +124,11 @@ class PartnerController extends Controller
      */
     public function destroy(Partner $partner)
     {
+        // Delete associated image if it exists
+        if ($partner->image) {
+            Storage::disk('public')->delete($partner->image);
+        }
+        
         $partner->delete();
 
         return redirect()->route('partners.index')

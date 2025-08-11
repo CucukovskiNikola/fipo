@@ -64,6 +64,19 @@
                 placeholder="Enter partner description" class="w-full" :invalid="!!errors.description" />
               <InputError :message="errors.description" class="mt-1" />
             </div>
+
+            <!-- Image Upload -->
+            <div class="md:col-span-2">
+              <label for="image" class="block text-sm font-medium text-[#706f6c] dark:text-[#A1A09A] mb-2">
+                Partner Image
+              </label>
+              <input type="file" id="image" @change="handleImageUpload" accept="image/*"
+                class="block w-full text-sm text-[#706f6c] dark:text-[#A1A09A] file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-[#FDFDFC] file:text-[#1b1b18] hover:file:bg-[#f8f8f7] dark:file:bg-[#0a0a0a] dark:file:text-[#EDEDEC] dark:hover:file:bg-[#1a1a19]" />
+              <p class="mt-1 text-xs text-[#706f6c] dark:text-[#A1A09A]">
+                Optional: Upload an image for this partner (JPEG, PNG, JPG, GIF, max 2MB)
+              </p>
+              <InputError :message="errors.image" class="mt-1" />
+            </div>
           </div>
         </div>
 
@@ -165,6 +178,7 @@ const form = useForm({
   name_of_owner: '',
   category: '',
   description: '',
+  image: null as File | null,
   city: '',
   zip_code: '',
   latitude: 0,
@@ -197,8 +211,16 @@ watch([() => form.city, () => form.zip_code, () => form.latitude, () => form.lon
 
 const { errors, processing } = form
 
+const handleImageUpload = (event: Event) => {
+  const target = event.target as HTMLInputElement
+  if (target.files && target.files[0]) {
+    form.image = target.files[0]
+  }
+}
+
 const submit = () => {
   form.post(route('partners.store'), {
+    forceFormData: true,
     onSuccess: () => {
       // Form will redirect on success
     },
