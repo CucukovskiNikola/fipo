@@ -2,7 +2,8 @@
   <AppLayout>
     <div class="space-y-6 p-6">
       <!-- Success Message -->
-      <div v-if="$page.props.flash?.success" class="rounded-lg bg-white p-4 shadow-[inset_0px_0px_0px_1px_rgba(26,26,0,0.16)] dark:bg-[#161615] dark:shadow-[inset_0px_0px_0px_1px_#fffaed2d]">
+      <div v-if="$page.props.flash?.success"
+        class="rounded-lg bg-white p-4 shadow-[inset_0px_0px_0px_1px_rgba(26,26,0,0.16)] dark:bg-[#161615] dark:shadow-[inset_0px_0px_0px_1px_#fffaed2d]">
         <div class="flex">
           <div class="rounded-full bg-green-100 p-2 dark:bg-green-900/30">
             <Icon name="check-circle" class="h-5 w-5 text-green-600 dark:text-green-400" />
@@ -17,17 +18,21 @@
 
       <!-- Partners Grid -->
       <div v-if="partners.data.length > 0" class="grid gap-6 lg:grid-cols-2 xl:grid-cols-3">
-        <div v-for="partner in partners.data" :key="partner.id" class="rounded-lg bg-white p-6 shadow-[inset_0px_0px_0px_1px_rgba(26,26,0,0.16)] dark:bg-[#161615] dark:shadow-[inset_0px_0px_0px_1px_#fffaed2d]">
+        <div v-for="partner in partners.data" :key="partner.id"
+          class="rounded-lg bg-white p-6 shadow-[inset_0px_0px_0px_1px_rgba(26,26,0,0.16)] dark:bg-[#161615] dark:shadow-[inset_0px_0px_0px_1px_#fffaed2d]">
           <!-- Category and Actions -->
           <div class="mb-4 flex items-start justify-between">
-            <span class="inline-flex items-center rounded-full bg-[#FDFDFC] px-2.5 py-0.5 text-xs font-medium text-[#1b1b18] border border-[#e3e3e0] dark:bg-[#0a0a0a] dark:text-[#EDEDEC] dark:border-[#3E3E3A]">
+            <span
+              class="inline-flex items-center rounded-full bg-[#FDFDFC] px-2.5 py-0.5 text-xs font-medium text-[#1b1b18] border border-[#e3e3e0] dark:bg-[#0a0a0a] dark:text-[#EDEDEC] dark:border-[#3E3E3A]">
               {{ getCategoryName(partner.category) }}
             </span>
             <div class="flex space-x-2">
-              <Link :href="route('partners.edit', partner.id)" class="text-[#706f6c] hover:text-[#1b1b18] dark:text-[#A1A09A] dark:hover:text-[#EDEDEC]">
-                <Icon name="pencil" class="h-4 w-4" />
+              <Link :href="route('partners.edit', partner.id)"
+                class="text-[#706f6c] hover:text-[#1b1b18] dark:text-[#A1A09A] dark:hover:text-[#EDEDEC]">
+              <Icon name="pencil" class="h-4 w-4" />
               </Link>
-              <button @click="confirmDelete(partner)" class="text-red-600 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300">
+              <button @click="confirmDelete(partner)"
+                class="text-red-600 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300">
                 <Icon name="trash" class="h-4 w-4" />
               </button>
             </div>
@@ -55,33 +60,41 @@
       </div>
 
       <!-- Empty State -->
-      <div v-else class="rounded-lg bg-white p-12 text-center shadow-[inset_0px_0px_0px_1px_rgba(26,26,0,0.16)] dark:bg-[#161615] dark:shadow-[inset_0px_0px_0px_1px_#fffaed2d]">
+      <div v-else
+        class="rounded-lg bg-white p-12 text-center shadow-[inset_0px_0px_0px_1px_rgba(26,26,0,0.16)] dark:bg-[#161615] dark:shadow-[inset_0px_0px_0px_1px_#fffaed2d]">
         <Icon name="map-pin" class="mx-auto h-12 w-12 text-[#706f6c] dark:text-[#A1A09A]" />
         <h3 class="mt-2 text-sm font-semibold text-[#1b1b18] dark:text-[#EDEDEC]">No partners</h3>
         <p class="mt-1 text-sm text-[#706f6c] dark:text-[#A1A09A]">Get started by creating a new partner.</p>
         <div class="mt-6">
           <Link :href="route('partners.create')"
             class="inline-flex items-center rounded-md bg-[#1b1b18] px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-[#706f6c] dark:bg-[#EDEDEC] dark:text-[#1b1b18] dark:hover:bg-[#A1A09A]">
-            <Icon name="plus" class="mr-1 h-4 w-4" />
-            Create Partner
+          <Icon name="plus" class="mr-1 h-4 w-4" />
+          Create Partner
           </Link>
         </div>
       </div>
 
       <!-- Pagination -->
       <div v-if="partners.links && partners.links.length > 3" class="flex justify-center">
-        <div class="rounded-lg bg-white p-4 shadow-[inset_0px_0px_0px_1px_rgba(26,26,0,0.16)] dark:bg-[#161615] dark:shadow-[inset_0px_0px_0px_1px_#fffaed2d]">
-          <nav class="flex items-center space-x-2">
-            <Link v-for="link in partners.links" :key="link.label" :href="link.url" :class="[
-              'px-3 py-2 text-sm rounded-md transition-colors',
-              link.active
-                ? 'bg-[#1b1b18] text-white dark:bg-[#EDEDEC] dark:text-[#1b1b18]'
-                : link.url
-                  ? 'text-[#706f6c] hover:bg-[#FDFDFC] dark:text-[#A1A09A] dark:hover:bg-[#0a0a0a]'
-                  : 'text-[#A1A09A] cursor-not-allowed dark:text-[#706f6c]'
-            ]">
-              {{ link.label }}
-            </Link>
+        <div
+          class="rounded-lg bg-white p-4 shadow-[inset_0px_0px_0px_1px_rgba(26,26,0,0.16)] dark:bg-[#161615] dark:shadow-[inset_0px_0px_0px_1px_#fffaed2d]">
+          <nav class="flex items-center justify-center space-x-2">
+            <template v-for="link in partners.links" :key="link.label">
+              <Link v-if="link.url" :href="link.url" :class="[
+                'px-3 py-2 text-sm rounded-md transition-colors',
+                link.active
+                  ? 'bg-[#1b1b18] text-white dark:bg-[#EDEDEC] dark:text-[#1b1b18]'
+                  : 'text-[#706f6c] hover:bg-[#FDFDFC] dark:text-[#A1A09A] dark:hover:bg-[#0a0a0a]'
+              ]">
+              {{ cleanLabel(link.label) }}
+              </Link>
+              <span v-else :class="[
+                'px-3 py-2 text-sm rounded-md cursor-not-allowed',
+                'text-[#A1A09A] dark:text-[#706f6c]'
+              ]">
+                {{ cleanLabel(link.label) }}
+              </span>
+            </template>
           </nav>
         </div>
       </div>
@@ -89,10 +102,12 @@
 
     <!-- Delete Confirmation Modal -->
     <Teleport to="body">
-      <div v-if="showDeleteModal" class="fixed inset-0 z-50 flex items-center justify-center p-4" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+      <div v-if="showDeleteModal" class="fixed inset-0 z-50 flex items-center justify-center p-4"
+        aria-labelledby="modal-title" role="dialog" aria-modal="true">
         <!-- Backdrop -->
-        <div class="fixed inset-0 bg-black/50 transition-opacity dark:bg-black/70" @click="showDeleteModal = false"></div>
-        
+        <div class="fixed inset-0 bg-black/50 transition-opacity dark:bg-black/70" @click="showDeleteModal = false">
+        </div>
+
         <!-- Modal Content -->
         <div class="relative bg-white rounded-lg shadow-xl max-w-lg w-full p-6 dark:bg-[#161615]">
           <div class="flex items-start space-x-4">
@@ -108,7 +123,7 @@
               </p>
             </div>
           </div>
-          
+
           <div class="mt-6 flex justify-end space-x-3">
             <button @click="showDeleteModal = false"
               class="px-4 py-2 text-sm font-medium text-[#706f6c] bg-white border border-[#e3e3e0] rounded-md hover:bg-[#FDFDFC] dark:bg-[#161615] dark:text-[#A1A09A] dark:border-[#3E3E3A] dark:hover:bg-[#0a0a0a]">
@@ -191,5 +206,15 @@ const deletePartner = () => {
     showDeleteModal.value = false
     partnerToDelete.value = null
   }
+}
+
+const cleanLabel = (label: string): string => {
+  // Replace HTML entities with clean text
+  return label
+    .replace(/&laquo;/g, '‹')
+    .replace(/&raquo;/g, '›')
+    .replace(/&lt;/g, '<')
+    .replace(/&gt;/g, '>')
+    .replace(/&amp;/g, '&')
 }
 </script>
