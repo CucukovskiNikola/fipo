@@ -1,0 +1,87 @@
+[
+  {
+    "id": "restaurant",
+    "name": "Restaurant",
+    "icon": "🍽️"
+  },
+  {
+    "id": "hotel",
+    "name": "Hotel",
+    "icon": "🏨"
+  },
+  {
+    "id": "shopping",
+    "name": "Shopping Center",
+    "icon": "🛍️"
+  },
+  {
+    "id": "entertainment",
+    "name": "Entertainment",
+    "icon": "🎬"
+  },
+  {
+    "id": "healthcare",
+    "name": "Healthcare",
+    "icon": "🏥"
+  },
+  {
+    "id": "education",
+    "name": "Education",
+    "icon": "🏫"
+  },
+  {
+    "id": "gas_station",
+    "name": "Gas Station",
+    "icon": "⛽"
+  },
+  {
+    "id": "bank",
+    "name": "Bank",
+    "icon": "🏦"
+  },
+  {
+    "id": "park",
+    "name": "Park",
+    "icon": "🌳"
+  },
+  {
+    "id": "gym",
+    "name": "Gym/Fitness",
+    "icon": "💪"
+  },
+  {
+    "id": "cafe",
+    "name": "Cafe",
+    "icon": "☕"
+  },
+  {
+    "id": "pharmacy",
+    "name": "Pharmacy",
+    "icon": "💊"
+  },
+  {
+    "id": "supermarket",
+    "name": "Supermarket",
+    "icon": "🛒"
+  },
+  {
+    "id": "church",
+    "name": "Church",
+    "icon": "⛪"
+  },
+  {
+    "id": "library",
+    "name": "Library",
+    "icon": "📚"
+  },
+  {
+    "id": "office",
+    "name": "Office",
+    "icon": "🏢"
+  },
+  {
+    "id": "other",
+    "name": "Other",
+    "icon": "📍"
+  }
+]
