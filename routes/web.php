@@ -7,6 +7,8 @@ Route::get('/', function () {
     return Inertia::render('Welcome');
 })->name('home');
 
+Route::get('/api/partners', [App\Http\Controllers\PartnerController::class, 'getPublicPartners']);
+
 Route::prefix('dashboard')->middleware(['auth', 'verified', 'admin'])->group(function () {
     Route::get('/', [App\Http\Controllers\DashboardController::class, 'index'])->name('dashboard');
 

@@ -109,4 +109,60 @@ class PartnerController extends Controller
         return redirect()->route('partners.index')
             ->with('success', 'Partner deleted successfully.');
     }
+
+    /**
+     * Get partners for public display with search and filter capabilities
+     */
+    public function getPublicPartners(Request $request)
+    {
+        $query = Partner::query();
+
+        // Search functionality
+        if ($request->has('search') && $request->search) {
+            $search = $request->search;
+            $query->where(function ($q) use ($search) {
+                $q->where('title', 'like', '%' . $search . '%')
+                  ->orWhere('description', 'like', '%' . $search . '%')
+                  ->orWhere('category', 'like', '%' . $search . '%')
+                  ->orWhere('city', 'like', '%' . $search . '%');
+            });
+        }
+
+        // Category filter
+        if ($request->has('category') && $request->category && $request->category !== 'all') {
+            $query->where('category', $request->category);
+        }
+
+        // City filter
+        if ($request->has('city') && $request->city && $request->city !== 'all') {
+            $query->where('city', $request->city);
+        }
+
+        // Pagination - default 12 per page for "Load More" functionality
+        $perPage = $request->get('per_page', 12);
+        $page = $request->get('page', 1);
+        
+        $partners = $query->orderBy('created_at', 'desc')
+            ->paginate($perPage, ['*'], 'page', $page);
+
+        // For initial load (page 1), also get categories and cities for filters
+        $categories = [];
+        $cities = [];
+        if ($page == 1 && !$request->has('search') && !$request->has('category') && !$request->has('city')) {
+            $allPartners = Partner::all();
+            $categories = $allPartners->pluck('category')->unique()->filter()->values()->toArray();
+            $cities = $allPartners->pluck('city')->unique()->filter()->values()->toArray();
+        }
+
+        return response()->json([
+            'data' => $partners->items(),
+            'current_page' => $partners->currentPage(),
+            'last_page' => $partners->lastPage(),
+            'per_page' => $partners->perPage(),
+            'total' => $partners->total(),
+            'has_more' => $partners->hasMorePages(),
+            'categories' => $categories,
+            'cities' => $cities,
+        ]);
+    }
 }

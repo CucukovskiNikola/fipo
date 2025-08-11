@@ -11,49 +11,179 @@
       v-if="isActive"
       class="bg-white text-black max-w-6xl mx-auto rounded-4xl p-8 mt-4 shadow-lg"
     >
-      <h2 class="text-xl font-semibold mb-6">Contact</h2>
-      <form @submit.prevent="submitForm" class="space-y-4" novalidate>
-        <input
-          v-model="form.name"
-          type="text"
-          placeholder="Your name"
-          class="w-full border rounded-4xl p-2"
-          :class="{ 'border-red-500': errors.name }"
-        />
-        <div v-if="errors.name" class="text-red-500 text-xs">{{ errors.name }}</div>
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <!-- Contact Information -->
+        <div class="space-y-6">
+          <div>
+            <h2 class="text-3xl font-bold mb-4 text-[#1a0d05]">Get in Touch</h2>
+            <p class="text-gray-600 text-lg leading-relaxed mb-6">
+              Ready to promote your business or find local partners? We'd love to hear from you. 
+              Send us a message and we'll get back to you as soon as possible.
+            </p>
+          </div>
+          
+          <div class="space-y-4">
+            <div class="flex items-center space-x-3">
+              <div class="w-10 h-10 bg-[#1a0d05] rounded-full flex items-center justify-center">
+                <i class="pi pi-envelope text-white"></i>
+              </div>
+              <div>
+                <p class="font-semibold text-[#1a0d05]">Email</p>
+                <p class="text-gray-600">contact@businessplatform.com</p>
+              </div>
+            </div>
+            
+            <div class="flex items-center space-x-3">
+              <div class="w-10 h-10 bg-[#1a0d05] rounded-full flex items-center justify-center">
+                <i class="pi pi-phone text-white"></i>
+              </div>
+              <div>
+                <p class="font-semibold text-[#1a0d05]">Phone</p>
+                <p class="text-gray-600">+1 (555) 123-4567</p>
+              </div>
+            </div>
+            
+            <div class="flex items-center space-x-3">
+              <div class="w-10 h-10 bg-[#1a0d05] rounded-full flex items-center justify-center">
+                <i class="pi pi-map-marker text-white"></i>
+              </div>
+              <div>
+                <p class="font-semibold text-[#1a0d05]">Address</p>
+                <p class="text-gray-600">123 Business St, Suite 100<br>City, State 12345</p>
+              </div>
+            </div>
+          </div>
+        </div>
 
-        <input
-          v-model="form.email"
-          type="email"
-          placeholder="you@example.com"
-          class="w-full border rounded-4xl p-2"
-          :class="{ 'border-red-500': errors.email }"
-        />
-        <div v-if="errors.email" class="text-red-500 text-xs">{{ errors.email }}</div>
+        <!-- Contact Form -->
+        <div class="bg-gray-50 rounded-4xl p-6">
+          <form @submit.prevent="submitForm" class="space-y-6" novalidate>
+            <div class="space-y-4">
+              <div>
+                <label for="name" class="block text-sm font-semibold text-[#1a0d05] mb-2">
+                  Full Name *
+                </label>
+                <InputText
+                  id="name"
+                  v-model="form.name"
+                  placeholder="Enter your full name"
+                  class="w-full !rounded-4xl"
+                  :invalid="!!errors.name"
+                  size="large"
+                />
+                <small v-if="errors.name" class="text-red-500">{{ errors.name }}</small>
+              </div>
 
-        <textarea
-          v-model="form.message"
-          placeholder="Your message"
-          class="w-full border rounded-4xl p-2"
-          rows="4"
-          :class="{ 'border-red-500': errors.message }"
-        ></textarea>
-        <div v-if="errors.message" class="text-red-500 text-xs">{{ errors.message }}</div>
+              <div>
+                <label for="email" class="block text-sm font-semibold text-[#1a0d05] mb-2">
+                  Email Address *
+                </label>
+                <InputText
+                  id="email"
+                  v-model="form.email"
+                  type="email"
+                  placeholder="Enter your email address"
+                  class="w-full !rounded-4xl"
+                  :invalid="!!errors.email"
+                  size="large"
+                />
+                <small v-if="errors.email" class="text-red-500">{{ errors.email }}</small>
+              </div>
 
-        <button
-          type="submit"
-          class="bg-orange-600 text-white px-4 py-2 rounded-md hover:bg-orange-700"
-          :disabled="isSubmitting"
-        >
-          {{ isSubmitting ? "Sending..." : "Send" }}
-        </button>
-      </form>
+              <div>
+                <label for="subject" class="block text-sm font-semibold text-[#1a0d05] mb-2">
+                  Subject
+                </label>
+                <InputText
+                  id="subject"
+                  v-model="form.subject"
+                  placeholder="What is this about?"
+                  class="w-full !rounded-4xl"
+                  size="large"
+                />
+              </div>
+
+              <div>
+                <label for="message" class="block text-sm font-semibold text-[#1a0d05] mb-2">
+                  Message *
+                </label>
+                <Textarea
+                  id="message"
+                  v-model="form.message"
+                  placeholder="Tell us more about your inquiry..."
+                  class="w-full !rounded-4xl"
+                  :invalid="!!errors.message"
+                  rows="4"
+                  auto-resize
+                />
+                <small v-if="errors.message" class="text-red-500">{{ errors.message }}</small>
+              </div>
+
+              <!-- Simple Captcha -->
+              <div>
+                <label class="block text-sm font-semibold text-[#1a0d05] mb-2">
+                  Security Check: What is {{ captcha.question }}? *
+                </label>
+                <InputText
+                  v-model="captcha.userAnswer"
+                  placeholder="Enter your answer"
+                  class="w-full !rounded-4xl"
+                  :invalid="!!errors.captcha"
+                  size="large"
+                />
+                <small v-if="errors.captcha" class="text-red-500">{{ errors.captcha }}</small>
+              </div>
+            </div>
+
+            <div class="flex flex-col sm:flex-row gap-4">
+              <Button
+                type="submit"
+                :disabled="isSubmitting"
+                class="flex-1 !rounded-4xl"
+                size="large"
+                :style="{ backgroundColor: '#1a0d05', borderColor: '#1a0d05' }"
+                :loading="isSubmitting"
+              >
+                <i class="pi pi-send mr-2"></i>
+                {{ isSubmitting ? 'Sending...' : 'Send Message' }}
+              </Button>
+              
+              <Button
+                type="button"
+                @click="resetForm"
+                severity="secondary"
+                outlined
+                class="!rounded-4xl"
+                size="large"
+                :style="{ borderColor: '#1a0d05', color: '#1a0d05' }"
+              >
+                <i class="pi pi-refresh mr-2"></i>
+                Reset
+              </Button>
+            </div>
+          </form>
+        </div>
+      </div>
+      
+      <!-- Success Message -->
+      <div 
+        v-if="showSuccessMessage" 
+        class="mt-6 p-4 bg-green-50 border border-green-200 text-green-800 rounded-4xl"
+      >
+        <div class="flex items-center">
+          <i class="pi pi-check-circle mr-2 text-green-600"></i>
+          <strong>Success!</strong> Thank you for your message! We'll get back to you soon.
+        </div>
+      </div>
     </section>
   </transition>
 </template>
 
 <script setup>
-import { reactive, ref } from "vue";
+import { reactive, ref, onMounted } from "vue";
+import InputText from 'primevue/inputtext';
+import Textarea from 'primevue/textarea';
+import Button from 'primevue/button';
 
 const props = defineProps({
   isActive: Boolean,
@@ -62,6 +192,7 @@ const props = defineProps({
 const form = reactive({
   name: "",
   email: "",
+  subject: "",
   message: "",
 });
 
@@ -69,48 +200,112 @@ const errors = reactive({
   name: null,
   email: null,
   message: null,
+  captcha: null,
+});
+
+const captcha = reactive({
+  question: "",
+  correctAnswer: 0,
+  userAnswer: "",
 });
 
 const isSubmitting = ref(false);
+const showSuccessMessage = ref(false);
+
+// Generate random captcha
+function generateCaptcha() {
+  const num1 = Math.floor(Math.random() * 10) + 1;
+  const num2 = Math.floor(Math.random() * 10) + 1;
+  const operations = [
+    { symbol: '+', operation: (a, b) => a + b },
+    { symbol: '-', operation: (a, b) => a - b },
+    { symbol: '×', operation: (a, b) => a * b }
+  ];
+  
+  const randomOp = operations[Math.floor(Math.random() * operations.length)];
+  
+  captcha.question = `${num1} ${randomOp.symbol} ${num2}`;
+  captcha.correctAnswer = randomOp.operation(num1, num2);
+  captcha.userAnswer = "";
+}
 
 function validateEmail(email) {
-  const re = /\S+@\S+\.\S+/;
+  const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   return re.test(email);
 }
 
-function submitForm() {
-  errors.name = null;
-  errors.email = null;
-  errors.message = null;
-
+function validateForm() {
+  // Reset errors
+  Object.keys(errors).forEach(key => errors[key] = null);
+  
   let valid = true;
 
   if (!form.name.trim()) {
-    errors.name = "Name is required.";
+    errors.name = "Full name is required";
+    valid = false;
+  } else if (form.name.trim().length < 2) {
+    errors.name = "Name must be at least 2 characters";
     valid = false;
   }
+
   if (!form.email.trim()) {
-    errors.email = "Email is required.";
+    errors.email = "Email address is required";
     valid = false;
   } else if (!validateEmail(form.email)) {
-    errors.email = "Email is invalid.";
-    valid = false;
-  }
-  if (!form.message.trim()) {
-    errors.message = "Message is required.";
+    errors.email = "Please enter a valid email address";
     valid = false;
   }
 
-  if (!valid) return;
+  if (!form.message.trim()) {
+    errors.message = "Message is required";
+    valid = false;
+  } else if (form.message.trim().length < 10) {
+    errors.message = "Message must be at least 10 characters";
+    valid = false;
+  }
+
+  if (!captcha.userAnswer.trim()) {
+    errors.captcha = "Please solve the math problem";
+    valid = false;
+  } else if (parseInt(captcha.userAnswer) !== captcha.correctAnswer) {
+    errors.captcha = "Incorrect answer. Please try again.";
+    generateCaptcha(); // Generate new captcha
+    valid = false;
+  }
+
+  return valid;
+}
+
+function submitForm() {
+  if (!validateForm()) return;
 
   isSubmitting.value = true;
+  showSuccessMessage.value = false;
 
+  // Simulate API call
   setTimeout(() => {
-    alert(`Thank you, ${form.name}! Your message has been sent.`);
-    form.name = "";
-    form.email = "";
-    form.message = "";
+    showSuccessMessage.value = true;
+    resetForm();
     isSubmitting.value = false;
+    
+    // Hide success message after 5 seconds
+    setTimeout(() => {
+      showSuccessMessage.value = false;
+    }, 5000);
   }, 1500);
 }
+
+function resetForm() {
+  form.name = "";
+  form.email = "";
+  form.subject = "";
+  form.message = "";
+  Object.keys(errors).forEach(key => errors[key] = null);
+  generateCaptcha();
+}
+
+// Initialize captcha when component mounts
+onMounted(() => {
+  generateCaptcha();
+});
 </script>

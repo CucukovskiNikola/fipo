@@ -6,13 +6,23 @@
     <div class="flex space-x-6">
       <button
         @click="$emit('change-section', 'overview')"
-        :class="activeSection === 'overview' ? 'underline' : ''"
+        :class="[
+          'rounded-4xl px-5 py-1.5 text-sm transition-colors',
+          activeSection === 'overview'
+            ? 'bg-orange-600 text-black'
+            : 'text-[#EDEDEC] hover:border-[#19140035] border border-transparent '
+        ]"
       >
         Overview
       </button>
       <button
         @click="$emit('change-section', 'contact')"
-        :class="activeSection === 'contact' ? 'underline' : ''"
+        :class="[
+          'rounded-4xl px-5 py-1.5 text-sm transition-colors',
+          activeSection === 'contact'
+            ? 'bg-orange-600 text-black'
+            : 'text-[#EDEDEC] hover:border-[#19140035] border border-transparent '
+        ]"
       >
         Contact
       </button>

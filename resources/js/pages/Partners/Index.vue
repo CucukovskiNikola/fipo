@@ -181,6 +181,18 @@ interface Props {
   }
 }
 
+// Extend the global Page interface to include flash messages
+declare global {
+  namespace App.Data {
+    interface PageProps {
+      flash?: {
+        success?: string
+        error?: string
+      }
+    }
+  }
+}
+
 defineProps<Props>()
 
 const showDeleteModal = ref(false)
