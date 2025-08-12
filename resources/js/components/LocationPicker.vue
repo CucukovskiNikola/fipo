@@ -5,13 +5,20 @@
       <label class="block text-sm font-medium text-[#706f6c] dark:text-[#A1A09A] mb-2">
         Search Location
       </label>
-      <div class="flex ">
-        <InputText v-model="searchQuery" placeholder="Enter city name or address..." class="w-full pl-10 pr-20"
-          @keyup.enter="searchLocation" />
-        <Icon name="magnifying-glass" class="w-12 text-[#706f6c] dark:text-[#A1A09A]" />
+      <div class="flex gap-2">
+        <div class="relative flex-1">
+          <InputText v-model="searchQuery" placeholder="Enter city name or address..." class="w-full pl-10"
+            @keyup.enter="searchLocation" />
+          <Icon name="magnifying-glass" class="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-[#706f6c] dark:text-[#A1A09A]" />
+        </div>
         <Button @click="searchLocation" :disabled="!searchQuery || isSearching" :loading="isSearching" size="small"
-          class="ml-4 w-32" :class="{ 'opacity-50': !searchQuery || isSearching }">
-          {{ isSearching ? 'Searching...' : 'Search' }}
+          class="w-24" :class="{ 'opacity-50': !searchQuery || isSearching }">
+          Search
+        </Button>
+        <Button @click="getCurrentLocation" :disabled="isGettingLocation" :loading="isGettingLocation" size="small"
+          class="w-32" severity="secondary">
+          <Icon name="location-dot" class="w-4 h-4 mr-1" />
+          {{ isGettingLocation ? 'Getting...' : 'My Location' }}
         </Button>
       </div>
     </div>
@@ -41,7 +48,7 @@
 
 <script setup lang="ts">
 import L from 'leaflet'
-import { onMounted, onUnmounted, ref, watch } from 'vue'
+import { onMounted, onUnmounted, ref, watch, computed } from 'vue'
 import Icon from '@/components/Icon.vue'
 
 // PrimeVue Components
@@ -59,11 +66,25 @@ interface Props {
   modelValue?: LocationData | null
   center?: [number, number]
   zoom?: number
+  user?: {
+    city?: string
+    zip_code?: string
+    latitude?: number
+    longitude?: number
+  }
 }
 
 const props = withDefaults(defineProps<Props>(), {
-  center: () => [40.7128, -74.0060], 
+  center: () => [40.7128, -74.0060],
   zoom: 10
+})
+
+// Compute the initial map center based on user location if available
+const mapCenter = computed(() => {
+  if (props.user?.latitude && props.user?.longitude) {
+    return [props.user.latitude, props.user.longitude] as [number, number]
+  }
+  return props.center
 })
 
 const emit = defineEmits<{
@@ -73,6 +94,7 @@ const emit = defineEmits<{
 const mapContainer = ref<HTMLDivElement>()
 const searchQuery = ref('')
 const isSearching = ref(false)
+const isGettingLocation = ref(false)
 const searchError = ref('')
 const selectedLocation = ref<LocationData | null>(props.modelValue || null)
 
@@ -100,12 +122,9 @@ const initializeMap = () => {
   }
 
   try {
-    // Clear any existing error
     searchError.value = ''
-    
-    // Create map
-    console.log('Initializing map with container:', mapContainer.value)
-    map = L.map(mapContainer.value).setView(props.center, props.zoom)
+
+    map = L.map(mapContainer.value).setView(mapCenter.value, props.zoom)
 
     // Add OpenStreetMap tiles
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -176,7 +195,7 @@ const setLocation = async (lat: number, lng: number, reverseGeocode = true) => {
     // Reverse geocode to get address information
     if (reverseGeocode) {
       try {
-        const response = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}&zoom=18&addressdetails=1`)
+        const response = await fetch(`/api/reverse-geocode?lat=${lat}&lng=${lng}`)
 
         if (!response.ok) {
           throw new Error('Geocoding service unavailable')
@@ -213,12 +232,7 @@ const searchLocation = async () => {
 
   try {
     const response = await fetch(
-      `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(searchQuery.value)}&limit=5&addressdetails=1`,
-      {
-        headers: {
-          'User-Agent': 'Partner Management App'
-        }
-      }
+      `/api/search-location?q=${encodeURIComponent(searchQuery.value)}`
     )
 
     if (!response.ok) {
@@ -263,6 +277,75 @@ const updateLocation = () => {
   emit('update:modelValue', selectedLocation.value)
 }
 
+const getCurrentLocation = async () => {
+  if (!navigator.geolocation) {
+    searchError.value = 'Geolocation is not supported by this browser.'
+    return
+  }
+
+  isGettingLocation.value = true
+  searchError.value = ''
+
+  try {
+    const position = await new Promise<GeolocationPosition>((resolve, reject) => {
+      navigator.geolocation.getCurrentPosition(resolve, reject, {
+        enableHighAccuracy: true,
+        timeout: 10000,
+        maximumAge: 300000 // 5 minutes
+      })
+    })
+
+    const { latitude, longitude } = position.coords
+    await setLocation(latitude, longitude, true)
+
+    // Update user location in database
+    try {
+      const response = await fetch('/api/user/location', {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || ''
+        },
+        body: JSON.stringify({
+          latitude,
+          longitude,
+          city: selectedLocation.value?.city || '',
+          zip_code: selectedLocation.value?.zipCode || ''
+        })
+      })
+
+      if (!response.ok) {
+        console.warn('Failed to update user location in database')
+      }
+    } catch (error) {
+      console.warn('Failed to update user location:', error)
+    }
+
+  } catch (error) {
+    console.error('Error getting location:', error)
+    if (error instanceof GeolocationPositionError) {
+      switch (error.code) {
+        case error.PERMISSION_DENIED:
+          searchError.value = 'Location access denied. Please enable location services and try again.'
+          break
+        case error.POSITION_UNAVAILABLE:
+          searchError.value = 'Location information is unavailable.'
+          break
+        case error.TIMEOUT:
+          searchError.value = 'Location request timed out.'
+          break
+        default:
+          searchError.value = 'An unknown error occurred while getting location.'
+          break
+      }
+    } else {
+      searchError.value = 'Failed to get current location.'
+    }
+  } finally {
+    isGettingLocation.value = false
+  }
+}
+
 // Watch for external changes
 watch(() => props.modelValue, (newValue) => {
   if (newValue && newValue !== selectedLocation.value) {
@@ -284,7 +367,7 @@ onMounted(() => {
           map.invalidateSize()
         }
       }, 100)
-      
+
       // Additional invalidation after a longer delay to ensure proper rendering
       setTimeout(() => {
         if (map) {
@@ -306,4 +389,3 @@ onUnmounted(() => {
   }
 })
 </script>
-

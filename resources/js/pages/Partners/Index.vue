@@ -20,8 +20,49 @@
       <div v-if="partners.data.length > 0" class="grid gap-6 lg:grid-cols-2 xl:grid-cols-3">
         <div v-for="partner in partners.data" :key="partner.id"
           class="rounded-lg bg-white shadow-[inset_0px_0px_0px_1px_rgba(26,26,0,0.16)] dark:bg-[#161615] dark:shadow-[inset_0px_0px_0px_1px_#fffaed2d] overflow-hidden">
-          <!-- Partner Image -->
-          <div v-if="partner.image">
+          <!-- Partner Images -->
+          <div v-if="partner.images && partner.images.length > 0" class="relative h-48 overflow-hidden group">
+            <div :ref="el => imageContainers[partner.id] = el"
+              class="flex overflow-x-auto h-full scrollbar-hide snap-x snap-mandatory" 
+              style="scrollbar-width: none; -ms-overflow-style: none;">
+              <div v-for="image in partner.images" :key="image.id" 
+                class="flex-none w-full h-48 snap-start">
+                <img :src="getImageUrl(image.path)" :alt="partner.title" 
+                  class="w-full h-full object-cover">
+              </div>
+            </div>
+            
+            <!-- Navigation Arrows (Desktop only) -->
+            <div v-if="partner.images.length > 1" class="hidden md:block">
+              <!-- Left Arrow -->
+              <button @click="scrollImages(partner.id, 'left')"
+                class="absolute left-2 top-1/2 transform -translate-y-1/2 bg-black bg-opacity-50 hover:bg-opacity-70 text-white rounded-full w-8 h-8 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+                <Icon name="chevron-left" class="w-4 h-4" />
+              </button>
+              
+              <!-- Right Arrow -->
+              <button @click="scrollImages(partner.id, 'right')"
+                class="absolute right-2 top-1/2 transform -translate-y-1/2 bg-black bg-opacity-50 hover:bg-opacity-70 text-white rounded-full w-8 h-8 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+                <Icon name="chevron-right" class="w-4 h-4" />
+              </button>
+            </div>
+            
+            <!-- Image counter -->
+            <div v-if="partner.images.length > 1" 
+              class="absolute top-2 right-2 bg-black bg-opacity-60 text-white text-xs px-2 py-1 rounded-full">
+              {{ partner.images.length }} photos
+            </div>
+            
+            <!-- Navigation dots -->
+            <div v-if="partner.images.length > 1" 
+              class="absolute bottom-2 left-1/2 transform -translate-x-1/2 flex space-x-1">
+              <div v-for="(image, index) in partner.images" :key="`dot-${image.id}`"
+                class="w-2 h-2 rounded-full bg-white bg-opacity-60"></div>
+            </div>
+          </div>
+          
+          <!-- Fallback to legacy single image -->
+          <div v-else-if="partner.image" class="relative">
             <img :src="getImageUrl(partner.image)" :alt="partner.title" 
               class="w-full h-48 object-cover">
           </div>
@@ -148,6 +189,17 @@
   </AppLayout>
 </template>
 
+<style scoped>
+.scrollbar-hide {
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE and Edge */
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none; /* Chrome, Safari and Opera */
+}
+</style>
+
 <script setup lang="ts">
 import { ref } from 'vue'
 import { Link, router } from '@inertiajs/vue3'
@@ -162,6 +214,13 @@ interface User {
   email: string
 }
 
+interface PartnerImage {
+  id: number
+  partner_id: number
+  path: string
+  sort_order: number
+}
+
 interface Partner {
   id: number
   title: string
@@ -169,6 +228,7 @@ interface Partner {
   category: string
   description: string
   image: string | null
+  images?: PartnerImage[]
   city: string
   zip_code: string
   longitude: number
@@ -206,6 +266,7 @@ defineProps<Props>()
 
 const showDeleteModal = ref(false)
 const partnerToDelete = ref<Partner | null>(null)
+const imageContainers = ref<{ [key: number]: HTMLElement | null }>({})
 
 const getCategoryName = (categoryId: string): string => {
   const category = categories.find(cat => cat.id === categoryId)
@@ -246,5 +307,25 @@ const getImageUrl = (imagePath: string): string => {
   }
   // Otherwise, treat as local storage path
   return `/storage/${imagePath}`
+}
+
+const scrollImages = (partnerId: number, direction: 'left' | 'right') => {
+  const container = imageContainers.value[partnerId]
+  if (!container) return
+  
+  const scrollAmount = container.clientWidth
+  const currentScroll = container.scrollLeft
+  
+  if (direction === 'left') {
+    container.scrollTo({
+      left: currentScroll - scrollAmount,
+      behavior: 'smooth'
+    })
+  } else {
+    container.scrollTo({
+      left: currentScroll + scrollAmount,
+      behavior: 'smooth'
+    })
+  }
 }
 </script>

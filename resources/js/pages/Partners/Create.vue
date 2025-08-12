@@ -67,15 +67,27 @@
 
             <!-- Image Upload -->
             <div class="md:col-span-2">
-              <label for="image" class="block text-sm font-medium text-[#706f6c] dark:text-[#A1A09A] mb-2">
-                Partner Image
+              <label for="images" class="block text-sm font-medium text-[#706f6c] dark:text-[#A1A09A] mb-2">
+                Partner Images
               </label>
-              <input type="file" id="image" @change="handleImageUpload" accept="image/*"
+              <input type="file" id="images" @change="handleImagesUpload" accept="image/jpeg,image/png,image/jpg,image/gif,image/svg+xml" multiple
                 class="block w-full text-sm text-[#706f6c] dark:text-[#A1A09A] file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-[#FDFDFC] file:text-[#1b1b18] hover:file:bg-[#f8f8f7] dark:file:bg-[#0a0a0a] dark:file:text-[#EDEDEC] dark:hover:file:bg-[#1a1a19]" />
               <p class="mt-1 text-xs text-[#706f6c] dark:text-[#A1A09A]">
-                Optional: Upload an image for this partner (JPEG, PNG, JPG, GIF, max 2MB)
+                Optional: Upload up to 15 images for this partner (JPEG, PNG, JPG, GIF, SVG, max 5MB each)
               </p>
-              <InputError :message="errors.image" class="mt-1" />
+              <InputError :message="errors.images" class="mt-1" />
+
+              <!-- Image Previews -->
+              <div v-if="selectedImages.length > 0" class="mt-4 grid grid-cols-6 md:grid-cols-9 gap-4">
+                <div v-for="(image, index) in selectedImages" :key="index" class="relative">
+                  <img :src="image.preview" :alt="`Preview ${index + 1}`"
+                    class="w-full h-24 object-cover rounded-lg border border-[#e3e3e0] dark:border-[#3E3E3A]">
+                  <button type="button" @click="removeSelectedImage(index)"
+                    class="absolute top-1 left-17 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs hover:bg-red-600">
+                    ×
+                  </button>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -86,7 +98,7 @@
           <h3 class="text-lg font-semibold text-[#1b1b18] dark:text-[#EDEDEC] mb-6">Location Information</h3>
 
           <!-- Location Picker -->
-          <LocationPicker v-model="locationData" class="mb-6" />
+          <LocationPicker v-model="locationData" :user="props.user" class="mb-6" />
 
           <!-- Manual Location Fields -->
           <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -166,6 +178,22 @@ import Textarea from 'primevue/textarea'
 import InputNumber from 'primevue/inputnumber'
 import Button from 'primevue/button'
 
+interface SelectedImage {
+  file: File
+  preview: string
+}
+
+interface Props {
+  user?: {
+    city?: string
+    zip_code?: string
+    latitude?: number
+    longitude?: number
+  }
+}
+
+const props = defineProps<Props>()
+
 interface LocationData {
   city: string
   zipCode: string
@@ -173,12 +201,15 @@ interface LocationData {
   longitude: number
 }
 
+const selectedImages = ref<SelectedImage[]>([])
+
 const form = useForm({
   title: '',
   name_of_owner: '',
   category: '',
   description: '',
   image: null as File | null,
+  images: [] as File[],
   city: '',
   zip_code: '',
   latitude: 0,
@@ -211,11 +242,28 @@ watch([() => form.city, () => form.zip_code, () => form.latitude, () => form.lon
 
 const { errors, processing } = form
 
-const handleImageUpload = (event: Event) => {
+const handleImagesUpload = (event: Event) => {
   const target = event.target as HTMLInputElement
-  if (target.files && target.files[0]) {
-    form.image = target.files[0]
+  if (target.files && target.files.length > 0) {
+    const newImages: SelectedImage[] = []
+    const maxImages = Math.min(15 - selectedImages.value.length, target.files.length)
+
+    for (let i = 0; i < maxImages; i++) {
+      const file = target.files[i]
+      const preview = URL.createObjectURL(file)
+      newImages.push({ file, preview })
+    }
+
+    selectedImages.value = [...selectedImages.value, ...newImages]
+    form.images = selectedImages.value.map(img => img.file)
   }
+}
+
+const removeSelectedImage = (index: number) => {
+  // Revoke the object URL to free memory
+  URL.revokeObjectURL(selectedImages.value[index].preview)
+  selectedImages.value.splice(index, 1)
+  form.images = selectedImages.value.map(img => img.file)
 }
 
 const submit = () => {

@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\Partner;
+use App\Models\PartnerImage;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
 
@@ -15,7 +17,7 @@ class PartnerController extends Controller
      */
     public function index()
     {
-        $partners = Partner::with('user')
+        $partners = Partner::with(['user', 'images'])
             ->orderBy('created_at', 'desc')
             ->paginate(10);
 
@@ -29,7 +31,11 @@ class PartnerController extends Controller
      */
     public function create()
     {
-        return Inertia::render('Partners/Create');
+        $user = Auth::user();
+        
+        return Inertia::render('Partners/Create', [
+            'user' => $user->only(['city', 'zip_code', 'latitude', 'longitude'])
+        ]);
     }
 
     /**
@@ -42,14 +48,16 @@ class PartnerController extends Controller
             'name_of_owner' => 'nullable|string|max:255',
             'category' => 'required|string|max:255',
             'description' => 'required|string',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'image' => 'nullable|file|mimes:jpeg,png,jpg,gif,svg|max:5120',
+            'images' => 'nullable|array|max:15',
+            'images.*' => 'file|mimes:jpeg,png,jpg,gif,svg|max:5120',
             'city' => 'required|string|max:255',
             'zip_code' => 'required|string|max:20',
             'longitude' => 'required|numeric|between:-180,180',
             'latitude' => 'required|numeric|between:-90,90',
         ]);
 
-        // Handle image upload
+        // Handle legacy single image upload
         if ($request->hasFile('image')) {
             $imagePath = $request->file('image')->store('partners', 'public');
             $validated['image'] = $imagePath;
@@ -57,7 +65,20 @@ class PartnerController extends Controller
 
         $validated['created_by'] = Auth::id();
 
-        Partner::create($validated);
+        $partner = Partner::create($validated);
+
+        // Handle multiple images upload
+        if ($request->hasFile('images')) {
+            $sortOrder = 0;
+            foreach ($request->file('images') as $image) {
+                $imagePath = $image->store('partners', 'public');
+                PartnerImage::create([
+                    'partner_id' => $partner->id,
+                    'path' => $imagePath,
+                    'sort_order' => $sortOrder++,
+                ]);
+            }
+        }
 
         return redirect()->route('partners.index')
             ->with('success', 'Partner created successfully.');
@@ -80,8 +101,12 @@ class PartnerController extends Controller
      */
     public function edit(Partner $partner)
     {
+        $partner->load(['images', 'user']);
+        $user = Auth::user();
+        
         return Inertia::render('Partners/Edit', [
             'partner' => $partner,
+            'user' => $user->only(['city', 'zip_code', 'latitude', 'longitude'])
         ]);
     }
 
@@ -90,19 +115,65 @@ class PartnerController extends Controller
      */
     public function update(Request $request, Partner $partner)
     {
-        $validated = $request->validate([
-            'title' => 'required|string|max:255',
-            'name_of_owner' => 'nullable|string|max:255',
-            'category' => 'required|string|max:255',
-            'description' => 'required|string',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-            'city' => 'required|string|max:255',
-            'zip_code' => 'required|string|max:20',
-            'longitude' => 'required|numeric|between:-180,180',
-            'latitude' => 'required|numeric|between:-90,90',
+        // Debug: Log incoming request data
+        $imageDetails = [];
+        if ($request->hasFile('images')) {
+            foreach ($request->file('images') as $index => $file) {
+                // Skip empty or invalid files
+                if ($file && $file->isValid()) {
+                    $imageDetails[] = [
+                        'index' => $index,
+                        'name' => $file->getClientOriginalName(),
+                        'size' => $file->getSize(),
+                        'mime' => $file->getMimeType(),
+                        'extension' => $file->getClientOriginalExtension()
+                    ];
+                } else {
+                    $imageDetails[] = [
+                        'index' => $index,
+                        'status' => 'invalid_or_empty'
+                    ];
+                }
+            }
+        }
+        
+        \Log::info('Partner update request data:', [
+            'partner_id' => $partner->id,
+            'partner_title' => $partner->title,
+            'request_title' => $request->input('title'),
+            'request_all_inputs' => array_keys($request->all()),
+            'images_count' => $request->hasFile('images') ? count($request->file('images')) : 0,
+            'image_details' => $imageDetails,
+            'remove_images' => $request->input('remove_images'),
+            'has_images_file' => $request->hasFile('images'),
+            'request_method' => $request->method(),
+            '_method' => $request->input('_method')
         ]);
 
-        // Handle image upload
+        try {
+            $validated = $request->validate([
+                'title' => 'required|string|max:255',
+                'name_of_owner' => 'nullable|string|max:255',
+                'category' => 'required|string|max:255',
+                'description' => 'required|string',
+                'image' => 'nullable|file|mimes:jpeg,png,jpg,gif,svg|max:5120',
+                'images' => 'nullable|array|max:15',
+                'images.*' => 'file|mimes:jpeg,png,jpg,gif,svg|max:5120',
+                'remove_images' => 'nullable|array',
+                'remove_images.*' => 'nullable|integer|exists:partner_images,id',
+                'city' => 'required|string|max:255',
+                'zip_code' => 'required|string|max:20',
+                'longitude' => 'required|numeric|between:-180,180',
+                'latitude' => 'required|numeric|between:-90,90',
+            ]);
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            \Log::error('Validation failed', ['errors' => $e->errors()]);
+            throw $e;
+        }
+        
+        \Log::info('Validation passed successfully');
+
+        // Handle legacy single image upload
         if ($request->hasFile('image')) {
             // Delete old image if it exists
             if ($partner->image) {
@@ -115,8 +186,71 @@ class PartnerController extends Controller
 
         $partner->update($validated);
 
+        // Handle image removal
+        if ($request->has('remove_images') && is_array($request->remove_images) && !empty($request->remove_images)) {
+            \Log::info('Processing image removals', ['remove_images' => $request->remove_images]);
+            $imagesToRemove = PartnerImage::whereIn('id', $request->remove_images)
+                ->where('partner_id', $partner->id)
+                ->get();
+                
+            foreach ($imagesToRemove as $imageToRemove) {
+                \Log::info('Removing image', ['id' => $imageToRemove->id, 'path' => $imageToRemove->path]);
+                Storage::disk('public')->delete($imageToRemove->path);
+                $imageToRemove->delete();
+            }
+        }
+
+        // Handle multiple images upload
+        if ($request->hasFile('images')) {
+            \Log::info('Processing new images upload');
+            $currentImageCount = $partner->images()->count();
+            $maxNewImages = min(15 - $currentImageCount, count($request->file('images')));
+            
+            \Log::info('Image upload details:', [
+                'current_count' => $currentImageCount,
+                'max_new' => $maxNewImages,
+                'files_received' => count($request->file('images'))
+            ]);
+            
+            $sortOrder = $partner->images()->max('sort_order') + 1;
+            if ($sortOrder === null) $sortOrder = 1;
+            
+            $uploadedImages = array_slice($request->file('images'), 0, $maxNewImages);
+            
+            foreach ($uploadedImages as $index => $image) {
+                try {
+                    \Log::info("Processing image {$index}");
+                    $imagePath = $image->store('partners', 'public');
+                    $partnerImage = PartnerImage::create([
+                        'partner_id' => $partner->id,
+                        'path' => $imagePath,
+                        'sort_order' => $sortOrder++,
+                    ]);
+                    \Log::info("Successfully created partner image", ['id' => $partnerImage->id, 'path' => $imagePath]);
+                } catch (\Exception $e) {
+                    \Log::error("Failed to process image {$index}: " . $e->getMessage());
+                }
+            }
+        }
+
+        \Log::info('Partner update completed successfully', ['partner_id' => $partner->id]);
+        
         return redirect()->route('partners.index')
             ->with('success', 'Partner updated successfully.');
+    }
+
+    /**
+     * Display the partners map page
+     */
+    public function map()
+    {
+        $partners = Partner::with(['user', 'images'])
+            ->select(['id', 'title', 'name_of_owner', 'category', 'description', 'image', 'city', 'zip_code', 'latitude', 'longitude', 'created_by'])
+            ->get();
+
+        return Inertia::render('PartnersMap', [
+            'partners' => $partners,
+        ]);
     }
 
     /**
@@ -124,9 +258,14 @@ class PartnerController extends Controller
      */
     public function destroy(Partner $partner)
     {
-        // Delete associated image if it exists
+        // Delete associated single image if it exists
         if ($partner->image) {
             Storage::disk('public')->delete($partner->image);
+        }
+        
+        // Delete all associated images
+        foreach ($partner->images as $image) {
+            Storage::disk('public')->delete($image->path);
         }
         
         $partner->delete();
@@ -189,5 +328,70 @@ class PartnerController extends Controller
             'categories' => $categories,
             'cities' => $cities,
         ]);
+    }
+
+    /**
+     * Search for locations using OpenStreetMap Nominatim API
+     */
+    public function searchLocation(Request $request)
+    {
+        $request->validate([
+            'q' => 'required|string|max:255',
+        ]);
+
+        $query = $request->input('q');
+
+        try {
+            $response = Http::withHeaders([
+                'User-Agent' => 'Partner Management App'
+            ])->get('https://nominatim.openstreetmap.org/search', [
+                'format' => 'json',
+                'q' => $query,
+                'limit' => 5,
+                'addressdetails' => 1
+            ]);
+
+            if ($response->successful()) {
+                return response()->json($response->json());
+            }
+
+            return response()->json(['error' => 'Search service unavailable'], 503);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Search failed'], 500);
+        }
+    }
+
+    /**
+     * Reverse geocode coordinates to get address information
+     */
+    public function reverseGeocode(Request $request)
+    {
+        $request->validate([
+            'lat' => 'required|numeric|between:-90,90',
+            'lng' => 'required|numeric|between:-180,180',
+        ]);
+
+        $lat = $request->input('lat');
+        $lng = $request->input('lng');
+
+        try {
+            $response = Http::withHeaders([
+                'User-Agent' => 'Partner Management App'
+            ])->get('https://nominatim.openstreetmap.org/reverse', [
+                'format' => 'json',
+                'lat' => $lat,
+                'lon' => $lng,
+                'zoom' => 18,
+                'addressdetails' => 1
+            ]);
+
+            if ($response->successful()) {
+                return response()->json($response->json());
+            }
+
+            return response()->json(['error' => 'Geocoding service unavailable'], 503);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Geocoding failed'], 500);
+        }
     }
 }
