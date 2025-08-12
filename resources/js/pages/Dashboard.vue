@@ -67,7 +67,7 @@ const quickActions = [
         title: 'Map Overview',
         description: 'View partners on map',
         icon: 'map',
-        route: 'map-demo'
+        route: 'map'
     }
 ];
 
