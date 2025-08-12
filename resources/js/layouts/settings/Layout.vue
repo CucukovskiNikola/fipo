@@ -14,10 +14,10 @@ const sidebarNavItems: NavItem[] = [
         title: 'Password',
         href: '/settings/password',
     },
-    {
-        title: 'Appearance',
-        href: '/settings/appearance',
-    },
+    // {
+    //     title: 'Appearance',
+    //     href: '/settings/appearance',
+    // },
 ];
 
 const page = usePage();
@@ -35,7 +35,7 @@ const currentPath = page.props.ziggy?.location ? new URL(page.props.ziggy.locati
                     <Button
                         v-for="item in sidebarNavItems"
                         :key="item.href"
-                        variant="ghost"
+                        variant="default"
                         :class="['w-full justify-start', { 'bg-muted': currentPath === item.href }]"
                         as-child
                     >

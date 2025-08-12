@@ -161,10 +161,22 @@
 }
 
 @layer base {
-    * {
-        @apply border-border outline-ring/50;
-    }
-    body {
-        @apply bg-background text-foreground;
-    }
+  * {
+    @apply border-border outline-ring/50;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+  }
+
+  .liquid-glass {
+    background: rgba(255, 255, 255, 0.1); 
+    backdrop-filter: blur(15px); 
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3); 
+    transition: all 0.3s ease; 
+  }
+
+  .gradient-color {
+    background: linear-gradient(to right, #2563eb, #9333ea);
+  }
 }

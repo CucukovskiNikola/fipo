@@ -9,14 +9,14 @@
   >
     <section
       v-if="isActive"
-      class="bg-white text-black max-w-6xl mx-auto rounded-4xl p-8 mt-4 shadow-lg"
+      class="liquid-glass text-white max-w-6xl mx-auto rounded-4xl p-8 mt-4 shadow-lg"
     >
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
         <!-- Contact Information -->
         <div class="space-y-6">
           <div>
-            <h2 class="text-3xl font-bold mb-4 text-[#1a0d05]">Get in Touch</h2>
-            <p class="text-gray-600 text-lg leading-relaxed mb-6">
+            <h2 class="text-3xl font-bold mb-4 text-white">Get in Touch</h2>
+            <p class="text-white/50 text-lg leading-relaxed mb-6">
               Ready to promote your business or find local partners? We'd love to hear from you. 
               Send us a message and we'll get back to you as soon as possible.
             </p>
@@ -24,39 +24,39 @@
           
           <div class="space-y-4">
             <div class="flex items-center space-x-3">
-              <div class="w-10 h-10 bg-[#1a0d05] rounded-full flex items-center justify-center">
+              <div class="w-13 h-13 gradient-color rounded-full flex items-center justify-center">
                 <i class="pi pi-envelope text-white"></i>
               </div>
               <div>
-                <p class="font-semibold text-[#1a0d05]">Email</p>
-                <p class="text-gray-600">contact@businessplatform.com</p>
+                <p class="font-semibold text-white">Email</p>
+                <p class="text-white/50">contact@businessplatform.com</p>
               </div>
             </div>
             
             <div class="flex items-center space-x-3">
-              <div class="w-10 h-10 bg-[#1a0d05] rounded-full flex items-center justify-center">
+              <div class="w-13 h-13 gradient-color rounded-full flex items-center justify-center">
                 <i class="pi pi-phone text-white"></i>
               </div>
               <div>
-                <p class="font-semibold text-[#1a0d05]">Phone</p>
-                <p class="text-gray-600">+1 (555) 123-4567</p>
+                <p class="font-semibold text-white">Phone</p>
+                <p class="text-white/50">+1 (555) 123-4567</p>
               </div>
             </div>
             
             <div class="flex items-center space-x-3">
-              <div class="w-10 h-10 bg-[#1a0d05] rounded-full flex items-center justify-center">
+              <div class="w-13 h-13 gradient-color rounded-full flex items-center justify-center">
                 <i class="pi pi-map-marker text-white"></i>
               </div>
               <div>
-                <p class="font-semibold text-[#1a0d05]">Address</p>
-                <p class="text-gray-600">123 Business St, Suite 100<br>City, State 12345</p>
+                <p class="font-semibold text-white">Address</p>
+                <p class="text-white/50">123 Business St, Suite 100<br>City, State 12345</p>
               </div>
             </div>
           </div>
         </div>
 
         <!-- Contact Form -->
-        <div class="bg-gray-50 rounded-4xl p-6">
+        <div class="bg-gray-50 rounded-3xl p-6">
           <form @submit.prevent="submitForm" class="space-y-6" novalidate>
             <div class="space-y-4">
               <div>
@@ -67,7 +67,7 @@
                   id="name"
                   v-model="form.name"
                   placeholder="Enter your full name"
-                  class="w-full !rounded-4xl"
+                  class="w-full !rounded-2xl bg-white"
                   :invalid="!!errors.name"
                   size="large"
                 />
@@ -83,7 +83,7 @@
                   v-model="form.email"
                   type="email"
                   placeholder="Enter your email address"
-                  class="w-full !rounded-4xl"
+                  class="w-full !rounded-2xl"
                   :invalid="!!errors.email"
                   size="large"
                 />
@@ -98,7 +98,7 @@
                   id="subject"
                   v-model="form.subject"
                   placeholder="What is this about?"
-                  class="w-full !rounded-4xl"
+                  class="w-full !rounded-2xl"
                   size="large"
                 />
               </div>
@@ -111,7 +111,7 @@
                   id="message"
                   v-model="form.message"
                   placeholder="Tell us more about your inquiry..."
-                  class="w-full !rounded-4xl"
+                  class="w-full !rounded-2xl"
                   :invalid="!!errors.message"
                   rows="4"
                   auto-resize
@@ -127,7 +127,7 @@
                 <InputText
                   v-model="captcha.userAnswer"
                   placeholder="Enter your answer"
-                  class="w-full !rounded-4xl"
+                  class="w-full !rounded-2xl"
                   :invalid="!!errors.captcha"
                   size="large"
                 />
@@ -139,9 +139,9 @@
               <Button
                 type="submit"
                 :disabled="isSubmitting"
-                class="flex-1 !rounded-4xl"
+                class="flex-1 !rounded-3xl"
                 size="large"
-                :style="{ backgroundColor: '#1a0d05', borderColor: '#1a0d05' }"
+                variant="gradient"
                 :loading="isSubmitting"
               >
                 <i class="pi pi-send mr-2"></i>
@@ -152,8 +152,8 @@
                 type="button"
                 @click="resetForm"
                 severity="secondary"
-                outlined
-                class="!rounded-4xl"
+                variant="default"
+                class="!rounded-3xl"
                 size="large"
                 :style="{ borderColor: '#1a0d05', color: '#1a0d05' }"
               >
@@ -183,7 +183,7 @@
 import { reactive, ref, onMounted } from "vue";
 import InputText from 'primevue/inputtext';
 import Textarea from 'primevue/textarea';
-import Button from 'primevue/button';
+import Button from "./ui/button/Button.vue";
 
 const props = defineProps({
   isActive: Boolean,

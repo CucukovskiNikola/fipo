@@ -9,101 +9,28 @@
   >
     <section
       v-if="isActive"
-      class="bg-white text-black max-w-6xl mx-auto rounded-4xl p-8 mt-4 shadow-lg"
+      class="liquid-glass text-white max-w-6xl mx-auto rounded-4xl p-2 lg:p-8 mt-4 shadow-lg"
     >
+       <HeroSection @navigate-to-contact="$emit('navigate-to-contact')"/>
 
-      <!-- What We Do Section -->
-      <div class="mb-8">
-        <h3 class="text-lg font-semibold mb-4">What We Do</h3>
-        <div class="grid grid-cols-1 md:grid-cols-4 gap-2">
-          <CardItem v-for="(card, index) in aboutCards" :key="`about-${index}`" :card="card" />
-        </div>
-      </div>
 
-      <!-- Search & Filters -->
       <div class="mb-6">
-        <h3 class="text-lg font-semibold mb-4">Find Partners</h3>
-        <div class="flex flex-col gap-4">
-          <!-- Search Bar -->
-          <div class="w-full">
-            <IconField>
-              <InputIcon class="pi pi-search" />
-              <InputText 
-                v-model="searchTerm" 
-                placeholder="Search partners by name, category, or city..." 
-                class="w-full !rounded-4xl"
-                size="large"
-              />
-            </IconField>
-          </div>
-
-          <!-- Filters Row -->
-          <div class="flex flex-wrap gap-3 items-center">
-            <Button
-              @click="resetFilters"
-              :severity="activeFilter === 'all' ? 'primary' : 'secondary'"
-              :outlined="activeFilter !== 'all'"
-              size="small"
-              class="!rounded-4xl min-w-48"
-              :style="{ backgroundColor: activeFilter === 'all' ? '#1a0d05' : '', borderColor: activeFilter === 'all' ? '#1a0d05' : '' }"
-            >
-              All Partners
-            </Button>
-            
-            <div v-if="categories.length > 0">
-              <Select
-                v-model="selectedCategory"
-                :options="categoryOptions"
-                option-label="label"
-                option-value="value"
-                placeholder="Select Category"
-                class="min-w-48 !rounded-4xl custom-select-brown"
-                show-clear
-                @change="onCategoryChange"
-              >
-                <template #option="{ option }">
-                  <div class="flex items-center">
-                    <span class="mr-2">{{ getCategoryIcon(option.value) }}</span>
-                    {{ option.label }}
-                  </div>
-                </template>
-              </Select>
-            </div>
-            
-            <div v-if="cities.length > 0">
-              <Select
-                v-model="selectedCity"
-                :options="cityOptions"
-                option-label="label"
-                option-value="value"
-                placeholder="Select City"
-                class="min-w-48 !rounded-4xl custom-select-brown"
-                show-clear
-                @change="onCityChange"
-              />
-            </div>
-            
-            <Button
-              v-if="hasActiveFilters"
-              @click="resetFilters"
-              severity="secondary"
-              size="small"
-              icon="pi pi-times"
-              outlined
-              class="min-w-48 !rounded-4xl"
-              :style="{ borderColor: '#1a0d05', color: '#1a0d05' }"
-            >
-              Reset Filters
-            </Button>
-          </div>
-        </div>
+        <SearchFilters
+          v-model:searchTerm="searchTerm"
+          :selectedCategory="selectedCategory"
+          :selectedCity="selectedCity"
+          :categories="categories"
+          :cities="cities"
+          @categoryChange="handleCategoryChange"
+          @cityChange="handleCityChange"
+          @resetFilters="resetFilters"
+        />
       </div>
 
       <!-- Partners Section -->
       <div>
-        <div class="flex justify-between items-center mb-4">
-          <h3 class="text-lg font-semibold">Our Partners</h3>
-          <span v-if="!loading && totalPartners > 0" class="text-sm text-gray-500">
+        <div class="flex justify-end items-center mb-4">
+          <span v-if="!loading && totalPartners > 0" class="text-sm text-white">
             Showing {{ partners.length }} of {{ totalPartners }} partners
           </span>
           <span v-if="loading" class="text-sm text-gray-500">Loading...</span>
@@ -111,20 +38,19 @@
         
         <div v-if="!loading && partners.length > 0" class="space-y-6">
           <!-- Partners Grid -->
-          <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6">
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             <PartnerCard v-for="partner in partners" :key="partner.id" :partner="partner" />
           </div>
           
           <!-- Load More Button -->
-          <div v-if="hasMore" class="text-center pt-4">
+          <div v-if="hasMore" class="text-center pt-4 pb-6">
             <Button
               @click="loadMorePartners"
               :disabled="loadingMore"
               :loading="loadingMore"
-              class="!rounded-4xl px-8 py-3"
+              class="!rounded-4xl px-8 py-3 w-full lg:w-[40%]"
               size="large"
-              outlined
-              :style="{ borderColor: '#1a0d05', color: '#1a0d05' }"
+              variant="gradient"
             >
               <i v-if="!loadingMore" class="pi pi-plus mr-2"></i>
               {{ loadingMore ? 'Loading...' : `Load More Partners (${totalPartners - partners.length} remaining)` }}
@@ -132,13 +58,13 @@
           </div>
           
           <!-- All Loaded Message -->
-          <div v-else-if="partners.length > 12" class="text-center pt-4 text-sm text-gray-500">
+          <div v-else-if="partners.length > 12" class="text-center pt-4 text-sm text-white">
             <i class="pi pi-check mr-2"></i>
             All {{ totalPartners }} partners loaded
           </div>
         </div>
         
-        <div v-else-if="!loading && partners.length === 0" class="text-center py-8 text-gray-500">
+      <div v-else-if="!loading && partners.length === 0" class="text-center py-8 text-white">
           <div class="flex flex-col items-center">
             <i class="pi pi-search text-4xl mb-4 text-gray-300"></i>
             <p class="text-lg font-medium mb-2">No partners found</p>
@@ -146,43 +72,22 @@
           </div>
         </div>
         
-        <div v-if="loading" class="text-center py-8">
-          <div class="inline-flex items-center">
-            <svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-gray-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-              <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-              <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-            </svg>
-            Loading partners...
-          </div>
+        <div v-if="loading" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <PartnerCardSkeleton v-for="n in 12" :key="n" />
         </div>
       </div>
 
-      <!-- Footer Links -->
-      <div class="flex justify-between text-xs text-gray-500 mt-6">
-        <div class="space-x-4">
-          <a href="#" class="hover:underline">World's Healthiest</a>
-          <a href="#" class="hover:underline">The Founder Health Coalition</a>
-        </div>
-        <div class="space-x-4">
-          <a href="#" class="hover:underline">Privacy Policy</a>
-          <a href="#" class="hover:underline">Informed Medical Consent</a>
-          <a href="#" class="hover:underline">Terms & Conditions</a>
-        </div>
-      </div>
     </section>
   </transition>
 </template>
 
 <script setup>
 import { ref, computed, onMounted, watch } from "vue";
-import CardItem from "./CardItem.vue";
 import PartnerCard from "./PartnerCard.vue";
-import InputText from 'primevue/inputtext';
-import Select from 'primevue/select';
-import Button from 'primevue/button';
-import IconField from 'primevue/iconfield';
-import InputIcon from 'primevue/inputicon';
-import categoriesData from '@/data/categories.json';
+import PartnerCardSkeleton from "./PartnerCardSkeleton.vue";
+import SearchFilters from "./SearchFilters.vue";
+import HeroSection from "./HeroSection.vue";
+import Button from "./ui/button/Button.vue";
 
 const props = defineProps({
   isActive: Boolean,
@@ -315,12 +220,14 @@ onMounted(() => {
 });
 
 // Filter handlers
-const onCategoryChange = () => {
+const handleCategoryChange = (category) => {
+  selectedCategory.value = category || null;
   currentPage.value = 1;
   fetchPartners(true);
 };
 
-const onCityChange = () => {
+const handleCityChange = (city) => {
+  selectedCity.value = city || null;
   currentPage.value = 1;
   fetchPartners(true);
 };
@@ -334,47 +241,8 @@ const resetFilters = () => {
   fetchPartners(true);
 };
 
-// Get category icon
-const getCategoryIcon = (categoryId) => {
-  const category = categoriesData.find(cat => cat.id === categoryId);
-  return category ? category.icon : '📍';
-};
 </script>
 
 <style scoped>
-/* Custom styling for PrimeVue Select components with brown theme */
-:deep(.custom-select-brown .p-select-dropdown) {
-  border-color: #d1d5db;
-}
-
-:deep(.custom-select-brown .p-select-dropdown:hover) {
-  border-color: #1a0d05;
-}
-
-:deep(.custom-select-brown .p-select-dropdown:focus) {
-  border-color: #1a0d05;
-  box-shadow: 0 0 0 0.2rem rgba(26, 13, 5, 0.2);
-}
-
-:deep(.custom-select-brown .p-select-option:hover) {
-  background-color: rgba(26, 13, 5, 0.1);
-}
-
-:deep(.custom-select-brown .p-select-option.p-select-option-selected) {
-  background-color: #1a0d05;
-  color: white;
-}
-
-:deep(.custom-select-brown .p-select-option.p-select-option-selected:hover) {
-  background-color: #1a0d05;
-  color: white;
-}
-
-:deep(.custom-select-brown .p-select-clear-icon) {
-  color: #1a0d05;
-}
-
-:deep(.custom-select-brown .p-select-dropdown-icon) {
-  color: #1a0d05;
-}
+/* Custom styling for shadcn components */
 </style>
