@@ -12,6 +12,9 @@ Route::get('/api/search-location', [App\Http\Controllers\PartnerController::clas
 Route::get('/api/reverse-geocode', [App\Http\Controllers\PartnerController::class, 'reverseGeocode']);
 Route::put('/api/user/location', [App\Http\Controllers\UserController::class, 'updateLocation'])->middleware('auth');
 
+// SEO-friendly query parameter route
+Route::get('/partners', [App\Http\Controllers\PartnerController::class, 'showPublic'])->name('partners.public.show');
+
 Route::prefix('dashboard')->middleware(['auth', 'verified', 'admin'])->group(function () {
     Route::get('/', [App\Http\Controllers\DashboardController::class, 'index'])->name('dashboard');
 

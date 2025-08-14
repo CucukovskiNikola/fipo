@@ -5,7 +5,12 @@
       "Bash(php artisan:*)",
       "Bash(php:*)",
       "Bash(herd restart:*)",
-      "Bash(curl:*)"
+      "Bash(curl:*)",
+      "Bash(grep:*)",
+      "Bash(rm:*)",
+      "Bash(npm install:*)",
+      "Bash(npm search:*)",
+      "Bash(npm info:*)"
     ],
     "deny": []
   }

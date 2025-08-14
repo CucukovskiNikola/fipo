@@ -3,13 +3,13 @@
     <div class="space-y-6 p-6">
       <!-- Success Message -->
       <div v-if="$page.props.flash?.success"
-        class="rounded-lg bg-white p-4 shadow-[inset_0px_0px_0px_1px_rgba(26,26,0,0.16)] dark:bg-[#161615] dark:shadow-[inset_0px_0px_0px_1px_#fffaed2d]">
+        class="rounded-lg bg-white p-4 shadow-[inset_0px_0px_0px_1px_rgba(26,26,0,0.16)]">
         <div class="flex">
-          <div class="rounded-full bg-green-100 p-2 dark:bg-green-900/30">
-            <Icon name="check-circle" class="h-5 w-5 text-green-600 dark:text-green-400" />
+          <div class="rounded-full bg-green-100 p-2">
+            <Icon name="check-circle" class="h-5 w-5 text-green-600" />
           </div>
           <div class="ml-3">
-            <p class="text-sm font-medium text-[#1b1b18] dark:text-[#EDEDEC]">
+            <p class="text-sm font-medium text-[#1b1b18]">
               {{ $page.props.flash.success }}
             </p>
           </div>
@@ -19,7 +19,7 @@
       <!-- Partners Grid -->
       <div v-if="partners.data.length > 0" class="grid gap-6 lg:grid-cols-2 xl:grid-cols-3">
         <div v-for="partner in partners.data" :key="partner.id"
-          class="rounded-lg bg-white shadow-[inset_0px_0px_0px_1px_rgba(26,26,0,0.16)] dark:bg-[#161615] dark:shadow-[inset_0px_0px_0px_1px_#fffaed2d] overflow-hidden">
+          class="rounded-lg bg-white shadow-[inset_0px_0px_0px_1px_rgba(26,26,0,0.16)] overflow-hidden">
           <!-- Partner Images -->
           <div v-if="partner.images && partner.images.length > 0" class="relative h-48 overflow-hidden group">
             <div :ref="el => imageContainers[partner.id] = el"
@@ -71,30 +71,30 @@
             <!-- Category and Actions -->
             <div class="mb-4 flex items-start justify-between">
               <span
-                class="inline-flex items-center rounded-full bg-[#FDFDFC] px-2.5 py-0.5 text-xs font-medium text-[#1b1b18] border border-[#e3e3e0] dark:bg-[#0a0a0a] dark:text-[#EDEDEC] dark:border-[#3E3E3A]">
+                class="inline-flex items-center rounded-full bg-[#FDFDFC] px-2.5 py-0.5 text-xs font-medium text-[#1b1b18] border border-[#e3e3e0]">
                 {{ getCategoryName(partner.category) }}
               </span>
               <div class="flex space-x-2">
                 <Link :href="route('partners.edit', partner.id)"
-                  class="text-[#706f6c] hover:text-[#1b1b18] dark:text-[#A1A09A] dark:hover:text-[#EDEDEC]">
+                  class="text-[#706f6c] hover:text-[#1b1b18]">
                 <Icon name="pencil" class="h-4 w-4" />
                 </Link>
                 <button @click="confirmDelete(partner)"
-                  class="text-red-600 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300">
+                  class="text-red-600 hover:text-red-700">
                   <Icon name="trash" class="h-4 w-4" />
                 </button>
               </div>
             </div>
 
             <!-- Partner Info -->
-            <h3 class="mb-2 text-lg font-semibold text-[#1b1b18] dark:text-[#EDEDEC]">{{ partner.title }}</h3>
-            <p v-if="partner.name_of_owner" class="mb-2 text-sm text-[#706f6c] dark:text-[#A1A09A]">
+            <h3 class="mb-2 text-lg font-semibold text-[#1b1b18]">{{ partner.title }}</h3>
+            <p v-if="partner.name_of_owner" class="mb-2 text-sm text-[#706f6c]">
               Owner: {{ partner.name_of_owner }}
             </p>
-            <p class="mb-3 text-sm text-[#706f6c] dark:text-[#A1A09A] line-clamp-2">{{ partner.description }}</p>
+            <p class="mb-3 text-sm text-[#706f6c] line-clamp-2">{{ partner.description }}</p>
 
             <!-- Partner Details -->
-            <div class="space-y-1 text-xs text-[#706f6c] dark:text-[#A1A09A]">
+            <div class="space-y-1 text-xs text-[#706f6c]">
               <div class="flex items-center">
                 <Icon name="map-pin" class="mr-1 h-3 w-3" />
                 {{ partner.city }}, {{ partner.zip_code }}
@@ -110,13 +110,13 @@
 
       <!-- Empty State -->
       <div v-else
-        class="rounded-lg bg-white p-12 text-center shadow-[inset_0px_0px_0px_1px_rgba(26,26,0,0.16)] dark:bg-[#161615] dark:shadow-[inset_0px_0px_0px_1px_#fffaed2d]">
-        <Icon name="map-pin" class="mx-auto h-12 w-12 text-[#706f6c] dark:text-[#A1A09A]" />
-        <h3 class="mt-2 text-sm font-semibold text-[#1b1b18] dark:text-[#EDEDEC]">No partners</h3>
-        <p class="mt-1 text-sm text-[#706f6c] dark:text-[#A1A09A]">Get started by creating a new partner.</p>
+        class="rounded-lg bg-white p-12 text-center shadow-[inset_0px_0px_0px_1px_rgba(26,26,0,0.16)]">
+        <Icon name="map-pin" class="mx-auto h-12 w-12 text-[#706f6c]" />
+        <h3 class="mt-2 text-sm font-semibold text-[#1b1b18]">No partners</h3>
+        <p class="mt-1 text-sm text-[#706f6c]">Get started by creating a new partner.</p>
         <div class="mt-6">
           <Link :href="route('partners.create')"
-            class="inline-flex items-center rounded-md bg-[#1b1b18] px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-[#706f6c] dark:bg-[#EDEDEC] dark:text-[#1b1b18] dark:hover:bg-[#A1A09A]">
+            class="inline-flex items-center rounded-md bg-[#1b1b18] px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-[#706f6c]">
           <Icon name="plus" class="mr-1 h-4 w-4" />
           Create Partner
           </Link>
@@ -126,20 +126,20 @@
       <!-- Pagination -->
       <div v-if="partners.links && partners.links.length > 3" class="flex justify-center">
         <div
-          class="rounded-lg bg-white p-4 shadow-[inset_0px_0px_0px_1px_rgba(26,26,0,0.16)] dark:bg-[#161615] dark:shadow-[inset_0px_0px_0px_1px_#fffaed2d]">
+          class="rounded-lg bg-white p-4 shadow-[inset_0px_0px_0px_1px_rgba(26,26,0,0.16)]">
           <nav class="flex items-center justify-center space-x-2">
             <template v-for="link in partners.links" :key="link.label">
               <Link v-if="link.url" :href="link.url" :class="[
                 'px-3 py-2 text-sm rounded-md transition-colors',
                 link.active
-                  ? 'bg-[#1b1b18] text-white dark:bg-[#EDEDEC] dark:text-[#1b1b18]'
-                  : 'text-[#706f6c] hover:bg-[#FDFDFC] dark:text-[#A1A09A] dark:hover:bg-[#0a0a0a]'
+                  ? 'bg-[#1b1b18] text-white'
+                  : 'text-[#706f6c] hover:bg-[#FDFDFC]'
               ]">
               {{ cleanLabel(link.label) }}
               </Link>
               <span v-else :class="[
                 'px-3 py-2 text-sm rounded-md cursor-not-allowed',
-                'text-[#A1A09A] dark:text-[#706f6c]'
+                'text-[#A1A09A]'
               ]">
                 {{ cleanLabel(link.label) }}
               </span>
@@ -154,20 +154,20 @@
       <div v-if="showDeleteModal" class="fixed inset-0 z-50 flex items-center justify-center p-4"
         aria-labelledby="modal-title" role="dialog" aria-modal="true">
         <!-- Backdrop -->
-        <div class="fixed inset-0 bg-black/50 transition-opacity dark:bg-black/70" @click="showDeleteModal = false">
+        <div class="fixed inset-0 bg-black/50 transition-opacity" @click="showDeleteModal = false">
         </div>
 
         <!-- Modal Content -->
-        <div class="relative bg-white rounded-lg shadow-xl max-w-lg w-full p-6 dark:bg-[#161615]">
+        <div class="relative bg-white rounded-lg shadow-xl max-w-lg w-full p-6">
           <div class="flex items-start space-x-4">
             <div class="flex-shrink-0">
-              <div class="flex h-10 w-10 items-center justify-center rounded-full bg-red-100 dark:bg-red-900/30">
-                <Icon name="exclamation-triangle" class="h-6 w-6 text-red-600 dark:text-red-400" />
+              <div class="flex h-10 w-10 items-center justify-center rounded-full bg-red-100">
+                <Icon name="exclamation-triangle" class="h-6 w-6 text-red-600" />
               </div>
             </div>
             <div class="flex-1">
-              <h3 class="text-lg font-semibold text-[#1b1b18] dark:text-[#EDEDEC]">Delete partner</h3>
-              <p class="mt-2 text-sm text-[#706f6c] dark:text-[#A1A09A]">
+              <h3 class="text-lg font-semibold text-[#1b1b18]">Delete partner</h3>
+              <p class="mt-2 text-sm text-[#706f6c]">
                 Are you sure you want to delete "{{ partnerToDelete?.title }}"? This action cannot be undone.
               </p>
             </div>
@@ -175,11 +175,11 @@
 
           <div class="mt-6 flex justify-end space-x-3">
             <button @click="showDeleteModal = false"
-              class="px-4 py-2 text-sm font-medium text-[#706f6c] bg-white border border-[#e3e3e0] rounded-md hover:bg-[#FDFDFC] dark:bg-[#161615] dark:text-[#A1A09A] dark:border-[#3E3E3A] dark:hover:bg-[#0a0a0a]">
+              class="px-4 py-2 text-sm font-medium text-[#706f6c] bg-white border border-[#e3e3e0] rounded-md hover:bg-[#FDFDFC]">
               Cancel
             </button>
             <button @click="deletePartner"
-              class="px-4 py-2 text-sm font-medium text-white bg-red-600 rounded-md hover:bg-red-700 dark:bg-red-600 dark:hover:bg-red-700">
+              class="px-4 py-2 text-sm font-medium text-white bg-red-600 rounded-md hover:bg-red-700">
               Delete
             </button>
           </div>

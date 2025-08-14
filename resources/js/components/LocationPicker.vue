@@ -2,14 +2,14 @@
   <div class="space-y-4">
     <!-- Search Input -->
     <div>
-      <label class="block text-sm font-medium text-[#706f6c] dark:text-[#A1A09A] mb-2">
+      <label class="block text-sm font-medium text-[#706f6c] mb-2">
         Search Location
       </label>
       <div class="flex gap-2">
         <div class="relative flex-1">
           <InputText v-model="searchQuery" placeholder="Enter city name or address..." class="w-full pl-10"
             @keyup.enter="searchLocation" />
-          <Icon name="magnifying-glass" class="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-[#706f6c] dark:text-[#A1A09A]" />
+          <Icon name="magnifying-glass" class="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-[#706f6c]" />
         </div>
         <Button @click="searchLocation" :disabled="!searchQuery || isSearching" :loading="isSearching" size="small"
           class="w-24" :class="{ 'opacity-50': !searchQuery || isSearching }">
@@ -25,21 +25,21 @@
 
     <!-- Map Container -->
     <div class="space-y-2">
-      <label class="block text-sm font-medium text-[#706f6c] dark:text-[#A1A09A]">
+      <label class="block text-sm font-medium text-[#706f6c]">
         Select Location on Map
       </label>
-      <div class="h-96 rounded-lg border border-[#e3e3e0] dark:border-[#3E3E3A] overflow-hidden relative">
+      <div class="h-96 rounded-lg border border-[#e3e3e0] overflow-hidden relative">
         <div ref="mapContainer" class="h-full w-full absolute" />
       </div>
-      <p class="text-xs text-[#706f6c] dark:text-[#A1A09A]">
+      <p class="text-xs text-[#706f6c]">
         Click on the map to select a location. The marker will show your selected point.
       </p>
     </div>
 
     <!-- Error Message -->
     <div v-if="searchError"
-      class="p-3 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg">
-      <p class="text-sm text-red-600 dark:text-red-400">
+      class="p-3 bg-red-50 border border-red-200 rounded-lg">
+      <p class="text-sm text-red-600">
         {{ searchError }}
       </p>
     </div>

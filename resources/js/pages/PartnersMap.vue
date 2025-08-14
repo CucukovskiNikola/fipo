@@ -7,11 +7,11 @@
     <div class="w-full mx-auto space-y-6 p-6">
       <!-- Map Controls -->
       <div
-        class="rounded-lg bg-white p-6 shadow-[inset_0px_0px_0px_1px_rgba(26,26,0,0.16)] dark:bg-[#161615] dark:shadow-[inset_0px_0px_0px_1px_#fffaed2d]">
+        class="rounded-lg bg-white p-6 shadow-[inset_0px_0px_0px_1px_rgba(26,26,0,0.16)]">
         <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
           <div>
-            <h3 class="text-lg font-semibold text-[#1b1b18] dark:text-[#EDEDEC] mb-1">Partner Locations</h3>
-            <p class="text-sm text-[#706f6c] dark:text-[#A1A09A]">
+            <h3 class="text-lg font-semibold text-[#1b1b18] mb-1">Partner Locations</h3>
+            <p class="text-sm text-[#706f6c]">
               Showing {{ partners.length }} partner{{ partners.length === 1 ? '' : 's' }} on the map
             </p>
           </div>
@@ -19,7 +19,7 @@
           <!-- Category Filter -->
           <div class="flex items-center space-x-4">
             <div>
-              <label for="category-filter" class="block text-sm font-medium text-[#706f6c] dark:text-[#A1A09A] mb-1">
+              <label for="category-filter" class="block text-sm font-medium text-[#706f6c] mb-1">
                 Filter by Category:
               </label>
               <Select 
@@ -54,7 +54,7 @@
 
       <!-- Partners Map -->
       <div
-        class="rounded-lg bg-white p-6 shadow-[inset_0px_0px_0px_1px_rgba(26,26,0,0.16)] dark:bg-[#161615] dark:shadow-[inset_0px_0px_0px_1px_#fffaed2d]">
+        class="rounded-lg bg-white p-6 shadow-[inset_0px_0px_0px_1px_rgba(26,26,0,0.16)]">
         <div class="h-[70vh]">
           <MapComponent 
             :center="mapCenter" 
@@ -67,19 +67,19 @@
 
       <!-- Partners List -->
       <div
-        class="rounded-lg bg-white p-6 shadow-[inset_0px_0px_0px_1px_rgba(26,26,0,0.16)] dark:bg-[#161615] dark:shadow-[inset_0px_0px_0px_1px_#fffaed2d]">
-        <h3 class="text-lg font-semibold text-[#1b1b18] dark:text-[#EDEDEC] mb-4">Partner Directory</h3>
+        class="rounded-lg bg-white p-6 shadow-[inset_0px_0px_0px_1px_rgba(26,26,0,0.16)]">
+        <h3 class="text-lg font-semibold text-[#1b1b18] mb-4">Partner Directory</h3>
         
         <div v-if="filteredPartners.length === 0" class="text-center py-8">
-          <Icon name="map-pin" class="mx-auto h-12 w-12 text-[#706f6c] dark:text-[#A1A09A] mb-4" />
-          <p class="text-[#706f6c] dark:text-[#A1A09A]">
+          <Icon name="map-pin" class="mx-auto h-12 w-12 text-[#706f6c] mb-4" />
+          <p class="text-[#706f6c]">
             {{ selectedCategory ? 'No partners found in this category.' : 'No partners available.' }}
           </p>
         </div>
 
         <div v-else class="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
           <div v-for="partner in filteredPartners" :key="partner.id"
-            class="rounded-lg bg-[#FDFDFC] p-4 shadow-sm border border-[#e3e3e0] dark:bg-[#0a0a0a] dark:border-[#3E3E3A]">
+            class="rounded-lg bg-[#FDFDFC] p-4 shadow-sm border border-[#e3e3e0]">
             
             <!-- Partner Image -->
             <div v-if="getPartnerImage(partner)" class="mb-3">
@@ -90,19 +90,19 @@
             <!-- Partner Info -->
             <div class="space-y-2">
               <div class="flex items-start justify-between">
-                <h4 class="font-semibold text-[#1b1b18] dark:text-[#EDEDEC] text-sm">{{ partner.title }}</h4>
-                <span class="text-xs px-2 py-1 rounded-full bg-[#706f6c]/10 text-[#706f6c] dark:bg-[#A1A09A]/10 dark:text-[#A1A09A]">
+                <h4 class="font-semibold text-[#1b1b18] text-sm">{{ partner.title }}</h4>
+                <span class="text-xs px-2 py-1 rounded-full bg-[#706f6c]/10 text-[#706f6c]">
                   {{ getCategoryName(partner.category) }}
                 </span>
               </div>
               
-              <p v-if="partner.name_of_owner" class="text-xs text-[#706f6c] dark:text-[#A1A09A]">
+              <p v-if="partner.name_of_owner" class="text-xs text-[#706f6c]">
                 Owner: {{ partner.name_of_owner }}
               </p>
               
-              <p class="text-xs text-[#706f6c] dark:text-[#A1A09A] line-clamp-2">{{ partner.description }}</p>
+              <p class="text-xs text-[#706f6c] line-clamp-2">{{ partner.description }}</p>
               
-              <div class="flex items-center text-xs text-[#706f6c] dark:text-[#A1A09A]">
+              <div class="flex items-center text-xs text-[#706f6c]">
                 <Icon name="map-pin" class="mr-1 h-3 w-3" />
                 {{ partner.city }}, {{ partner.zip_code }}
               </div>
@@ -111,7 +111,7 @@
               <div class="flex items-center justify-between pt-2">
                 <div class="flex space-x-2">
                   <Link :href="route('partners.edit', partner.id)"
-                    class="text-[#706f6c] hover:text-[#1b1b18] dark:text-[#A1A09A] dark:hover:text-[#EDEDEC]">
+                    class="text-[#706f6c] hover:text-[#1b1b18]">
                     <Icon name="pencil" class="h-3 w-3" />
                   </Link>
                 </div>

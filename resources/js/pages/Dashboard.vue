@@ -95,29 +95,29 @@ const formatTimeAgo = (dateString: string) => {
         <div class="space-y-6 p-6">
             <!-- Welcome Section -->
             <div
-                class="rounded-lg bg-white p-6 shadow-[inset_0px_0px_0px_1px_rgba(26,26,0,0.16)] dark:bg-[#161615] dark:shadow-[inset_0px_0px_0px_1px_#fffaed2d]">
-                <h1 class="mb-2 text-2xl font-semibold text-[#1b1b18] dark:text-[#EDEDEC]">Partner Management Dashboard
+                class="rounded-lg bg-white p-6 shadow-[inset_0px_0px_0px_1px_rgba(26,26,0,0.16)]">
+                <h1 class="mb-2 text-2xl font-semibold text-[#1b1b18]">Partner Management Dashboard
                 </h1>
-                <p class="text-[#706f6c] dark:text-[#A1A09A]">
+                <p class="text-[#706f6c]">
                     Manage your partner locations, categories, and view analytics from this central hub.
                 </p>
             </div>
 
             <!-- Stats Grid -->
             <div
-                class="rounded-lg bg-white p-6 shadow-[inset_0px_0px_0px_1px_rgba(26,26,0,0.16)] dark:bg-[#161615] dark:shadow-[inset_0px_0px_0px_1px_#fffaed2d]">
-                <h2 class="mb-6 text-lg font-semibold text-[#1b1b18] dark:text-[#EDEDEC]">Quick Actions</h2>
+                class="rounded-lg bg-white p-6 shadow-[inset_0px_0px_0px_1px_rgba(26,26,0,0.16)]">
+                <h2 class="mb-6 text-lg font-semibold text-[#1b1b18]">Quick Actions</h2>
                 <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
                     <Link v-for="action in quickActions" :key="action.title" :href="route(action.route)"
-                        class="group rounded-lg border border-[#e3e3e0] p-6 transition-colors hover:border-[#1915014a] dark:border-[#3E3E3A] dark:hover:border-[#62605b]">
+                        class="group rounded-lg border border-[#e3e3e0] p-6 transition-colors hover:border-[#1915014a]">
                     <div class="flex items-start space-x-4">
                         <div
-                            class="rounded-md bg-[#FDFDFC] p-2 group-hover:bg-[#f8f8f7] dark:bg-[#0a0a0a] dark:group-hover:bg-[#1a1a19]">
-                            <Icon :name="action.icon" class="h-6 w-6 text-[#706f6c] dark:text-[#A1A09A]" />
+                            class="rounded-md bg-[#FDFDFC] p-2 group-hover:bg-[#f8f8f7]">
+                            <Icon :name="action.icon" class="h-6 w-6 text-[#706f6c]" />
                         </div>
                         <div>
-                            <h3 class="font-medium text-[#1b1b18] dark:text-[#EDEDEC]">{{ action.title }}</h3>
-                            <p class="mt-1 text-sm text-[#706f6c] dark:text-[#A1A09A]">{{ action.description }}</p>
+                            <h3 class="font-medium text-[#1b1b18]">{{ action.title }}</h3>
+                            <p class="mt-1 text-sm text-[#706f6c]">{{ action.description }}</p>
                         </div>
                     </div>
                     </Link>
@@ -128,23 +128,23 @@ const formatTimeAgo = (dateString: string) => {
 
             <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
                 <div v-for="stat in props.stats" :key="stat.name"
-                    class="rounded-lg bg-white p-6 shadow-[inset_0px_0px_0px_1px_rgba(26,26,0,0.16)] dark:bg-[#161615] dark:shadow-[inset_0px_0px_0px_1px_#fffaed2d]">
+                    class="rounded-lg bg-white p-6 shadow-[inset_0px_0px_0px_1px_rgba(26,26,0,0.16)]">
                     <div class="flex items-center justify-between">
                         <div>
-                            <p class="text-sm font-medium text-[#706f6c] dark:text-[#A1A09A]">{{ stat.name }}</p>
-                            <p class="text-2xl font-semibold text-[#1b1b18] dark:text-[#EDEDEC]">{{ stat.value }}</p>
+                            <p class="text-sm font-medium text-[#706f6c]">{{ stat.name }}</p>
+                            <p class="text-2xl font-semibold text-[#1b1b18]">{{ stat.value }}</p>
                         </div>
-                        <div class="rounded-md bg-[#FDFDFC] p-3 dark:bg-[#0a0a0a]">
-                            <Icon :name="stat.icon" class="h-6 w-6 text-[#706f6c] dark:text-[#A1A09A]" />
+                        <div class="rounded-md bg-[#FDFDFC] p-3">
+                            <Icon :name="stat.icon" class="h-6 w-6 text-[#706f6c]" />
                         </div>
                     </div>
                     <div class="mt-4 flex items-center text-sm">
                         <span :class="[
                             stat.changeType === 'increase'
-                                ? 'text-green-600 dark:text-green-400'
+                                ? 'text-green-600'
                                 : stat.changeType === 'decrease'
-                                    ? 'text-red-600 dark:text-red-400'
-                                    : 'text-[#706f6c] dark:text-[#A1A09A]'
+                                    ? 'text-red-600'
+                                    : 'text-[#706f6c]'
                         ]">
                             {{ stat.change }}
                         </span>
@@ -156,28 +156,28 @@ const formatTimeAgo = (dateString: string) => {
             <div class="grid grid-cols-1 gap-6 lg:grid-cols-2">
                 <!-- Recent Activity -->
                 <div
-                    class="rounded-lg bg-white p-6 shadow-[inset_0px_0px_0px_1px_rgba(26,26,0,0.16)] dark:bg-[#161615] dark:shadow-[inset_0px_0px_0px_1px_#fffaed2d]">
+                    class="rounded-lg bg-white p-6 shadow-[inset_0px_0px_0px_1px_rgba(26,26,0,0.16)]">
                     <div class="mb-6 flex items-center justify-between">
-                        <h2 class="text-lg font-semibold text-[#1b1b18] dark:text-[#EDEDEC]">Recent Activity</h2>
+                        <h2 class="text-lg font-semibold text-[#1b1b18]">Recent Activity</h2>
                         <Link :href="route('partners.index')"
-                            class="text-sm text-[#1b1b18] hover:text-[#706f6c] dark:text-[#EDEDEC] dark:hover:text-[#A1A09A]">
+                            class="text-sm text-[#1b1b18] hover:text-[#706f6c]">
                         View all →
                         </Link>
                     </div>
                     <div class="space-y-4">
                         <div v-if="props.recentPartners.length === 0" class="text-center py-8">
-                            <Icon name="building-office" class="mx-auto h-8 w-8 text-[#706f6c] dark:text-[#A1A09A]" />
-                            <p class="mt-2 text-sm text-[#706f6c] dark:text-[#A1A09A]">No recent partner activity</p>
+                            <Icon name="building-office" class="mx-auto h-8 w-8 text-[#706f6c]" />
+                            <p class="mt-2 text-sm text-[#706f6c]">No recent partner activity</p>
                         </div>
-                        <div v-else v-for="partner in props.recentPartners" :key="partner.id" class="flex items-center space-x-3 rounded-md bg-[#FDFDFC] p-3 dark:bg-[#0a0a0a]">
-                            <div class="rounded-full bg-green-100 p-2 dark:bg-green-900/30">
-                                <Icon name="building-office" class="h-4 w-4 text-green-600 dark:text-green-400" />
+                        <div v-else v-for="partner in props.recentPartners" :key="partner.id" class="flex items-center space-x-3 rounded-md bg-[#FDFDFC] p-3">
+                            <div class="rounded-full bg-green-100 p-2">
+                                <Icon name="building-office" class="h-4 w-4 text-green-600" />
                             </div>
                             <div class="flex-1">
-                                <p class="text-sm font-medium text-[#1b1b18] dark:text-[#EDEDEC]">
+                                <p class="text-sm font-medium text-[#1b1b18]">
                                     "{{ partner.title }}" {{ partner.action }} by {{ partner.created_by }}
                                 </p>
-                                <p class="text-xs text-[#706f6c] dark:text-[#A1A09A]">{{ formatTimeAgo(partner.created_at) }}</p>
+                                <p class="text-xs text-[#706f6c]">{{ formatTimeAgo(partner.created_at) }}</p>
                             </div>
                         </div>
                     </div>
@@ -185,29 +185,29 @@ const formatTimeAgo = (dateString: string) => {
 
                 <!-- System Overview -->
                 <div
-                    class="rounded-lg bg-white p-6 shadow-[inset_0px_0px_0px_1px_rgba(26,26,0,0.16)] dark:bg-[#161615] dark:shadow-[inset_0px_0px_0px_1px_#fffaed2d]">
-                    <h2 class="mb-6 text-lg font-semibold text-[#1b1b18] dark:text-[#EDEDEC]">System Overview</h2>
+                    class="rounded-lg bg-white p-6 shadow-[inset_0px_0px_0px_1px_rgba(26,26,0,0.16)]">
+                    <h2 class="mb-6 text-lg font-semibold text-[#1b1b18]">System Overview</h2>
                     <div class="space-y-4">
-                        <div class="flex items-center justify-between rounded-md bg-[#FDFDFC] p-3 dark:bg-[#0a0a0a]">
+                        <div class="flex items-center justify-between rounded-md bg-[#FDFDFC] p-3">
                             <div class="flex items-center space-x-3">
                                 <Icon name="check-circle" class="h-5 w-5 text-green-500" />
-                                <span class="text-sm font-medium text-[#1b1b18] dark:text-[#EDEDEC]">Partner System</span>
+                                <span class="text-sm font-medium text-[#1b1b18]">Partner System</span>
                             </div>
-                            <span class="text-xs text-[#706f6c] dark:text-[#A1A09A]">Operational</span>
+                            <span class="text-xs text-[#706f6c]">Operational</span>
                         </div>
-                        <div class="flex items-center justify-between rounded-md bg-[#FDFDFC] p-3 dark:bg-[#0a0a0a]">
+                        <div class="flex items-center justify-between rounded-md bg-[#FDFDFC] p-3">
                             <div class="flex items-center space-x-3">
                                 <Icon name="users" class="h-5 w-5 text-blue-500" />
-                                <span class="text-sm font-medium text-[#1b1b18] dark:text-[#EDEDEC]">Total Users</span>
+                                <span class="text-sm font-medium text-[#1b1b18]">Total Users</span>
                             </div>
-                            <span class="text-xs text-[#706f6c] dark:text-[#A1A09A]">{{ props.totalUsers }}</span>
+                            <span class="text-xs text-[#706f6c]">{{ props.totalUsers }}</span>
                         </div>
-                        <div class="flex items-center justify-between rounded-md bg-[#FDFDFC] p-3 dark:bg-[#0a0a0a]">
+                        <div class="flex items-center justify-between rounded-md bg-[#FDFDFC] p-3">
                             <div class="flex items-center space-x-3">
                                 <Icon name="clock" class="h-5 w-5 text-purple-500" />
-                                <span class="text-sm font-medium text-[#1b1b18] dark:text-[#EDEDEC]">Active This Week</span>
+                                <span class="text-sm font-medium text-[#1b1b18]">Active This Week</span>
                             </div>
-                            <span class="text-xs text-[#706f6c] dark:text-[#A1A09A]">{{ props.activeUsers }}</span>
+                            <span class="text-xs text-[#706f6c]">{{ props.activeUsers }}</span>
                         </div>
                     </div>
                 </div>

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Partner;
 use App\Models\PartnerImage;
+use App\Services\ImageOptimizer;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
@@ -43,6 +44,13 @@ class PartnerController extends Controller
      */
     public function store(Request $request)
     {
+        \Log::info('Partner creation request:', [
+            'has_images' => $request->hasFile('images'),
+            'images_count' => $request->hasFile('images') ? count($request->file('images')) : 0,
+            'has_single_image' => $request->hasFile('image'),
+            'all_files' => array_keys($request->allFiles())
+        ]);
+
         $validated = $request->validate([
             'title' => 'required|string|max:255',
             'name_of_owner' => 'nullable|string|max:255',
@@ -59,8 +67,10 @@ class PartnerController extends Controller
 
         // Handle legacy single image upload
         if ($request->hasFile('image')) {
-            $imagePath = $request->file('image')->store('partners', 'public');
+            \Log::info('Processing single image upload');
+            $imagePath = ImageOptimizer::optimizeImage($request->file('image'));
             $validated['image'] = $imagePath;
+            \Log::info('Single image optimized:', ['path' => $imagePath]);
         }
 
         $validated['created_by'] = Auth::id();
@@ -69,15 +79,24 @@ class PartnerController extends Controller
 
         // Handle multiple images upload
         if ($request->hasFile('images')) {
+            \Log::info('Processing multiple images upload');
             $sortOrder = 0;
             foreach ($request->file('images') as $image) {
-                $imagePath = $image->store('partners', 'public');
-                PartnerImage::create([
+                \Log::info('Optimizing image:', ['original_name' => $image->getClientOriginalName(), 'size' => $image->getSize()]);
+                
+                // Optimize each image
+                $imagePath = ImageOptimizer::optimizeImage($image);
+                \Log::info('Image optimized and stored:', ['path' => $imagePath]);
+                
+                $partnerImage = PartnerImage::create([
                     'partner_id' => $partner->id,
                     'path' => $imagePath,
                     'sort_order' => $sortOrder++,
                 ]);
+                \Log::info('PartnerImage created:', ['id' => $partnerImage->id]);
             }
+        } else {
+            \Log::info('No images uploaded');
         }
 
         return redirect()->route('partners.index')
@@ -89,7 +108,39 @@ class PartnerController extends Controller
      */
     public function show(Partner $partner)
     {
-        $partner->load('user');
+        $partner->load(['user', 'images']);
+
+        return Inertia::render('Partners/Show', [
+            'partner' => $partner,
+        ]);
+    }
+
+    /**
+     * Display the specified resource for public viewing (SEO-friendly format).
+     */
+    public function showPublic(Request $request)
+    {
+        \Log::info('SEO route hit', [
+            'query_params' => $request->all(),
+            'id' => $request->query('id'),
+            'title' => $request->query('title'),
+            'url' => $request->fullUrl()
+        ]);
+        
+        // Get the ID from query parameters
+        $id = $request->query('id');
+        
+        if (!$id) {
+            \Log::error('Partner ID missing in request', ['query' => $request->all()]);
+            abort(404, 'Partner ID is required');
+        }
+
+        $partner = Partner::with(['user', 'images'])->findOrFail($id);
+        
+        \Log::info('Partner found successfully', [
+            'partner_id' => $partner->id,
+            'partner_title' => $partner->title
+        ]);
 
         return Inertia::render('Partners/Show', [
             'partner' => $partner,
@@ -180,8 +231,10 @@ class PartnerController extends Controller
                 Storage::disk('public')->delete($partner->image);
             }
             
-            $imagePath = $request->file('image')->store('partners', 'public');
+            \Log::info('Processing single image upload for update');
+            $imagePath = ImageOptimizer::optimizeImage($request->file('image'));
             $validated['image'] = $imagePath;
+            \Log::info('Single image optimized for update:', ['path' => $imagePath]);
         }
 
         $partner->update($validated);
@@ -219,14 +272,14 @@ class PartnerController extends Controller
             
             foreach ($uploadedImages as $index => $image) {
                 try {
-                    \Log::info("Processing image {$index}");
-                    $imagePath = $image->store('partners', 'public');
+                    \Log::info("Optimizing image {$index} for update", ['original_name' => $image->getClientOriginalName(), 'size' => $image->getSize()]);
+                    $imagePath = ImageOptimizer::optimizeImage($image);
                     $partnerImage = PartnerImage::create([
                         'partner_id' => $partner->id,
                         'path' => $imagePath,
                         'sort_order' => $sortOrder++,
                     ]);
-                    \Log::info("Successfully created partner image", ['id' => $partnerImage->id, 'path' => $imagePath]);
+                    \Log::info("Successfully created optimized partner image", ['id' => $partnerImage->id, 'path' => $imagePath]);
                 } catch (\Exception $e) {
                     \Log::error("Failed to process image {$index}: " . $e->getMessage());
                 }
@@ -279,7 +332,7 @@ class PartnerController extends Controller
      */
     public function getPublicPartners(Request $request)
     {
-        $query = Partner::query();
+        $query = Partner::with('images');
 
         // Search functionality
         if ($request->has('search') && $request->search) {
@@ -292,13 +345,19 @@ class PartnerController extends Controller
             });
         }
 
-        // Category filter
-        if ($request->has('category') && $request->category && $request->category !== 'all') {
+        // Category filter (supports multiple categories)
+        if ($request->has('categories') && is_array($request->categories) && !empty($request->categories)) {
+            $query->whereIn('category', $request->categories);
+        } elseif ($request->has('category') && $request->category && $request->category !== 'all') {
+            // Backward compatibility for single category
             $query->where('category', $request->category);
         }
 
-        // City filter
-        if ($request->has('city') && $request->city && $request->city !== 'all') {
+        // City filter (supports multiple cities)
+        if ($request->has('cities') && is_array($request->cities) && !empty($request->cities)) {
+            $query->whereIn('city', $request->cities);
+        } elseif ($request->has('city') && $request->city && $request->city !== 'all') {
+            // Backward compatibility for single city
             $query->where('city', $request->city);
         }
 
@@ -312,7 +371,7 @@ class PartnerController extends Controller
         // For initial load (page 1), also get categories and cities for filters
         $categories = [];
         $cities = [];
-        if ($page == 1 && !$request->has('search') && !$request->has('category') && !$request->has('city')) {
+        if ($page == 1 && !$request->has('search') && !$request->has('category') && !$request->has('city') && !$request->has('categories') && !$request->has('cities')) {
             $allPartners = Partner::all();
             $categories = $allPartners->pluck('category')->unique()->filter()->values()->toArray();
             $cities = $allPartners->pluck('city')->unique()->filter()->values()->toArray();

@@ -1,24 +1,69 @@
 <template>
-<div class="min-h-screen text-white p-2 bg-black" style="background-image: url('/images/bg.jpg'); background-size: contain; background-repeat: no-repeat;">
-    <Navbar :activeSection="activeSection" @change-section="activeSection = $event" />
-    <Overview :isActive="activeSection === 'overview'" @navigate-to-contact="activeSection = 'contact'" />
+  <div class="min-h-auto text-white p-2 bg-black bg-image" fetchpriority="high">
+    <Navbar :activeSection="activeSection" @change-section="changeSection" />
+    <Overview
+      :isActive="activeSection === 'overview'"
+      @navigate-to-contact="() => changeSection('contact')"
+    />
     <ContactForm :isActive="activeSection === 'contact'" />
-    <WhatWeDo :isActive="activeSection === 'whatwedo'"/>
+    <WhatWeDo :isActive="activeSection === 'whatwedo'" />
     <PrivacyPolicy :isActive="activeSection === 'privacy'" />
     <TermsAndConditions :isActive="activeSection === 'terms'" />
-    <Footer @navigate-to="activeSection = $event" />
+    <Footer @navigate-to="changeSection" />
   </div>
 </template>
 
 <script setup>
-import { ref } from "vue";
-import Navbar from "@/components/Navbar.vue";
-import Overview from "@/components/Overview.vue";
-import ContactForm from "@/components/ContactForm.vue";
-import WhatWeDo from "@/components/WhatWeDo.vue";
-import PrivacyPolicy from "@/components/PrivacyPolicy.vue";
-import TermsAndConditions from "@/components/TermsAndConditions.vue";
-import Footer from "@/components/Footer.vue";
+import { ref, onMounted, defineAsyncComponent } from "vue";
+
+const Navbar = defineAsyncComponent(() => import("@/components/Navbar.vue"));
+const Overview = defineAsyncComponent(
+  () => import("@/components/Overview.vue")
+);
+const ContactForm = defineAsyncComponent(
+  () => import("@/components/ContactForm.vue")
+);
+const WhatWeDo = defineAsyncComponent(
+  () => import("@/components/WhatWeDo.vue")
+);
+const PrivacyPolicy = defineAsyncComponent(
+  () => import("@/components/PrivacyPolicy.vue")
+);
+const TermsAndConditions = defineAsyncComponent(
+  () => import("@/components/TermsAndConditions.vue")
+);
+const Footer = defineAsyncComponent(() => import("@/components/Footer.vue"));
 
 const activeSection = ref("overview");
+
+onMounted(() => {
+  const urlParams = new URLSearchParams(window.location.search);
+  const sectionParam = urlParams.get("section");
+
+  if (sectionParam) {
+    const validSections = [
+      "overview",
+      "whatwedo",
+      "contact",
+      "privacy",
+      "terms",
+    ];
+    if (validSections.includes(sectionParam)) {
+      activeSection.value = sectionParam;
+    }
+  }
+});
+
+const changeSection = (section) => {
+  activeSection.value = section;
+
+  const url = new URL(window.location);
+  if (section === "overview") {
+    url.searchParams.delete("section");
+  } else {
+    url.searchParams.set("section", section);
+  }
+
+  window.history.pushState({}, "", url.toString());
+};
 </script>
