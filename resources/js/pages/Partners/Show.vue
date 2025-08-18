@@ -1,4 +1,15 @@
 <template>
+  <Head>
+    <title>{{ meta?.title || `findemich - ${partner?.title}` }}</title>
+    <meta
+      name="description"
+      :content="
+        meta?.description ||
+        `View ${partner?.title} - ${partner?.category} business partner in ${partner?.city}. Contact information, services, and location details available.`
+      "
+    />
+  </Head>
+
   <div
     class="min-h-screen text-white p-2 bg-black"
     style="
@@ -291,7 +302,7 @@
 
 <script setup>
 import { computed, ref, onMounted, onUnmounted } from "vue";
-import { router } from "@inertiajs/vue3";
+import { router, Head } from "@inertiajs/vue3";
 import Button from "@/components/ui/button/Button.vue";
 import Navbar from "@/components/Navbar.vue";
 import Footer from "@/components/Footer.vue";
@@ -303,6 +314,7 @@ import CircumIcons from "@klarr-agency/circum-icons-vue";
 
 const props = defineProps({
   partner: Object,
+  meta: Object,
 });
 
 const currentImageIndex = ref(0);

@@ -24,6 +24,11 @@ class PartnerController extends Controller
 
         return Inertia::render('Partners/Index', [
             'partners' => $partners,
+            'meta' => [
+                'title' => 'findemich - Manage Business Partners',
+                'description' => 'Manage business partner listings, review applications, and maintain partner database with advanced filtering and search tools.',
+                'keywords' => 'partner management, business administration, findemich admin, partner listings'
+            ]
         ]);
     }
 
@@ -35,7 +40,12 @@ class PartnerController extends Controller
         $user = Auth::user();
         
         return Inertia::render('Partners/Create', [
-            'user' => $user->only(['city', 'zip_code', 'latitude', 'longitude'])
+            'user' => $user->only(['city', 'zip_code', 'latitude', 'longitude']),
+            'meta' => [
+                'title' => 'findemich - Add New Business Partner',
+                'description' => 'Add new business partners to the findemich platform. Enter partner details, location data, and business information through our admin form.',
+                'keywords' => 'add partner, new business, partner registration, findemich admin'
+            ]
         ]);
     }
 
@@ -112,6 +122,11 @@ class PartnerController extends Controller
 
         return Inertia::render('Partners/Show', [
             'partner' => $partner,
+            'meta' => [
+                'title' => "findemich - {$partner->title}",
+                'description' => "View detailed business partner information for {$partner->title} in {$partner->city}. Contact details, services, and administrative management options.",
+                'keywords' => "business partner, {$partner->title}, {$partner->city}, {$partner->category}"
+            ]
         ]);
     }
 
@@ -144,6 +159,11 @@ class PartnerController extends Controller
 
         return Inertia::render('Partners/Show', [
             'partner' => $partner,
+            'meta' => [
+                'title' => "findemich - {$partner->title} in {$partner->city}",
+                'description' => "View {$partner->title} - {$partner->category} business partner in {$partner->city}. Contact information, services, and location details available.",
+                'keywords' => "business partner, {$partner->title}, {$partner->city}, {$partner->category}, local services"
+            ]
         ]);
     }
 

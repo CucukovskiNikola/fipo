@@ -19,7 +19,7 @@
               : 'text-[#EDEDEC] hover:border-[#19140035] border border-transparent ',
           ]"
         >
-          Overview
+          Home
         </button>
         <button
           @click="$emit('change-section', 'whatwedo')"
@@ -30,7 +30,7 @@
               : 'text-[#EDEDEC] hover:border-[#19140035] border border-transparent ',
           ]"
         >
-          What We Do
+          About
         </button>
         <button
           @click="$emit('change-section', 'contact')"
@@ -59,7 +59,7 @@
             :href="route('login')"
             class="inline-block rounded-4xl px-5 py-2 text-sm text-[#EDEDEC] bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700"
           >
-            Log in
+            Login
           </Link>
           <!-- <Link
             :href="route('register')"
@@ -76,7 +76,12 @@
       <!-- Mobile Header -->
       <div class="flex items-center justify-between px-4 py-3">
         <!-- Logo -->
-        <img src="/images/logo.svg" alt="Logo" class="w-[120px]" />
+        <img
+          src="/images/logo.svg"
+          alt="Logo"
+          class="w-[120px]"
+          fetchpriority="high"
+        />
 
         <!-- Mobile Menu Button -->
         <button
@@ -132,7 +137,7 @@
                 : 'text-[#EDEDEC] hover:bg-white/10',
             ]"
           >
-            Overview
+            Home
           </button>
           <button
             @click="handleMobileNavClick('whatwedo')"
@@ -143,7 +148,7 @@
                 : 'text-[#EDEDEC] hover:bg-white/10',
             ]"
           >
-            What We Do
+            About
           </button>
           <button
             @click="handleMobileNavClick('contact')"
@@ -172,7 +177,7 @@
               :href="route('login')"
               class="block w-full text-left rounded-4xl px-4 py-3 text-sm text-[#EDEDEC] hover:bg-white/10 transition-colors"
             >
-              Log in
+              Login
             </Link>
             <!-- <Link
               :href="route('register')"

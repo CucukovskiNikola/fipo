@@ -10,8 +10,13 @@
       "Bash(rm:*)",
       "Bash(npm install:*)",
       "Bash(npm search:*)",
-      "Bash(npm info:*)"
+      "Bash(npm info:*)",
+      "Bash(npm run build:*)",
+      "Bash(mkdir:*)",
+      "Bash(node:*)",
+      "Bash(mv:*)"
     ],
-    "deny": []
+    "deny": [],
+    "defaultMode": "acceptEdits"
   }
 }

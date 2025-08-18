@@ -21,6 +21,11 @@ class AuthenticatedSessionController extends Controller
         return Inertia::render('auth/Login', [
             'canResetPassword' => Route::has('password.request'),
             'status' => $request->session()->get('status'),
+            'meta' => [
+                'title' => 'findemich - Sign In',
+                'description' => 'Sign in to your findemich account to access partner management tools, dashboard features, and personalized business networking services.',
+                'keywords' => 'findemich login, sign in, business account, partner management, admin access'
+            ]
         ]);
     }
 

@@ -59,14 +59,14 @@ class DashboardController extends Controller
             [
                 'name' => 'New This Month',
                 'value' => (string) $partnersThisMonth,
-                'icon' => 'plus',
+                'icon' => 'trending-up',
                 'change' => $monthlyChange > 0 ? '+' . $monthlyChange . '%' : ($monthlyChange < 0 ? $monthlyChange . '%' : 'No change'),
                 'changeType' => $monthlyChange > 0 ? 'increase' : ($monthlyChange < 0 ? 'decrease' : 'neutral')
             ],
             [
                 'name' => 'Categories',
                 'value' => (string) $categoriesCount,
-                'icon' => 'tag',
+                'icon' => 'chart-bar',
                 'change' => $categoriesCount > 0 ? $categoriesCount . ' active' : 'No categories',
                 'changeType' => 'neutral'
             ],
@@ -83,7 +83,12 @@ class DashboardController extends Controller
             'stats' => $stats,
             'recentPartners' => $recentPartners,
             'totalUsers' => User::count(),
-            'activeUsers' => User::whereDate('updated_at', '>=', Carbon::now()->subDays(7))->count()
+            'activeUsers' => User::whereDate('updated_at', '>=', Carbon::now()->subDays(7))->count(),
+            'meta' => [
+                'title' => 'findemich - Admin Dashboard',
+                'description' => 'findemich Admin Dashboard - Manage business partners, view analytics, and oversee platform operations with comprehensive admin tools.',
+                'keywords' => 'admin dashboard, business management, partner analytics, findemich administration'
+            ]
         ]);
     }
 }

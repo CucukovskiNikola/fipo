@@ -1,25 +1,50 @@
 <template>
-  <div class="min-h-auto text-white p-2 bg-black bg-image" fetchpriority="high">
+  <Head>
+    <title>
+      {{ meta?.title || 'findemich - Find Local Business Partners' }}
+    </title>
+    <meta
+      name="description"
+      :content="
+        meta?.description || 'Find trusted local business partners near you'
+      "
+    />
+  </Head>
+
+  <div class="min-h-auto text-white p-2 bg-black bg-image">
     <Navbar :activeSection="activeSection" @change-section="changeSection" />
     <Overview
+      v-if="activeSection === 'overview'"
       :isActive="activeSection === 'overview'"
       @navigate-to-contact="() => changeSection('contact')"
     />
-    <ContactForm :isActive="activeSection === 'contact'" />
-    <WhatWeDo :isActive="activeSection === 'whatwedo'" />
-    <PrivacyPolicy :isActive="activeSection === 'privacy'" />
-    <TermsAndConditions :isActive="activeSection === 'terms'" />
-    <Footer @navigate-to="changeSection" />
+    <ContactForm
+      v-if="activeSection === 'contact'"
+      :isActive="activeSection === 'contact'"
+    />
+    <WhatWeDo
+      v-if="activeSection === 'whatwedo'"
+      :isActive="activeSection === 'whatwedo'"
+    />
+    <PrivacyPolicy
+      v-if="activeSection === 'privacy'"
+      :isActive="activeSection === 'privacy'"
+    />
+    <TermsAndConditions
+      v-if="activeSection === 'terms'"
+      :isActive="activeSection === 'terms'"
+    />
+    <Footer v-if="activeSection === 'overview'" @navigate-to="changeSection" />
   </div>
 </template>
 
 <script setup>
 import { ref, onMounted, defineAsyncComponent } from "vue";
+import { Head } from "@inertiajs/vue3";
 
-const Navbar = defineAsyncComponent(() => import("@/components/Navbar.vue"));
-const Overview = defineAsyncComponent(
-  () => import("@/components/Overview.vue")
-);
+import Navbar from "@/components/Navbar.vue";
+import Overview from "@/components/Overview.vue";
+
 const ContactForm = defineAsyncComponent(
   () => import("@/components/ContactForm.vue")
 );
@@ -34,8 +59,9 @@ const TermsAndConditions = defineAsyncComponent(
 );
 const Footer = defineAsyncComponent(() => import("@/components/Footer.vue"));
 
-const activeSection = ref("overview");
+const props = defineProps(["meta", "debug"]);
 
+const activeSection = ref("overview");
 onMounted(() => {
   const urlParams = new URLSearchParams(window.location.search);
   const sectionParam = urlParams.get("section");

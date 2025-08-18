@@ -34,8 +34,41 @@
 
     <title inertia>{{ config('app.name', 'Laravel') }}</title>
 
-    <link rel="preload" as="image" href="{{ asset('images/bg.webp') }}" type="image/webp">
-    <link rel="preload" as="image" href="{{ asset('images/logo.svg') }}" type="image/svg+xml">
+    {{-- SEO Meta Tags --}}
+    @if(isset($page['props']['meta']))
+        <meta name="description" content="{{ $page['props']['meta']['description'] }}">
+        <meta name="keywords" content="{{ $page['props']['meta']['keywords'] ?? 'findemich, business partners, local services, verified companies, business networking' }}">
+        
+        {{-- Open Graph Meta Tags --}}
+        <meta property="og:title" content="{{ $page['props']['meta']['title'] ?? config('app.name') }}">
+        <meta property="og:description" content="{{ $page['props']['meta']['description'] }}">
+        <meta property="og:type" content="website">
+        <meta property="og:url" content="{{ request()->url() }}">
+        <meta property="og:site_name" content="findemich">
+        
+        {{-- Twitter Card Meta Tags --}}
+        <meta name="twitter:card" content="summary">
+        <meta name="twitter:title" content="{{ $page['props']['meta']['title'] ?? config('app.name') }}">
+        <meta name="twitter:description" content="{{ $page['props']['meta']['description'] }}">
+    @else
+        <meta name="description" content="findemich - Connect with trusted local business partners and discover quality services in your area.">
+        <meta name="keywords" content="findemich, business partners, local services, verified companies, business networking">
+        
+        {{-- Default Open Graph --}}
+        <meta property="og:title" content="{{ config('app.name') }}">
+        <meta property="og:description" content="findemich - Connect with trusted local business partners and discover quality services in your area.">
+        <meta property="og:type" content="website">
+        <meta property="og:url" content="{{ request()->url() }}">
+        <meta property="og:site_name" content="findemich">
+        
+        {{-- Default Twitter Card --}}
+        <meta name="twitter:card" content="summary">
+        <meta name="twitter:title" content="{{ config('app.name') }}">
+        <meta name="twitter:description" content="findemich - Connect with trusted local business partners and discover quality services in your area.">
+    @endif
+
+    <link rel="preload" as="image" href="{{ asset('images/bg.webp') }}" type="image/webp" fetchpriority="high">
+    <link rel="preload" as="image" href="{{ asset('images/logo.svg') }}" type="image/svg+xml" fetchpriority="high">
 
     <link rel="icon" href="/favicon.ico" sizes="any">
     <link rel="icon" href="/favicon.svg" type="image/svg+xml">

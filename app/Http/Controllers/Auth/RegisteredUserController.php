@@ -20,7 +20,13 @@ class RegisteredUserController extends Controller
      */
     public function create(): Response
     {
-        return Inertia::render('auth/Register');
+        return Inertia::render('auth/Register', [
+            'meta' => [
+                'title' => 'findemich - Create Account',
+                'description' => 'Create your findemich account to connect with business partners, manage your profile, and access exclusive networking opportunities.',
+                'keywords' => 'findemich register, create account, sign up, business networking, partner registration'
+            ]
+        ]);
     }
 
     /**

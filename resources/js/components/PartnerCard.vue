@@ -37,8 +37,10 @@
           />
         </svg>
       </div>
+    </div>
 
-      <div class="pt-2 pb-2">
+    <CardContent class="p-2">
+      <div>
         <span
           class="inline-flex items-center px-3 py-1 border bg-white/10 backdrop-blur-sm border-white/20 text-white text-xs rounded-2xl"
         >
@@ -46,13 +48,10 @@
           {{ categoryInfo.name }}
         </span>
       </div>
-    </div>
-
-    <CardContent class="p-2">
       <div class="my-3">
-        <h3 class="font-semibold text-lg text-white line-clamp-2 min-h-14">
+        <h1 class="font-semibold text-lg text-white line-clamp-2 min-h-14">
           {{ partner.title }}
-        </h3>
+        </h1>
       </div>
 
       <p class="text-sm text-white mb-3 line-clamp-3 min-h-16">
