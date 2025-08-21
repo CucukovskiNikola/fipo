@@ -199,7 +199,7 @@ const logout = () => {
 
 const closeDropdown = (event?: Event) => {
   // Don't close if clicking on navigation links
-  if (event?.target && (event.target as HTMLElement).closest('a[href]')) {
+  if (event?.target && (event.target as HTMLElement).closest("a[href]")) {
     return;
   }
   showDropdown.value = false;

@@ -179,7 +179,7 @@ const navigationLinks = [
   },
   {
     label: "Home",
-    href: "/",
+    href: route("dashboard"),
   },
 ];
 
@@ -279,11 +279,14 @@ const filterMarkers = () => {
   // Optionally center the map on filtered partners
   if (filteredPartners.value.length > 0) {
     // Calculate center of filtered partners
-    const lats = filteredPartners.value.map((p) => p.latitude);
-    const lngs = filteredPartners.value.map((p) => p.longitude);
-    const centerLat = lats.reduce((sum, lat) => sum + lat, 0) / lats.length;
-    const centerLng = lngs.reduce((sum, lng) => sum + lng, 0) / lngs.length;
-    mapCenter.value = [centerLat, centerLng];
+    const lats = filteredPartners.value.map((p) => p.latitude).filter(lat => !isNaN(lat));
+    const lngs = filteredPartners.value.map((p) => p.longitude).filter(lng => !isNaN(lng));
+    
+    if (lats.length > 0 && lngs.length > 0) {
+      const centerLat = lats.reduce((sum, lat) => sum + lat, 0) / lats.length;
+      const centerLng = lngs.reduce((sum, lng) => sum + lng, 0) / lngs.length;
+      mapCenter.value = [centerLat, centerLng];
+    }
   }
 };
 
@@ -308,12 +311,15 @@ const centerOnPartner = (partner: Partner) => {
 onMounted(() => {
   if (props.partners.length > 0) {
     // Calculate center of all partners
-    const lats = props.partners.map((p) => p.latitude);
-    const lngs = props.partners.map((p) => p.longitude);
-    const centerLat = lats.reduce((sum, lat) => sum + lat, 0) / lats.length;
-    const centerLng = lngs.reduce((sum, lng) => sum + lng, 0) / lngs.length;
-    mapCenter.value = [centerLat, centerLng];
-    mapZoom.value = 10;
+    const lats = props.partners.map((p) => p.latitude).filter(lat => !isNaN(lat));
+    const lngs = props.partners.map((p) => p.longitude).filter(lng => !isNaN(lng));
+    
+    if (lats.length > 0 && lngs.length > 0) {
+      const centerLat = lats.reduce((sum, lat) => sum + lat, 0) / lats.length;
+      const centerLng = lngs.reduce((sum, lng) => sum + lng, 0) / lngs.length;
+      mapCenter.value = [centerLat, centerLng];
+      mapZoom.value = 10;
+    }
   }
 });
 </script>

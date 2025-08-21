@@ -83,19 +83,19 @@
 
             <!-- Description -->
             <div class="md:col-span-2">
-              <Label
+              <label
                 for="description"
                 class="block text-sm font-medium text-gray-300 mb-2"
               >
                 Description <span class="text-red-400">*</span>
-              </Label>
+              </label>
               <Textarea
                 id="description"
                 v-model="form.description"
                 rows="4"
                 required
                 placeholder="Enter partner description"
-                class="w-full rounded-2xl h-40 bg-white/10 border border-white/20 text-white placeholder:text-gray-400 focus:border-white/40 resize-none"
+                class="w-full min-h-[100px] border broder-white/20"
               />
               <InputError :message="errors.description" class="mt-1" />
             </div>

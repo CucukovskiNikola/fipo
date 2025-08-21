@@ -20,6 +20,7 @@ import {
   Clock,
   ChartBar,
   Search,
+  Languages,
 } from "lucide-vue-next";
 import Chart from "primevue/chart";
 
@@ -57,6 +58,7 @@ const iconMap: Record<string, any> = {
   "exclamation-triangle": AlertTriangle,
   "arrow-left": ArrowLeft,
   search: Search,
+  language: Languages,
 };
 
 const icon = computed(() => {

@@ -30,8 +30,13 @@ let markerGroup: L.LayerGroup | null = null
 const initializeMap = () => {
   if (!mapContainer.value) return
 
+  // Validate center coordinates
+  const center: LatLngTuple = props.center && !isNaN(props.center[0]) && !isNaN(props.center[1]) 
+    ? props.center 
+    : [51.505, -0.09] // London as fallback
+
   // Create map
-  map = L.map(mapContainer.value).setView(props.center, props.zoom)
+  map = L.map(mapContainer.value).setView(center, props.zoom)
 
   // Add OpenStreetMap tiles
   L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -68,7 +73,7 @@ watch(() => props.markers, updateMarkers, { deep: true })
 
 // Watch for center changes
 watch(() => props.center, (newCenter) => {
-  if (map) {
+  if (map && newCenter && !isNaN(newCenter[0]) && !isNaN(newCenter[1])) {
     map.setView(newCenter, props.zoom)
   }
 }, { deep: true })

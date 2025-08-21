@@ -1,7 +1,7 @@
 <template>
   <div class="min-h-screen text-white p-2 bg-black bg-image">
     <!-- Navigation -->
-    <DashboardNavbar 
+    <DashboardNavbar
       title="Edit Partner"
       title-icon="home"
       :home-route="route('dashboard')"
@@ -25,13 +25,12 @@
               >
                 Title <span class="text-red-400">*</span>
               </label>
-              <InputText
+              <Input
                 id="title"
                 v-model="form.title"
                 required
                 placeholder="Enter partner title"
-                class="w-full"
-                :invalid="!!errors.title"
+                class="w-full rounded-2xl bg-white/10 border border-white/20 text-white placeholder:text-gray-400 focus:border-white/40"
               />
               <InputError :message="errors.title" class="mt-1" />
             </div>
@@ -44,40 +43,41 @@
               >
                 Name of Owner
               </label>
-              <InputText
+              <Input
                 id="name_of_owner"
                 v-model="form.name_of_owner"
                 placeholder="Enter owner name (optional)"
-                class="w-full"
-                :invalid="!!errors.name_of_owner"
+                class="w-full rounded-2xl bg-white/10 border border-white/20 text-white placeholder:text-gray-400 focus:border-white/40"
               />
               <InputError :message="errors.name_of_owner" class="mt-1" />
             </div>
 
             <!-- Category -->
             <div>
-              <label
+              <Label
                 for="category"
                 class="block text-sm font-medium text-gray-300 mb-2"
               >
                 Category <span class="text-red-400">*</span>
-              </label>
-              <Select
+              </Label>
+              <select
+                id="category"
                 v-model="form.category"
-                :options="categories"
-                option-label="name"
-                option-value="id"
-                placeholder="Select a category"
-                class="w-full"
-                :invalid="!!errors.category"
+                required
+                class="w-full rounded-2xl bg-white/20 border border-white/20 text-white placeholder:text-gray-400 focus:border-white/40 px-3 py-2.5 min-h-9 focus:outline-none focus:ring-2 focus:ring-white/20"
               >
-                <template #option="{ option }">
-                  <div class="flex items-center">
-                    <span class="mr-2">{{ option.icon }}</span>
-                    {{ option.name }}
-                  </div>
-                </template>
-              </Select>
+                <option value="" disabled class="bg-white/10 text-black">
+                  Select a category
+                </option>
+                <option
+                  v-for="category in categories"
+                  :key="category.id"
+                  :value="category.id"
+                  class="!bg-transparent rounded-2xl liquid-glass text-black"
+                >
+                  {{ category.icon }} {{ category.name }}
+                </option>
+              </select>
               <InputError :message="errors.category" class="mt-1" />
             </div>
 
@@ -95,8 +95,7 @@
                 rows="4"
                 required
                 placeholder="Enter partner description"
-                class="w-full"
-                :invalid="!!errors.description"
+                class="w-full min-h-[100px] border border-white/20 rounded-2xl"
               />
               <InputError :message="errors.description" class="mt-1" />
             </div>
@@ -127,7 +126,7 @@
                     <img
                       :src="getImageUrl(image.path)"
                       :alt="partner.title"
-                      class="w-full h-24 object-cover rounded-lg border border-[#e3e3e0]"
+                      class="w-full h-24 object-cover rounded-lg border border-white/20"
                     />
                     <button
                       type="button"
@@ -156,7 +155,7 @@
                 @change="handleImagesUpload"
                 accept="image/jpeg,image/png,image/jpg,image/gif,image/svg+xml"
                 multiple
-                class="block w-full text-sm text-gray-300 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-[#FDFDFC] file:text-white hover:file:bg-[#f8f8f7]"
+                class="block w-full text-sm text-black file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-[#FDFDFC] file:text-white hover:file:bg-[#f8f8f7]"
               />
               <p class="mt-1 text-xs text-gray-300">
                 Optional: Upload up to 15 images for this partner (JPEG, PNG,
@@ -214,13 +213,12 @@
               >
                 City <span class="text-red-400">*</span>
               </label>
-              <InputText
+              <Input
                 id="city"
                 v-model="form.city"
                 required
                 placeholder="Enter city name"
                 class="w-full"
-                :invalid="!!errors.city"
               />
               <InputError :message="errors.city" class="mt-1" />
             </div>
@@ -232,13 +230,12 @@
               >
                 Zip Code <span class="text-red-400">*</span>
               </label>
-              <InputText
+              <Input
                 id="zip_code"
                 v-model="form.zip_code"
                 required
                 placeholder="Enter zip code"
                 class="w-full"
-                :invalid="!!errors.zip_code"
               />
               <InputError :message="errors.zip_code" class="mt-1" />
             </div>
@@ -250,16 +247,16 @@
               >
                 Latitude <span class="text-red-400">*</span>
               </label>
-              <InputNumber
+              <Input
                 id="latitude"
                 v-model="form.latitude"
-                :min="-90"
-                :max="90"
-                :fraction-digits="8"
+                type="number"
+                step="0.00000001"
+                min="-90"
+                max="90"
                 required
                 placeholder="Enter latitude"
                 class="w-full"
-                :invalid="!!errors.latitude"
               />
               <InputError :message="errors.latitude" class="mt-1" />
             </div>
@@ -271,16 +268,16 @@
               >
                 Longitude <span class="text-red-400">*</span>
               </label>
-              <InputNumber
+              <Input
                 id="longitude"
                 v-model="form.longitude"
-                :min="-180"
-                :max="180"
-                :fraction-digits="8"
+                type="number"
+                step="0.00000001"
+                min="-180"
+                max="180"
                 required
                 placeholder="Enter longitude"
                 class="w-full"
-                :invalid="!!errors.longitude"
               />
               <InputError :message="errors.longitude" class="mt-1" />
             </div>
@@ -313,21 +310,13 @@
           <div class="flex items-center justify-end space-x-4">
             <Button
               type="button"
-              severity="secondary"
-              outlined
-              @click="$inertia.visit(route('partners.index'))"
+              variant="default"
+              @click="router.visit(route('partners.index'))"
             >
               Cancel
             </Button>
-            <Button
-              type="submit"
-              :loading="processing"
-              :disabled="processing"
-              class="min-w-32"
-            >
-              <template #icon>
-                <Icon name="pencil" class="h-4 w-4" />
-              </template>
+            <Button type="submit" :disabled="processing" class="min-w-32">
+              <Icon name="pencil" class="h-4 w-4 mr-2" />
               {{ processing ? "Updating..." : "Update Partner" }}
             </Button>
           </div>
@@ -338,42 +327,38 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch, onMounted, onUnmounted } from "vue";
-import { useForm, Link, router, usePage } from "@inertiajs/vue3";
+import { ref, watch, onMounted } from "vue";
+import { useForm, router, usePage } from "@inertiajs/vue3";
 import { route } from "ziggy-js";
-import AppLayout from "@/layouts/AppLayout.vue";
-import Heading from "@/components/Heading.vue";
 import Icon from "@/components/Icon.vue";
 import DashboardNavbar from "@/components/DashboardNavbar.vue";
 import InputError from "@/components/InputError.vue";
 import LocationPicker from "@/components/LocationPicker.vue";
 import categories from "@/data/categories.json";
+import { cn } from "@/lib/utils";
 
 const page = usePage();
-const user = page.props.auth.user as User;
 
 // Navigation configuration
 const navigationLinks = [
   {
-    label: 'Partners',
-    href: route('partners.index')
+    label: "Partners",
+    href: route("partners.index"),
   },
   {
-    label: 'Create Partner',
-    href: route('partners.create')
+    label: "Create Partner",
+    href: route("partners.create"),
   },
   {
-    label: 'Home',
-    href: '/'
-  }
+    label: "Home",
+    href: route("dashboard"),
+  },
 ];
 
-// PrimeVue Components
-import InputText from "primevue/inputtext";
-import Select from "primevue/select";
-import Textarea from "primevue/textarea";
-import InputNumber from "primevue/inputnumber";
-import Button from "primevue/button";
+// Shadcn Components
+import Input from "@/components/ui/input/Input.vue";
+import Textarea from "@/components/ui/textarea/Textarea.vue";
+import Button from "@/components/ui/button/Button.vue";
 
 interface User {
   id: number;

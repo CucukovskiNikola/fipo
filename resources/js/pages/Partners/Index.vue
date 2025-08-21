@@ -18,22 +18,6 @@
           this central hub.
         </p>
       </div>
-      <!-- Success Message -->
-      <div
-        v-if="$page.props.flash?.success"
-        class="liquid-glass text-white rounded-4xl p-4 mt-4 shadow-lg"
-      >
-        <div class="flex">
-          <div class="rounded-full bg-green-500/20 p-2">
-            <Icon name="check-circle" class="h-5 w-5 text-green-400" />
-          </div>
-          <div class="ml-3">
-            <p class="text-sm font-medium text-white">
-              {{ $page.props.flash.success }}
-            </p>
-          </div>
-        </div>
-      </div>
 
       <!-- Partners Grid -->
       <div
@@ -52,7 +36,7 @@
             class="relative h-48 overflow-hidden group"
           >
             <div
-              :ref="(el) => (imageContainers[partner.id] = el)"
+              :ref="(el) => (imageContainers[partner.id] = el as HTMLElement)"
               class="flex overflow-x-auto h-full scrollbar-hide snap-x snap-mandatory"
               style="scrollbar-width: none; -ms-overflow-style: none"
             >
@@ -135,7 +119,7 @@
                   <Icon name="pencil" class="h-4 w-4" />
                 </Link>
                 <button
-                  @click.stop="confirmDelete(partner)"
+                  @click.stop.prevent="confirmDelete(partner)"
                   class="text-red-400 hover:text-red-300 transition-colors"
                 >
                   <Icon name="trash" class="h-4 w-4" />
@@ -300,11 +284,9 @@
 import { ref, onMounted, onUnmounted } from "vue";
 import { Link, router, usePage } from "@inertiajs/vue3";
 import { route } from "ziggy-js";
-import AppLayout from "@/layouts/AppLayout.vue";
 import Icon from "@/components/Icon.vue";
 import DashboardNavbar from "@/components/DashboardNavbar.vue";
 import categories from "@/data/categories.json";
-import { type User } from "@/types";
 
 const page = usePage();
 const user = page.props.auth.user as User;
@@ -321,7 +303,7 @@ const navigationLinks = [
   },
   {
     label: "Home",
-    href: "/",
+    href: route("dashboard"),
   },
 ];
 
