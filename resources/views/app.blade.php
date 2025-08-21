@@ -52,27 +52,56 @@
         <meta name="twitter:description" content="{{ $page['props']['meta']['description'] }}">
     @else
         <meta name="description" content="findemich - Connect with trusted local business partners and discover quality services in your area.">
-        <meta name="keywords" content="findemich, business partners, local services, verified companies, business networking">
-        
+        <meta name="keywords" content="local business partners, verified companies, business networking, service providers, business directory">
+
         {{-- Default Open Graph --}}
         <meta property="og:title" content="{{ config('app.name') }}">
         <meta property="og:description" content="findemich - Connect with trusted local business partners and discover quality services in your area.">
         <meta property="og:type" content="website">
         <meta property="og:url" content="{{ request()->url() }}">
         <meta property="og:site_name" content="findemich">
+        <meta property="og:image" content="{{ asset('/og_image.webp') }}">
+        <meta property="og:image:width" content="1200">
+        <meta property="og:image:height" content="630">
+        <meta property="og:locale" content="{{ str_replace('_', '-', app()->getLocale()) }}">
         
         {{-- Default Twitter Card --}}
         <meta name="twitter:card" content="summary">
         <meta name="twitter:title" content="{{ config('app.name') }}">
         <meta name="twitter:description" content="findemich - Connect with trusted local business partners and discover quality services in your area.">
+        <meta name="twitter:image" content="{{ asset('/og_image.webp') }}">
     @endif
+
+    <!-- Standard favicon -->
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+
+<!-- Apple Touch Icon -->
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+
+<!-- Android/Chrome -->
+<link rel="manifest" href="/site.webmanifest">
+
+<!-- Safari pinned tab -->
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+<!-- Microsoft -->
+<meta name="msapplication-TileColor" content="#2b5797">
+<meta name="msapplication-TileImage" content="/mstile-150x150.png">
+
+<!-- Theme color -->
+<meta name="theme-color" content="#ffffff">
+
+<link rel="canonical" href="{{ request()->url() }}">
+
+
 
     <link rel="preload" as="image" href="{{ asset('images/bg.webp') }}" type="image/webp" fetchpriority="high">
     <link rel="preload" as="image" href="{{ asset('images/logo.svg') }}" type="image/svg+xml" fetchpriority="high">
 
-    <link rel="icon" href="/favicon.ico" sizes="any">
-    <link rel="icon" href="/favicon.svg" type="image/svg+xml">
-    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+
 
     <link rel="preconnect" href="https://fonts.bunny.net">
 
