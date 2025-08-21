@@ -46,6 +46,14 @@ class HandleInertiaRequests extends Middleware
             'auth' => [
                 'user' => $request->user(),
             ],
+            'translations' => [
+                'common' => __('common'),
+                'business' => __('business'),
+                'contact' => __('contact'),
+                'auth' => __('auth'),
+                'home' => __('home'),
+            ],
+            'locale' => app()->getLocale(),
             'ziggy' => [
                 ...(new Ziggy)->toArray(),
                 'location' => $request->url(),

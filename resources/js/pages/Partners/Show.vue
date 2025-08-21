@@ -406,7 +406,7 @@ const initializeMap = () => {
           <p class="text-sm text-gray-700">${props.partner.city}, ${props.partner.zip_code}</p>
           <a href="https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}" 
              target="_blank" 
-             class="inline-block mt-2 px-3 py-1 bg-blue-600 text-white text-xs rounded-full hover:bg-blue-700 transition-colors">
+             class="inline-block mt-2 px-3 py-1 bg-white/10 text-white text-xs rounded-full hover:bg-white/20 transition-colors">
             Get Directions
           </a>
         </div>

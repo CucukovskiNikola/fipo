@@ -1,7 +1,9 @@
 <script setup lang="ts">
 import Button from "./ui/button/Button.vue";
+import { useTranslations } from "@/composables/useTranslations";
 
 const emit = defineEmits(["navigate-to-contact"]);
+const { trans } = useTranslations();
 
 const handleContactClick = () => {
   emit("navigate-to-contact");
@@ -12,22 +14,15 @@ const handleContactClick = () => {
   <div class="mb-12 text-center bg-[rgba(3,3,3,0.8)] rounded-3xl p-2">
     <div class="max-w-4xl mx-auto p-5">
       <h1 class="text-4xl md:text-5xl font-bold text-white mb-6 leading-tight">
-        Boost Your Business Across
-        <span
-          class="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600"
-          >Germany</span
-        >
+        {{ trans('home.boost_business_title', { country: trans('home.germany') }) }}
       </h1>
 
       <p
         class="text-base lg:text-xl text-white mb-8 leading-relaxed max-w-3xl mx-auto"
       >
-        Get your restaurant, shop, or service noticed! For a simple fee, we'll
-        feature your business on our platform, alongside others, and promote it
-        with
-        <span class="font-semibold text-blue-600">free targeted ads</span>
-        on Facebook and Instagram. Expand your reach, attract more customers,
-        and grow your brand effortlessly.
+        {{ trans('home.hero_description_part1') }}
+        <span class="font-semibold text-blue-600">{{ trans('home.free_targeted_ads') }}</span>
+        {{ trans('home.hero_description_part2') }}
       </p>
 
       <div class="flex flex-col md:flex-row items-center justify-center gap-6">
@@ -37,7 +32,7 @@ const handleContactClick = () => {
           class="cursor-pointer"
           @click="handleContactClick"
         >
-          Contact Us
+          {{ trans('home.contact_us_button') }}
           <i class="pi pi-phone mr-2"></i>
         </Button>
 
@@ -64,8 +59,8 @@ const handleContactClick = () => {
             />
           </div>
           <div class="text-left">
-            <p class="text-sm font-semibold text-white">Join thousands of</p>
-            <p class="text-sm font-semibold text-blue-600">business partners</p>
+            <p class="text-sm font-semibold text-white">{{ trans('home.join_thousands') }}</p>
+            <p class="text-sm font-semibold text-blue-600">{{ trans('home.business_partners') }}</p>
           </div>
         </div>
       </div>

@@ -269,7 +269,8 @@ const formatTimeAgo = (dateString: string) => {
               <div class="flex items-center space-x-3">
                 <Icon name="check-circle" class="h-5 w-5 text-green-400" />
                 <span class="text-sm font-medium text-white"
-                  >Partner System</span
+                  >Partner
+                                    System</span
                 >
               </div>
               <span class="text-xs text-gray-300">Operational</span>
@@ -289,7 +290,8 @@ const formatTimeAgo = (dateString: string) => {
               <div class="flex items-center space-x-3">
                 <Icon name="clock" class="h-5 w-5 text-purple-400" />
                 <span class="text-sm font-medium text-white"
-                  >Active This Week</span
+                  >Active This
+                                    Week</span
                 >
               </div>
               <span class="text-xs text-gray-300">{{ props.activeUsers }}</span>

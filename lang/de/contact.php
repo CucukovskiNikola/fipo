@@ -1,0 +1,26 @@
+<?php
+
+return [
+    'contact_us' => 'Kontaktieren Sie uns',
+    'get_in_touch' => 'Nehmen Sie Kontakt auf',
+    'contact_form' => 'Kontaktformular',
+    'full_name' => 'Vollständiger Name',
+    'full_name_placeholder' => 'Geben Sie Ihren vollständigen Namen ein',
+    'email_address' => 'E-Mail-Adresse',
+    'email_address_placeholder' => 'Geben Sie Ihre E-Mail-Adresse ein',
+    'subject' => 'Betreff',
+    'subject_placeholder' => 'Worum geht es?',
+    'message' => 'Nachricht',
+    'message_placeholder' => 'Erzählen Sie uns mehr über Ihre Anfrage...',
+    'send_message' => 'Nachricht senden',
+    'message_sent' => 'Nachricht gesendet',
+    'message_sent_success' => 'Ihre Nachricht wurde erfolgreich gesendet. Wir werden uns bald bei Ihnen melden.',
+    'message_error' => 'Fehler beim Senden der Nachricht. Bitte versuchen Sie es erneut.',
+    'required_field' => 'Dieses Feld ist erforderlich',
+    'invalid_email' => 'Bitte geben Sie eine gültige E-Mail-Adresse ein',
+    'phone_number' => 'Telefonnummer',
+    'company' => 'Unternehmen',
+    'captcha_answer_placeholder' => 'Geben Sie Ihre Antwort ein',
+    'security_check' => 'Sicherheitsprüfung: Was ist :question? *',
+    'contact_description' => 'Bereit, Ihr Unternehmen zu bewerben oder lokale Partner zu finden? Wir würden uns freuen, von Ihnen zu hören. Senden Sie uns eine Nachricht und wir melden uns so schnell wie möglich bei Ihnen zurück.',
+];

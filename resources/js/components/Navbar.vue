@@ -19,7 +19,7 @@
               : 'text-[#EDEDEC] hover:border-[#19140035] border border-transparent ',
           ]"
         >
-          Home
+          {{ trans('common.home') }}
         </button>
         <button
           @click="$emit('change-section', 'whatwedo')"
@@ -30,7 +30,7 @@
               : 'text-[#EDEDEC] hover:border-[#19140035] border border-transparent ',
           ]"
         >
-          About
+          {{ trans('common.about') }}
         </button>
         <button
           @click="$emit('change-section', 'contact')"
@@ -41,25 +41,26 @@
               : 'text-[#EDEDEC] hover:border-[#19140035] border border-transparent ',
           ]"
         >
-          Contact
+          {{ trans('common.contact') }}
         </button>
       </div>
 
-      <!-- Auth Links -->
+      <!-- Language Switcher & Auth Links -->
       <div class="flex items-center justify-end gap-4">
+        <LanguageSwitcher />
         <Link
           v-if="$page.props.auth.user"
           :href="route('dashboard')"
           class="inline-block rounded-4xl px-5 py-2 text-sm leading-normal text-[#EDEDEC] hover:border-[#1915014a]"
         >
-          Dashboard
+          {{ trans('common.dashboard') }}
         </Link>
         <template v-else>
           <Link
             :href="route('login')"
             class="inline-block rounded-4xl px-5 py-2 text-sm text-[#EDEDEC] bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700"
           >
-            Login
+            {{ trans('common.login') }}
           </Link>
           <!-- <Link
             :href="route('register')"
@@ -137,7 +138,7 @@
                 : 'text-[#EDEDEC] hover:bg-white/10',
             ]"
           >
-            Home
+            {{ trans('common.home') }}
           </button>
           <button
             @click="handleMobileNavClick('whatwedo')"
@@ -148,7 +149,7 @@
                 : 'text-[#EDEDEC] hover:bg-white/10',
             ]"
           >
-            About
+            {{ trans('common.about') }}
           </button>
           <button
             @click="handleMobileNavClick('contact')"
@@ -159,8 +160,15 @@
                 : 'text-[#EDEDEC] hover:bg-white/10',
             ]"
           >
-            Contact
+            {{ trans('common.contact') }}
           </button>
+        </div>
+
+        <!-- Language Switcher -->
+        <div class="border-t border-white/10 pt-3 pb-3">
+          <div class="px-4">
+            <LanguageSwitcher />
+          </div>
         </div>
 
         <!-- Auth Links -->
@@ -170,14 +178,14 @@
             :href="route('dashboard')"
             class="block w-full text-left rounded-4xl px-4 py-3 text-sm text-[#EDEDEC] hover:bg-white/10 transition-colors"
           >
-            Dashboard
+            {{ trans('common.dashboard') }}
           </Link>
           <template v-else>
             <Link
               :href="route('login')"
               class="block w-full text-left rounded-4xl px-4 py-3 text-sm text-[#EDEDEC] hover:bg-white/10 transition-colors"
             >
-              Login
+              {{ trans('common.login') }}
             </Link>
             <!-- <Link
               :href="route('register')"
@@ -195,12 +203,15 @@
 <script setup>
 import { ref } from "vue";
 import { Link } from "@inertiajs/vue3";
+import { useTranslations } from "@/composables/useTranslations";
+import LanguageSwitcher from "@/components/LanguageSwitcher.vue";
 
 const props = defineProps({
   activeSection: String,
 });
 
 const emit = defineEmits(["change-section"]);
+const { trans } = useTranslations();
 
 // Mobile menu state
 const isMobileMenuOpen = ref(false);

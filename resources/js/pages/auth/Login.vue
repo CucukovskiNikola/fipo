@@ -8,6 +8,9 @@ import { Label } from "@/components/ui/label";
 import AuthBase from "@/layouts/AuthLayout.vue";
 import { Head, useForm } from "@inertiajs/vue3";
 import { LoaderCircle } from "lucide-vue-next";
+import { useTranslations } from "@/composables/useTranslations";
+
+const { trans } = useTranslations();
 
 defineProps<{
   status?: string;
@@ -34,16 +37,16 @@ const submit = () => {
 
 <template>
   <AuthBase
-    title="Log in to your account"
-    description="Enter your email and password below to log in"
+    :title="trans('auth.login_title')"
+    :description="trans('auth.login_description')"
   >
     <Head>
-      <title>{{ meta?.title || "findemich - Sign In" }}</title>
+      <title>{{ meta?.title || trans('auth.login_meta_title') }}</title>
       <meta
         name="description"
         :content="
           meta?.description ||
-          'Sign in to your findemich account to access partner management tools, dashboard features, and personalized business networking services.'
+          trans('auth.login_meta_description')
         "
       />
     </Head>
@@ -58,7 +61,7 @@ const submit = () => {
     <form @submit.prevent="submit" class="flex flex-col gap-6">
       <div class="grid gap-6">
         <div class="grid gap-2">
-          <Label for="email">Email address</Label>
+          <Label for="email">{{ trans('auth.email') }}</Label>
           <Input
             id="email"
             type="email"
@@ -67,21 +70,21 @@ const submit = () => {
             :tabindex="1"
             autocomplete="email"
             v-model="form.email"
-            placeholder="email@example.com"
+            :placeholder="trans('auth.email_placeholder')"
           />
           <InputError :message="form.errors.email" />
         </div>
 
         <div class="grid gap-2">
           <div class="flex items-center justify-between">
-            <Label for="password">Password</Label>
+            <Label for="password">{{ trans('auth.password') }}</Label>
             <TextLink
               v-if="canResetPassword"
               :href="route('password.request')"
               class="text-sm"
               :tabindex="5"
             >
-              Forgot password?
+              {{ trans('auth.forgot_password') }}
             </TextLink>
           </div>
           <Input
@@ -91,7 +94,7 @@ const submit = () => {
             :tabindex="2"
             autocomplete="current-password"
             v-model="form.password"
-            placeholder="Password"
+            :placeholder="trans('auth.password_placeholder')"
           />
           <InputError :message="form.errors.password" />
         </div>
@@ -99,7 +102,7 @@ const submit = () => {
         <div class="flex items-center justify-between">
           <Label for="remember" class="flex items-center space-x-3">
             <Checkbox id="remember" v-model="form.remember" :tabindex="3" />
-            <span>Remember me</span>
+            <span>{{ trans('auth.remember_me') }}</span>
           </Label>
         </div>
 
@@ -110,13 +113,13 @@ const submit = () => {
           :disabled="form.processing"
         >
           <LoaderCircle v-if="form.processing" class="h-4 w-4 animate-spin" />
-          Log in
+          {{ trans('auth.login') }}
         </Button>
       </div>
 
       <div class="text-center text-sm text-muted-foreground">
-        Don't have an account?
-        <TextLink :href="route('register')" :tabindex="5">Sign up</TextLink>
+        {{ trans('auth.not_registered') }}
+        <TextLink :href="route('register')" :tabindex="5">{{ trans('auth.register') }}</TextLink>
       </div>
     </form>
   </AuthBase>

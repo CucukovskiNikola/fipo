@@ -30,10 +30,10 @@ export default defineConfig({
         }),
     ],
     server: {
-        host: 'localhost',
+        host: 'fipoo.test',
         port: 5173,
         hmr: {
-            host: 'localhost',
+            host: 'fipoo.test',
         },
     },
     resolve: {

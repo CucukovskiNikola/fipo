@@ -7,6 +7,9 @@ import { Label } from "@/components/ui/label";
 import AuthBase from "@/layouts/AuthLayout.vue";
 import { Head, useForm } from "@inertiajs/vue3";
 import { LoaderCircle } from "lucide-vue-next";
+import { useTranslations } from "@/composables/useTranslations";
+
+const { trans } = useTranslations();
 
 defineProps<{
   meta?: {
@@ -32,16 +35,16 @@ const submit = () => {
 
 <template>
   <AuthBase
-    title="Create an account"
-    description="Enter your details below to create your account"
+    :title="trans('auth.register_title')"
+    :description="trans('auth.register_description')"
   >
     <Head>
-      <title>{{ meta?.title || "findemich - Create Account" }}</title>
+      <title>{{ meta?.title || trans('auth.register_meta_title') }}</title>
       <meta
         name="description"
         :content="
           meta?.description ||
-          'Create your findemich account to connect with business partners, manage your profile, and access exclusive networking opportunities.'
+          trans('auth.register_meta_description')
         "
       />
     </Head>
@@ -49,7 +52,7 @@ const submit = () => {
     <form @submit.prevent="submit" class="flex flex-col gap-6">
       <div class="grid gap-6">
         <div class="grid gap-2">
-          <Label for="name">Name</Label>
+          <Label for="name">{{ trans('auth.name') }}</Label>
           <Input
             id="name"
             type="text"
@@ -58,13 +61,13 @@ const submit = () => {
             :tabindex="1"
             autocomplete="name"
             v-model="form.name"
-            placeholder="Full name"
+            :placeholder="trans('auth.full_name_placeholder')"
           />
           <InputError :message="form.errors.name" />
         </div>
 
         <div class="grid gap-2">
-          <Label for="email">Email address</Label>
+          <Label for="email">{{ trans('auth.email') }}</Label>
           <Input
             id="email"
             type="email"
@@ -72,13 +75,13 @@ const submit = () => {
             :tabindex="2"
             autocomplete="email"
             v-model="form.email"
-            placeholder="email@example.com"
+            :placeholder="trans('auth.email_placeholder')"
           />
           <InputError :message="form.errors.email" />
         </div>
 
         <div class="grid gap-2">
-          <Label for="password">Password</Label>
+          <Label for="password">{{ trans('auth.password') }}</Label>
           <Input
             id="password"
             type="password"
@@ -86,13 +89,13 @@ const submit = () => {
             :tabindex="3"
             autocomplete="new-password"
             v-model="form.password"
-            placeholder="Password"
+            :placeholder="trans('auth.password_placeholder')"
           />
           <InputError :message="form.errors.password" />
         </div>
 
         <div class="grid gap-2">
-          <Label for="password_confirmation">Confirm password</Label>
+          <Label for="password_confirmation">{{ trans('auth.confirm_password') }}</Label>
           <Input
             id="password_confirmation"
             type="password"
@@ -100,7 +103,7 @@ const submit = () => {
             :tabindex="4"
             autocomplete="new-password"
             v-model="form.password_confirmation"
-            placeholder="Confirm password"
+            :placeholder="trans('auth.confirm_password_placeholder')"
           />
           <InputError :message="form.errors.password_confirmation" />
         </div>
@@ -112,17 +115,17 @@ const submit = () => {
           :disabled="form.processing"
         >
           <LoaderCircle v-if="form.processing" class="h-4 w-4 animate-spin" />
-          Create account
+          {{ trans('auth.create_account') }}
         </Button>
       </div>
 
       <div class="text-center text-sm text-muted-foreground">
-        Already have an account?
+        {{ trans('auth.already_registered') }}
         <TextLink
           :href="route('login')"
           class="underline underline-offset-4"
           :tabindex="6"
-          >Log in</TextLink
+          >{{ trans('auth.login') }}</TextLink
         >
       </div>
     </form>

@@ -31,35 +31,31 @@
         <!-- Right side - Text -->
         <div class="space-y-6 flex flex-col justify-center">
           <h2 class="text-3xl md:text-4xl font-bold text-white leading-tight">
-            Free 
             <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600">
-              Meta Ads
+              {{ trans('home.free_meta_ads') }}
             </span>
-            for Your Business
           </h2>
           
           <p class="text-lg text-gray-300 leading-relaxed">
-            We offer you <strong class="text-white">FREE Meta Ads</strong> campaigns on Facebook and Instagram 
-            to boost your business visibility. Our professional team creates targeted advertisements 
-            that reach your ideal customers in your local area.
+            {{ trans('home.meta_ads_description') }}
           </p>
           
           <div class="space-y-3">
             <div class="flex items-center space-x-3">
               <div class="w-2 h-2 bg-blue-500 rounded-full"></div>
-              <span class="text-gray-300">Professional ad design and copywriting</span>
+              <span class="text-gray-300">{{ trans('home.professional_ad_design') }}</span>
             </div>
             <div class="flex items-center space-x-3">
               <div class="w-2 h-2 bg-purple-500 rounded-full"></div>
-              <span class="text-gray-300">Targeted audience based on location and interests</span>
+              <span class="text-gray-300">{{ trans('home.targeted_audience') }}</span>
             </div>
             <div class="flex items-center space-x-3">
               <div class="w-2 h-2 bg-blue-500 rounded-full"></div>
-              <span class="text-gray-300">Monthly performance reports and optimization</span>
+              <span class="text-gray-300">{{ trans('home.monthly_reports') }}</span>
             </div>
             <div class="flex items-center space-x-3">
               <div class="w-2 h-2 bg-purple-500 rounded-full"></div>
-              <span class="text-gray-300">No additional cost - included with your listing</span>
+              <span class="text-gray-300">{{ trans('home.no_additional_cost') }}</span>
             </div>
           </div>
           
@@ -68,7 +64,7 @@
               <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 24 24">
                 <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
               </svg>
-              Learn More About Meta Ads
+              {{ trans('home.learn_more_meta_ads') }}
             </Button>
           </div>
         </div>
@@ -86,13 +82,12 @@
           <!-- Section Header -->
           <div class="text-center mb-12">
             <h2 class="text-4xl md:text-5xl font-bold text-white mb-4">
-              What We 
               <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400">
-                Deliver
+                {{ trans('home.what_we_deliver') }}
               </span>
             </h2>
             <p class="text-xl text-gray-300 max-w-2xl mx-auto">
-              Comprehensive solutions to elevate your business presence and connect you with the right audience
+              {{ trans('home.what_we_deliver_description') }}
             </p>
           </div>
 
@@ -163,8 +158,8 @@
                 </div>
               </div>
               <div class="text-left">
-                <p class="text-white font-semibold">Ready to grow your business?</p>
-                <p class="text-gray-300 text-sm">Join thousands of successful partners</p>
+                <p class="text-white font-semibold">{{ trans('home.ready_to_grow') }}</p>
+                <p class="text-gray-300 text-sm">{{ trans('home.join_successful_partners') }}</p>
               </div>
             </div>
           </div>
@@ -176,30 +171,34 @@
 </template>
 
 <script setup>
+import { computed } from "vue";
 import Button from "./ui/button/Button.vue";
+import { useTranslations } from "@/composables/useTranslations";
 
 const props = defineProps({
   isActive: Boolean,
 });
 
-const aboutCards = [
+const { trans } = useTranslations();
+
+const aboutCards = computed(() => [
   {
-    title: "Find Partners",
-    description: "Discover local businesses and partners in your area to collaborate and grow together. Build meaningful connections that drive mutual success.",
+    title: trans('home.find_partners_title'),
+    description: trans('home.find_partners_desc'),
   },
   {
-    title: "Promote Your Business", 
-    description: "List your business and reach potential customers in your local community. Increase visibility and attract your target audience effectively.",
+    title: trans('home.promote_business_title'), 
+    description: trans('home.promote_business_desc'),
   },
   {
-    title: "Local Network",
-    description: "Build connections with local entrepreneurs and expand your business network. Create partnerships that open new opportunities.",
+    title: trans('home.local_network_title'),
+    description: trans('home.local_network_desc'),
   },
   {
-    title: "Business Growth",
-    description: "Access resources and opportunities to help your business thrive in the local market. Scale your operations with confidence.",
+    title: trans('home.business_growth_title'),
+    description: trans('home.business_growth_desc'),
   },
-];
+]);
 
 // Helper function to get service icons
 const getServiceIcon = (index) => {
@@ -210,10 +209,10 @@ const getServiceIcon = (index) => {
 // Helper function to get service features
 const getServiceFeatures = (index) => {
   const features = [
-    ['Partner Matching', 'Collaboration Tools', 'Trust Network'],
-    ['Digital Marketing', 'Local Visibility', 'Target Audience'],
-    ['Community Access', 'Business Events', 'Networking Hub'],
-    ['Analytics Dashboard', 'Growth Metrics', 'Success Tracking']
+    [trans('home.partner_matching'), trans('home.collaboration_tools'), trans('home.trust_network')],
+    [trans('home.digital_marketing'), trans('home.local_visibility'), trans('home.target_audience')],
+    [trans('home.community_access'), trans('home.business_events'), trans('home.networking_hub')],
+    [trans('home.analytics_dashboard'), trans('home.growth_metrics'), trans('home.success_tracking')]
   ];
   return features[index] || [];
 };

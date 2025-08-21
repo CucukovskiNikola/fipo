@@ -1,0 +1,28 @@
+<?php
+
+return [
+    'contact_us' => 'Contact Us',
+    'get_in_touch' => 'Get in Touch',
+    'contact_form' => 'Contact Form',
+    'full_name' => 'Full Name',
+    'email_address' => 'Email Address',
+    'subject' => 'Subject',
+    'message' => 'Message',
+    'send_message' => 'Send Message',
+    'message_sent' => 'Message Sent',
+    'message_sent_success' => 'Your message has been sent successfully. We will get back to you soon.',
+    'message_error' => 'Error sending message. Please try again.',
+    'required_field' => 'This field is required',
+    'invalid_email' => 'Please enter a valid email address',
+    'phone_number' => 'Phone Number',
+    'company' => 'Company',
+    'full_name_placeholder' => 'Enter your full name',
+    'email_address_placeholder' => 'Enter your email address',
+    'subject_placeholder' => 'What is this about?',
+    'message_placeholder' => 'Tell us more about your inquiry...',
+    'security_check' => 'Security Check: What is :question? *',
+    'captcha_answer_placeholder' => 'Enter your answer',
+    'phone_number_placeholder' => 'Enter your phone number (optional)',
+    'company_placeholder' => 'Enter your company name (optional)',
+    'contact_description' => 'Ready to promote your business or find local partners? We would love to hear from you. Send us a message and we will get back to you as soon as possible.',
+];

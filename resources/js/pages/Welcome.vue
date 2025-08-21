@@ -1,17 +1,17 @@
 <template>
   <Head>
     <title>
-      {{ meta?.title || 'findemich - Find Local Business Partners' }}
+      {{ meta?.title || trans('business.find_local_partners') + ' - findemich' }}
     </title>
     <meta
       name="description"
       :content="
-        meta?.description || 'Find trusted local business partners near you'
+        meta?.description || trans('business.find_partners_near_you')
       "
     />
   </Head>
 
-  <div class="min-h-auto text-white p-2 bg-black bg-image">
+  <div class="min-h-screen text-white p-2 bg-black bg-image">
     <Navbar :activeSection="activeSection" @change-section="changeSection" />
     <Overview
       v-if="activeSection === 'overview'"
@@ -41,6 +41,7 @@
 <script setup>
 import { ref, onMounted, defineAsyncComponent } from "vue";
 import { Head } from "@inertiajs/vue3";
+import { useTranslations } from "@/composables/useTranslations";
 
 import Navbar from "@/components/Navbar.vue";
 import Overview from "@/components/Overview.vue";
@@ -60,6 +61,7 @@ const TermsAndConditions = defineAsyncComponent(
 const Footer = defineAsyncComponent(() => import("@/components/Footer.vue"));
 
 const props = defineProps(["meta", "debug"]);
+const { trans } = useTranslations();
 
 const activeSection = ref("overview");
 onMounted(() => {

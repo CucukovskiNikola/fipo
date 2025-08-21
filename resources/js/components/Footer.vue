@@ -16,9 +16,7 @@
             />
           </div>
           <p class="text-gray-300 text-sm leading-relaxed mb-6 max-w-md">
-            Connect local businesses across Germany with our comprehensive
-            platform. We help you grow through partnerships, visibility, and
-            free Meta advertising campaigns.
+            {{ trans('home.footer_description') }}
           </p>
 
           <!-- Social Media -->
@@ -51,14 +49,14 @@
 
         <!-- Quick Links -->
         <div>
-          <h1 class="text-white font-semibold mb-4">Quick Links</h1>
+          <h1 class="text-white font-semibold mb-4">{{ trans('home.quick_links') }}</h1>
           <ul class="space-y-2">
             <li>
               <button
                 @click="handleNavigate('overview')"
                 class="text-gray-300 hover:text-white text-sm transition-colors hover:translate-x-1 transform duration-200"
               >
-                Overview
+                {{ trans('home.overview') }}
               </button>
             </li>
             <li>
@@ -66,7 +64,7 @@
                 @click="handleNavigate('whatwedo')"
                 class="text-gray-300 hover:text-white text-sm transition-colors hover:translate-x-1 transform duration-200"
               >
-                What We Do
+                {{ trans('home.what_we_do') }}
               </button>
             </li>
             <li>
@@ -74,7 +72,7 @@
                 @click="handleNavigate('contact')"
                 class="text-gray-300 hover:text-white text-sm transition-colors hover:translate-x-1 transform duration-200"
               >
-                Contact
+                {{ trans('common.contact') }}
               </button>
             </li>
           </ul>
@@ -82,14 +80,14 @@
 
         <!-- Legal -->
         <div>
-          <h1 class="text-white font-semibold mb-4">Legal</h1>
+          <h1 class="text-white font-semibold mb-4">{{ trans('home.legal') }}</h1>
           <ul class="space-y-2">
             <li>
               <button
                 @click="handleNavigate('privacy')"
                 class="text-gray-300 hover:text-white text-sm transition-colors hover:translate-x-1 transform duration-200"
               >
-                Privacy Policy
+                {{ trans('home.privacy_policy') }}
               </button>
             </li>
             <li>
@@ -97,7 +95,7 @@
                 @click="handleNavigate('terms')"
                 class="text-gray-300 hover:text-white text-sm transition-colors hover:translate-x-1 transform duration-200"
               >
-                Terms & Conditions
+                {{ trans('home.terms_conditions') }}
               </button>
             </li>
           </ul>
@@ -111,10 +109,10 @@
         class="flex flex-col md:flex-row justify-between items-center space-y-2 md:space-y-0"
       >
         <p class="text-gray-400 text-xs">
-          © {{ new Date().getFullYear() }} findemich. All rights reserved.
+          © {{ new Date().getFullYear() }} findemich. {{ trans('home.all_rights_reserved') }}
         </p>
         <div class="flex items-center space-x-4 text-xs text-gray-400">
-          <span>Made with ❤️ in Germany</span>
+          <span>{{ trans('home.made_with_love') }}</span>
           <div class="w-1 h-1 bg-gray-500 rounded-full"></div>
           <span>v1.0.0</span>
         </div>
@@ -124,7 +122,10 @@
 </template>
 
 <script setup>
+import { useTranslations } from "@/composables/useTranslations";
+
 const emit = defineEmits(["navigate-to"]);
+const { trans } = useTranslations();
 
 const scrollToTop = () => {
   window.scrollTo({

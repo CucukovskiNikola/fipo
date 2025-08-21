@@ -28,9 +28,9 @@
       <div>
         <div class="flex justify-end items-center mb-4">
           <span v-if="!loading && totalPartners > 0" class="text-sm text-white">
-            Showing {{ partners.length }} of {{ totalPartners }} partners
+            {{ trans('home.showing_partners', { showing: partners.length, total: totalPartners }) }}
           </span>
-          <span v-if="loading" class="text-sm text-gray-500">Loading...</span>
+          <span v-if="loading" class="text-sm text-gray-500">{{ trans('home.loading') }}</span>
         </div>
 
         <div v-if="!loading && partners.length > 0" class="space-y-6">
@@ -56,8 +56,8 @@
               <i v-if="!loadingMore" class="pi pi-plus mr-2"></i>
               {{
                 loadingMore
-                  ? "Loading..."
-                  : `Load More Partners (${totalPartners - partners.length} remaining)`
+                  ? trans('home.loading')
+                  : trans('home.load_more') + ` (${totalPartners - partners.length} remaining)`
               }}
             </Button>
           </div>
@@ -68,7 +68,7 @@
             class="text-center pt-4 text-sm text-white"
           >
             <i class="pi pi-check mr-2"></i>
-            All {{ totalPartners }} partners loaded
+            {{ trans('home.all_partners_loaded', { total: totalPartners }) }}
           </div>
         </div>
 
@@ -78,9 +78,9 @@
         >
           <div class="flex flex-col items-center">
             <i class="pi pi-search text-4xl mb-4 text-gray-300"></i>
-            <p class="text-lg font-medium mb-2">No partners found</p>
+            <p class="text-lg font-medium mb-2">{{ trans('home.no_partners_found') }}</p>
             <p class="text-sm">
-              Try adjusting your search criteria or filters.
+              {{ trans('home.try_different_filters') }}
             </p>
           </div>
         </div>
@@ -103,10 +103,13 @@ import PartnerCardSkeleton from "./PartnerCardSkeleton.vue";
 import SearchFilters from "./SearchFilters.vue";
 import HeroSection from "./HeroSection.vue";
 import Button from "./ui/button/Button.vue";
+import { useTranslations } from "@/composables/useTranslations";
 
 const props = defineProps({
   isActive: Boolean,
 });
+
+const { trans } = useTranslations();
 
 // Static cards about the business
 const aboutCards = [

@@ -40,10 +40,11 @@
         v-if="partners.data.length > 0"
         class="grid gap-6 lg:grid-cols-2 xl:grid-cols-3 mt-4"
       >
-        <div
+        <Link
           v-for="partner in partners.data"
           :key="partner.id"
-          class="liquid-glass text-white rounded-4xl shadow-lg overflow-hidden backdrop-blur-sm"
+          :href="route('partners.show', partner.id)"
+          class="liquid-glass text-white rounded-4xl shadow-lg overflow-hidden backdrop-blur-sm hover:shadow-xl transition-all duration-300 cursor-pointer block"
         >
           <!-- Partner Images -->
           <div
@@ -72,7 +73,7 @@
             <div v-if="partner.images.length > 1" class="hidden md:block">
               <!-- Left Arrow -->
               <button
-                @click="scrollImages(partner.id, 'left')"
+                @click.stop="scrollImages(partner.id, 'left')"
                 class="absolute left-2 top-1/2 transform -translate-y-1/2 bg-black bg-opacity-50 hover:bg-opacity-70 text-white rounded-full w-8 h-8 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-200"
               >
                 <Icon name="chevron-left" class="w-4 h-4" />
@@ -80,7 +81,7 @@
 
               <!-- Right Arrow -->
               <button
-                @click="scrollImages(partner.id, 'right')"
+                @click.stop="scrollImages(partner.id, 'right')"
                 class="absolute right-2 top-1/2 transform -translate-y-1/2 bg-black bg-opacity-50 hover:bg-opacity-70 text-white rounded-full w-8 h-8 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-200"
               >
                 <Icon name="chevron-right" class="w-4 h-4" />
@@ -128,12 +129,13 @@
               <div class="flex space-x-2">
                 <Link
                   :href="route('partners.edit', partner.id)"
+                  @click.stop
                   class="text-gray-300 hover:text-white transition-colors"
                 >
                   <Icon name="pencil" class="h-4 w-4" />
                 </Link>
                 <button
-                  @click="confirmDelete(partner)"
+                  @click.stop="confirmDelete(partner)"
                   class="text-red-400 hover:text-red-300 transition-colors"
                 >
                   <Icon name="trash" class="h-4 w-4" />
@@ -165,7 +167,7 @@
               </div>
             </div>
           </div>
-        </div>
+        </Link>
       </div>
 
       <!-- Empty State -->

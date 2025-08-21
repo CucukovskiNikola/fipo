@@ -1,24 +1,16 @@
 <template>
   <DropdownMenu>
     <DropdownMenuTrigger as-child>
-      <Button 
-        variant="ghost" 
-        size="sm"
-        class="text-gray-300 hover:text-white hover:bg-white/10"
-      >
-        <Icon name="globe-alt" class="h-4 w-4 mr-2" />
+      <Button variant="ghost" size="sm"
+        class="text-white/80 hover:text-white hover:bg-white/10 border border-white/20 backdrop-blur-sm rounded-2xl px-4 py-1.5 text-sm">
+        <Icon name="globe-alt" class="h-4 w-4" />
         {{ currentLanguageLabel }}
-        <Icon name="chevron-down" class="h-4 w-4 ml-1" />
       </Button>
     </DropdownMenuTrigger>
-    <DropdownMenuContent class="w-40 bg-black/90 border-white/20 backdrop-blur-sm">
-      <DropdownMenuItem
-        v-for="language in languages"
-        :key="language.code"
-        @click="switchLanguage(language.code)"
-        class="flex items-center cursor-pointer text-white hover:bg-white/10 focus:bg-white/10"
-        :class="{ 'bg-white/10': currentLocale === language.code }"
-      >
+    <DropdownMenuContent
+      class="w-40 p-2 rounded-lg bg-gray-600 border border-white/10 text-white backdrop-blur-3xl shadow-md">
+      <DropdownMenuItem v-for="language in languages" :key="language.code" @click="switchLanguage(language.code)"
+        class="flex items-center cursor-pointer text-white/80 hover:text-white hover:bg-white/40">
         <span class="mr-2">{{ language.flag }}</span>
         {{ language.name }}
       </DropdownMenuItem>
@@ -59,17 +51,12 @@ const currentLanguageLabel = computed(() => {
 });
 
 const switchLanguage = (locale: string) => {
-  // Get current route and preserve all parameters
-  const currentPath = window.location.pathname;
-  const currentSearch = window.location.search;
-  
-  // Send a POST request to switch language
-  router.post('/language', { 
-    locale: locale,
-    redirect_to: currentPath + currentSearch
+  // Send a POST request to switch language - the controller handles the redirect
+  router.post('/language/switch', {
+    locale: locale
   }, {
     preserveState: false,
-    preserveScroll: true,
+    preserveScroll: false
   });
 };
 </script>

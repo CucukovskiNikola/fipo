@@ -8,7 +8,7 @@
       <Input
         :model-value="searchTerm"
         @update:model-value="$emit('update:searchTerm', $event)"
-        placeholder="Search partners by name, category, or city..."
+        :placeholder="trans('home.search_placeholder')"
         class="w-full pl-10 pr-4 h-14 rounded-3xl bg-white/10 border border-white/10 backdrop-blur-sm text-white placeholder:text-white"
       />
     </div>
@@ -44,7 +44,7 @@
       >
         <!-- Header -->
         <div class="flex items-center justify-between">
-          <h4 class="font-medium">Filters</h4>
+          <h4 class="font-medium">{{ trans('home.categories') }}</h4>
           <Button
             v-if="hasActiveFilters"
             @click="handleResetFilters"
@@ -53,13 +53,13 @@
             class="h-8 px-3 text-sm border"
           >
             <X class="h-3 w-3 mr-1" />
-            Reset
+            {{ trans('home.reset_filters') }}
           </Button>
         </div>
 
         <!-- Categories Multi-select -->
         <div>
-          <label class="text-sm font-medium mb-3 block">Categories</label>
+          <label class="text-sm font-medium mb-3 block">{{ trans('home.categories') }}</label>
           <div class="space-y-3">
             <!-- All Categories Button -->
             <button
@@ -73,7 +73,7 @@
             >
               <div class="flex items-center">
                 <span class="mr-2">📁</span>
-                <span>All Categories</span>
+                <span>{{ trans('home.all_categories') }}</span>
               </div>
               <div
                 v-if="selectedCategories.length === 0"
@@ -109,7 +109,7 @@
 
         <!-- Cities Multi-select -->
         <div>
-          <label class="text-sm font-medium mb-3 block">Cities</label>
+          <label class="text-sm font-medium mb-3 block">{{ trans('home.cities') }}</label>
           <div class="space-y-3">
             <!-- All Cities Button -->
             <button
@@ -123,7 +123,7 @@
             >
               <div class="flex items-center">
                 <MapPin class="mr-2 h-4 w-4" />
-                <span>All Cities</span>
+                <span>{{ trans('home.all_cities') }}</span>
               </div>
               <div
                 v-if="selectedCities.length === 0"
@@ -172,8 +172,10 @@ import {
 } from "@/components/ui/popover";
 import { Search, X, MapPin } from "lucide-vue-next";
 import categoriesData from "@/data/categories.json";
+import { useTranslations } from "@/composables/useTranslations";
 
 const isFilterOpen = ref(false);
+const { trans } = useTranslations();
 
 const props = defineProps({
   searchTerm: String,

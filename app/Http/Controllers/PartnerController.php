@@ -13,6 +13,7 @@ use Inertia\Inertia;
 
 class PartnerController extends Controller
 {
+
     /**
      * Display a listing of the resource.
      */
@@ -397,8 +398,31 @@ class PartnerController extends Controller
             $cities = $allPartners->pluck('city')->unique()->filter()->values()->toArray();
         }
 
+        // Transform partners data to include original content for frontend translation
+        $transformedPartners = $partners->getCollection()->map(function ($partner) {
+            return [
+                'id' => $partner->id,
+                'title' => $partner->title,
+                'name_of_owner' => $partner->name_of_owner,
+                'category' => $partner->category,
+                'description' => $partner->description,
+                'image' => $partner->image,
+                'city' => $partner->city,
+                'zip_code' => $partner->zip_code,
+                'longitude' => $partner->longitude,
+                'latitude' => $partner->latitude,
+                'created_at' => $partner->created_at,
+                'updated_at' => $partner->updated_at,
+                'images' => $partner->images,
+                // Mark original language for translation
+                'original_lang' => 'de',
+                // Fields that should be translated
+                'translatable_fields' => ['title', 'description', 'category']
+            ];
+        });
+
         return response()->json([
-            'data' => $partners->items(),
+            'data' => $transformedPartners,
             'current_page' => $partners->currentPage(),
             'last_page' => $partners->lastPage(),
             'per_page' => $partners->perPage(),
