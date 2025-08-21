@@ -11,17 +11,18 @@ class SetLocale
 {
     public function handle(Request $request, Closure $next)
     {
-        // First priority: Check URL for locale prefix
         $segment = $request->segment(1);
-        if ($segment === 'de') {
-            App::setLocale('de');
-            Session::put('locale', 'de');
-        } else {
-            // For routes without /de prefix, use English
+
+        if ($segment === 'en') {
+            // If URL starts with /en, set English
             App::setLocale('en');
             Session::put('locale', 'en');
+        } else {
+            // Default to German for root or any non-en-prefixed URL
+            App::setLocale('de');
+            Session::put('locale', 'de');
         }
-        
+
         return $next($request);
     }
 }
