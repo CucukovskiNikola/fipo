@@ -21,6 +21,8 @@ import {
   ChartBar,
   Search,
   Languages,
+  LogOut,
+  House,
 } from "lucide-vue-next";
 import Chart from "primevue/chart";
 
@@ -59,6 +61,8 @@ const iconMap: Record<string, any> = {
   "arrow-left": ArrowLeft,
   search: Search,
   language: Languages,
+  logout: LogOut,
+  home: House,
 };
 
 const icon = computed(() => {

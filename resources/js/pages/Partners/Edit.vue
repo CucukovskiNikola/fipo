@@ -52,7 +52,6 @@
               <InputError :message="errors.name_of_owner" class="mt-1" />
             </div>
 
-            <!-- Category -->
             <div>
               <Label
                 for="category"
@@ -60,25 +59,30 @@
               >
                 Category <span class="text-red-400">*</span>
               </Label>
-              <select
-                id="category"
-                v-model="form.category"
-                required
-                class="w-full rounded-2xl bg-white/20 border border-white/20 text-white placeholder:text-gray-400 focus:border-white/40 px-3 py-2.5 min-h-9 focus:outline-none focus:ring-2 focus:ring-white/20"
-              >
-                <option value="" disabled class="bg-white/10 text-black">
-                  Select a category
-                </option>
-                <option
-                  v-for="category in categories"
-                  :key="category.id"
-                  :value="category.id"
-                  class="!bg-transparent rounded-2xl liquid-glass text-black"
+              <Select id="category" v-model="form.category" required>
+                <SelectTrigger
+                  class="w-full text-md rounded-2xl bg-white/20 border border-white/20 text-white px-4 py-5.5"
                 >
-                  {{ category.icon }} {{ category.name }}
-                </option>
-              </select>
-              <InputError :message="errors.category" class="mt-1" />
+                  <SelectValue
+                    placeholder="Select a category"
+                    class="text-white"
+                  />
+                </SelectTrigger>
+                <SelectContent
+                  class="bg-white/20 backdrop-blur-xl text-white rounded-2xl border-none"
+                >
+                  <SelectGroup>
+                    <SelectItem
+                      v-for="category in categories"
+                      :key="category.id"
+                      :value="category.id"
+                      class="rounded-2xl text-md"
+                    >
+                      {{ category.icon }} {{ category.name }}</SelectItem
+                    >
+                  </SelectGroup>
+                </SelectContent>
+              </Select>
             </div>
 
             <!-- Description -->
@@ -131,7 +135,7 @@
                     <button
                       type="button"
                       @click="removeExistingImage(image.id)"
-                      class="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs hover:bg-red-600"
+                      class="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-8 h-8 flex items-center justify-center text-xl hover:bg-red-600"
                     >
                       ×
                     </button>
@@ -155,7 +159,7 @@
                 @change="handleImagesUpload"
                 accept="image/jpeg,image/png,image/jpg,image/gif,image/svg+xml"
                 multiple
-                class="block w-full text-sm text-black file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-[#FDFDFC] file:text-white hover:file:bg-[#f8f8f7]"
+                class="block w-full text-sm text-white file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-white/10 file:text-white hover:file:bg-white/30"
               />
               <p class="mt-1 text-xs text-gray-300">
                 Optional: Upload up to 15 images for this partner (JPEG, PNG,
@@ -218,7 +222,7 @@
                 v-model="form.city"
                 required
                 placeholder="Enter city name"
-                class="w-full"
+                class="w-full rounded-2xl bg-white/10 border border-white/20 text-white placeholder:text-gray-400 focus:border-white/40"
               />
               <InputError :message="errors.city" class="mt-1" />
             </div>
@@ -235,7 +239,7 @@
                 v-model="form.zip_code"
                 required
                 placeholder="Enter zip code"
-                class="w-full"
+                class="w-full rounded-2xl bg-white/10 border border-white/20 text-white placeholder:text-gray-400 focus:border-white/40"
               />
               <InputError :message="errors.zip_code" class="mt-1" />
             </div>
@@ -256,7 +260,7 @@
                 max="90"
                 required
                 placeholder="Enter latitude"
-                class="w-full"
+                class="w-full rounded-2xl bg-white/10 border border-white/20 text-white placeholder:text-gray-400 focus:border-white/40"
               />
               <InputError :message="errors.latitude" class="mt-1" />
             </div>
@@ -277,7 +281,7 @@
                 max="180"
                 required
                 placeholder="Enter longitude"
-                class="w-full"
+                class="w-full rounded-2xl bg-white/10 border border-white/20 text-white placeholder:text-gray-400 focus:border-white/40"
               />
               <InputError :message="errors.longitude" class="mt-1" />
             </div>
@@ -285,9 +289,7 @@
         </div>
 
         <!-- Meta Information -->
-        <div
-          class="rounded-lg bg-[#FDFDFC] p-6 shadow-[inset_0px_0px_0px_1px_rgba(26,26,0,0.16)]"
-        >
+        <div class="liquid-glass text-white rounded-4xl p-8 shadow-lg">
           <h3 class="text-lg font-semibold text-white mb-4">Information</h3>
           <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
             <div>
@@ -310,12 +312,17 @@
           <div class="flex items-center justify-end space-x-4">
             <Button
               type="button"
-              variant="default"
+              class="bg-white/20 border border-white/20 text-white"
               @click="router.visit(route('partners.index'))"
             >
               Cancel
             </Button>
-            <Button type="submit" :disabled="processing" class="min-w-32">
+            <Button
+              type="submit"
+              :disabled="processing"
+              size="normal"
+              variant="gradient"
+            >
               <Icon name="pencil" class="h-4 w-4 mr-2" />
               {{ processing ? "Updating..." : "Update Partner" }}
             </Button>
@@ -335,7 +342,6 @@ import DashboardNavbar from "@/components/DashboardNavbar.vue";
 import InputError from "@/components/InputError.vue";
 import LocationPicker from "@/components/LocationPicker.vue";
 import categories from "@/data/categories.json";
-import { cn } from "@/lib/utils";
 
 const page = usePage();
 
@@ -359,6 +365,12 @@ const navigationLinks = [
 import Input from "@/components/ui/input/Input.vue";
 import Textarea from "@/components/ui/textarea/Textarea.vue";
 import Button from "@/components/ui/button/Button.vue";
+import Select from "@/components/ui/select/Select.vue";
+import SelectTrigger from "@/components/ui/select/SelectTrigger.vue";
+import SelectValue from "@/components/ui/select/SelectValue.vue";
+import SelectContent from "@/components/ui/select/SelectContent.vue";
+import SelectGroup from "@/components/ui/select/SelectGroup.vue";
+import SelectItem from "@/components/ui/select/SelectItem.vue";
 
 interface User {
   id: number;

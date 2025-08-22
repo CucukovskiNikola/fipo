@@ -60,25 +60,30 @@
               >
                 Category <span class="text-red-400">*</span>
               </Label>
-              <select
-                id="category"
-                v-model="form.category"
-                required
-                class="w-full rounded-2xl bg-white/20 border border-white/20 text-white placeholder:text-gray-400 focus:border-white/40 px-3 py-2.5 min-h-9 focus:outline-none focus:ring-2 focus:ring-white/20"
-              >
-                <option value="" disabled class="bg-white/10 text-black">
-                  Select a category
-                </option>
-                <option
-                  v-for="category in categories"
-                  :key="category.id"
-                  :value="category.id"
-                  class="!bg-transparent rounded-2xl liquid-glass text-black"
+              <Select id="category" v-model="form.category" required>
+                <SelectTrigger
+                  class="w-full text-md rounded-2xl bg-white/20 border border-white/20 text-white px-4 py-5.5"
                 >
-                  {{ category.icon }} {{ category.name }}
-                </option>
-              </select>
-              <InputError :message="errors.category" class="mt-1" />
+                  <SelectValue
+                    placeholder="Select a category"
+                    class="text-white"
+                  />
+                </SelectTrigger>
+                <SelectContent
+                  class="bg-white/20 backdrop-blur-xl text-white rounded-2xl border-none"
+                >
+                  <SelectGroup>
+                    <SelectItem
+                      v-for="category in categories"
+                      :key="category.id"
+                      :value="category.id"
+                      class="rounded-2xl text-md"
+                    >
+                      {{ category.icon }} {{ category.name }}</SelectItem
+                    >
+                  </SelectGroup>
+                </SelectContent>
+              </Select>
             </div>
 
             <!-- Description -->
@@ -95,7 +100,7 @@
                 rows="4"
                 required
                 placeholder="Enter partner description"
-                class="w-full min-h-[100px] border broder-white/20"
+                class="w-full min-h-[100px] border border-white/20"
               />
               <InputError :message="errors.description" class="mt-1" />
             </div>
@@ -114,7 +119,7 @@
                 @change="handleImagesUpload"
                 accept="image/jpeg,image/png,image/jpg,image/gif,image/svg+xml"
                 multiple
-                class="block w-full text-sm text-[#706f6c] file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-[#FDFDFC] file:text-[#1b1b18] hover:file:bg-[#f8f8f7]"
+                class="block w-full text-sm text-white file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-white/10 file:text-white hover:file:bg-white/30"
               />
               <p class="mt-1 text-xs text-gray-400">
                 Optional: Upload up to 15 images for this partner (JPEG, PNG,
@@ -306,6 +311,12 @@ import Input from "@/components/ui/input/Input.vue";
 import Textarea from "@/components/ui/textarea/Textarea.vue";
 import Button from "@/components/ui/button/Button.vue";
 import Label from "@/components/ui/label/Label.vue";
+import Select from "@/components/ui/select/Select.vue";
+import SelectTrigger from "@/components/ui/select/SelectTrigger.vue";
+import SelectValue from "@/components/ui/select/SelectValue.vue";
+import SelectContent from "@/components/ui/select/SelectContent.vue";
+import SelectGroup from "@/components/ui/select/SelectGroup.vue";
+import SelectItem from "@/components/ui/select/SelectItem.vue";
 
 interface SelectedImage {
   file: File;
