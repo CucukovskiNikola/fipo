@@ -2,7 +2,7 @@
   <div class="min-h-screen text-white p-2 bg-black bg-image">
     <!-- Navigation -->
     <DashboardNavbar
-      title="Partners"
+      title="Partner"
       title-icon="home"
       :home-route="route('dashboard')"
       :navigation-links="navigationLinks"
@@ -11,15 +11,15 @@
     <div class="space-y-6 max-w-6xl mx-auto">
       <div class="liquid-glass text-white rounded-4xl p-8 mt-4 shadow-lg">
         <h1 class="mb-2 text-2xl font-semibold text-white">
-          Partner Management Dashboard
+          Partner‑Verwaltungs‑Dashboard
         </h1>
         <p class="text-gray-300">
-          Manage your partner locations, categories, and view analytics from
-          this central hub.
+          Verwalten Sie Ihre Partner‑Standorte, Kategorien und sehen Sie
+          Analysen von dieser zentralen Übersicht.
         </p>
       </div>
 
-      <!-- Partners Grid -->
+      <!-- Partner‑Grid -->
       <div
         v-if="partners.data.length > 0"
         class="grid gap-6 lg:grid-cols-2 xl:grid-cols-3 mt-4"
@@ -30,7 +30,7 @@
           :href="route('partners.show', partner.id)"
           class="liquid-glass text-white rounded-4xl shadow-lg overflow-hidden backdrop-blur-sm hover:shadow-xl transition-all duration-300 cursor-pointer block"
         >
-          <!-- Partner Images -->
+          <!-- Partner‑Bilder -->
           <div
             v-if="partner.images && partner.images.length > 0"
             class="relative h-48 overflow-hidden group"
@@ -53,9 +53,9 @@
               </div>
             </div>
 
-            <!-- Navigation Arrows (Desktop only) -->
+            <!-- Navigations‑Pfeile (nur Desktop) -->
             <div v-if="partner.images.length > 1" class="hidden md:block">
-              <!-- Left Arrow -->
+              <!-- Linker Pfeil -->
               <button
                 @click.stop="scrollImages(partner.id, 'left')"
                 class="absolute left-2 top-1/2 transform -translate-y-1/2 bg-black bg-opacity-50 hover:bg-opacity-70 text-white rounded-full w-8 h-8 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-200"
@@ -63,7 +63,7 @@
                 <Icon name="chevron-left" class="w-4 h-4" />
               </button>
 
-              <!-- Right Arrow -->
+              <!-- Rechter Pfeil -->
               <button
                 @click.stop="scrollImages(partner.id, 'right')"
                 class="absolute right-2 top-1/2 transform -translate-y-1/2 bg-black bg-opacity-50 hover:bg-opacity-70 text-white rounded-full w-8 h-8 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-200"
@@ -72,15 +72,15 @@
               </button>
             </div>
 
-            <!-- Image counter -->
+            <!-- Bild‑Zähler -->
             <div
               v-if="partner.images.length > 1"
               class="absolute top-2 right-2 bg-black bg-opacity-60 text-white text-xs px-2 py-1 rounded-full"
             >
-              {{ partner.images.length }} photos
+              {{ partner.images.length }} Fotos
             </div>
 
-            <!-- Navigation dots -->
+            <!-- Navigations‑Punkte -->
             <div
               v-if="partner.images.length > 1"
               class="absolute bottom-2 left-1/2 transform -translate-x-1/2 flex space-x-1"
@@ -93,7 +93,7 @@
             </div>
           </div>
 
-          <!-- Fallback to legacy single image -->
+          <!-- Fallback, einzelnes Bild -->
           <div v-else-if="partner.image" class="relative">
             <img
               :src="getImageUrl(partner.image)"
@@ -103,7 +103,7 @@
           </div>
 
           <div class="p-6">
-            <!-- Category and Actions -->
+            <!-- Kategorie und Aktionen -->
             <div class="mb-4 flex items-start justify-between">
               <span
                 class="inline-flex items-center rounded-full bg-white/10 px-2.5 py-0.5 text-xs font-medium text-white border border-white/20"
@@ -127,18 +127,18 @@
               </div>
             </div>
 
-            <!-- Partner Info -->
+            <!-- Partner‑Infos -->
             <h3 class="mb-2 text-lg font-semibold text-white">
               {{ partner.title }}
             </h3>
             <p v-if="partner.name_of_owner" class="mb-2 text-sm text-gray-300">
-              Owner: {{ partner.name_of_owner }}
+              Inhaber: {{ partner.name_of_owner }}
             </p>
             <p class="mb-3 text-sm text-gray-300 line-clamp-2">
               {{ partner.description }}
             </p>
 
-            <!-- Partner Details -->
+            <!-- Partner‑Details -->
             <div class="space-y-1 text-xs text-gray-400">
               <div class="flex items-center">
                 <Icon name="map-pin" class="mr-1 h-3 w-3" />
@@ -146,7 +146,7 @@
               </div>
               <div class="flex items-center">
                 <Icon name="user" class="mr-1 h-3 w-3" />
-                Created by {{ partner.user?.name }} on
+                Erstellt von {{ partner.user?.name }} am
                 {{ formatDate(partner.created_at) }}
               </div>
             </div>
@@ -154,15 +154,15 @@
         </Link>
       </div>
 
-      <!-- Empty State -->
+      <!-- Leerer Zustand -->
       <div
         v-else
         class="liquid-glass text-white rounded-4xl p-12 text-center shadow-lg"
       >
         <Icon name="map-pin" class="mx-auto h-12 w-12 text-gray-400" />
-        <h3 class="mt-2 text-sm font-semibold text-white">No partners</h3>
+        <h3 class="mt-2 text-sm font-semibold text-white">Keine Partner</h3>
         <p class="mt-1 text-sm text-gray-300">
-          Get started by creating a new partner.
+          Starten Sie, indem Sie einen neuen Partner anlegen.
         </p>
         <div class="mt-6">
           <Link
@@ -170,7 +170,7 @@
             class="inline-flex items-center rounded-md bg-white/10 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-white/20 transition-colors backdrop-blur-sm border border-white/20"
           >
             <Icon name="plus" class="mr-1 h-4 w-4" />
-            Create Partner
+            Partner erstellen
           </Link>
         </div>
       </div>
@@ -210,7 +210,7 @@
       </div>
     </div>
 
-    <!-- Delete Confirmation Modal -->
+    <!-- Bestätigungsmodal für Löschung -->
     <Teleport to="body">
       <div
         v-if="showDeleteModal"
@@ -219,13 +219,13 @@
         role="dialog"
         aria-modal="true"
       >
-        <!-- Backdrop -->
+        <!-- Hintergrund -->
         <div
           class="fixed inset-0 bg-black/50 transition-opacity"
           @click="showDeleteModal = false"
         ></div>
 
-        <!-- Modal Content -->
+        <!-- Modal-Inhalt -->
         <div
           class="relative liquid-glass text-white rounded-4xl shadow-xl max-w-lg w-full p-6 backdrop-blur-lg"
         >
@@ -241,10 +241,10 @@
               </div>
             </div>
             <div class="flex-1">
-              <h3 class="text-lg font-semibold text-white">Delete partner</h3>
+              <h3 class="text-lg font-semibold text-white">Partner löschen</h3>
               <p class="mt-2 text-sm text-gray-300">
-                Are you sure you want to delete "{{ partnerToDelete?.title }}"?
-                This action cannot be undone.
+                Sind Sie sicher, dass Sie "{{ partnerToDelete?.title }}" löschen
+                möchten? Diese Aktion kann nicht rückgängig gemacht werden.
               </p>
             </div>
           </div>
@@ -254,13 +254,13 @@
               @click="showDeleteModal = false"
               class="px-4 py-2 text-sm font-medium text-gray-300 bg-white/10 border border-white/20 rounded-md hover:bg-white/20 transition-colors backdrop-blur-sm"
             >
-              Cancel
+              Abbrechen
             </button>
             <button
               @click="deletePartner"
               class="px-4 py-2 text-sm font-medium text-white bg-red-600/80 rounded-md hover:bg-red-600 transition-colors backdrop-blur-sm"
             >
-              Delete
+              Löschen
             </button>
           </div>
         </div>
@@ -272,37 +272,37 @@
 <style scoped>
 .scrollbar-hide {
   scrollbar-width: none; /* Firefox */
-  -ms-overflow-style: none; /* IE and Edge */
+  -ms-overflow-style: none; /* IE und Edge */
 }
 
 .scrollbar-hide::-webkit-scrollbar {
-  display: none; /* Chrome, Safari and Opera */
+  display: none; /* Chrome, Safari und Opera */
 }
 </style>
 
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted } from "vue";
+import { ref } from "vue";
 import { Link, router, usePage } from "@inertiajs/vue3";
 import { route } from "ziggy-js";
 import Icon from "@/components/Icon.vue";
 import DashboardNavbar from "@/components/DashboardNavbar.vue";
-import categories from "@/data/categories.json";
+import { useCategories } from "@/composables/useCategories";
+import { useTranslations } from "@/composables/useTranslations";
 
 const page = usePage();
 const user = page.props.auth.user as User;
 
-// Navigation configuration
 const navigationLinks = [
   {
-    label: "Partners",
+    label: "Partner",
     href: route("partners.index"),
   },
   {
-    label: "Create Partner",
+    label: "Partner erstellen",
     href: route("partners.create"),
   },
   {
-    label: "Home",
+    label: "Startseite",
     href: route("dashboard"),
   },
 ];
@@ -349,7 +349,6 @@ interface Props {
   };
 }
 
-// Extend the global Page interface to include flash messages
 declare global {
   namespace App.Data {
     interface PageProps {
@@ -367,13 +366,11 @@ const showDeleteModal = ref(false);
 const partnerToDelete = ref<Partner | null>(null);
 const imageContainers = ref<{ [key: number]: HTMLElement | null }>({});
 
-const getCategoryName = (categoryId: string): string => {
-  const category = categories.find((cat) => cat.id === categoryId);
-  return category ? `${category.icon} ${category.name}` : categoryId;
-};
+const { trans } = useTranslations();
+const { categories, getCategoryName } = useCategories();
 
 const formatDate = (dateString: string): string => {
-  return new Date(dateString).toLocaleDateString();
+  return new Date(dateString).toLocaleDateString("de-DE");
 };
 
 const confirmDelete = (partner: Partner) => {
@@ -390,7 +387,6 @@ const deletePartner = () => {
 };
 
 const cleanLabel = (label: string): string => {
-  // Replace HTML entities with clean text
   return label
     .replace(/&laquo;/g, "‹")
     .replace(/&raquo;/g, "›")
@@ -400,11 +396,9 @@ const cleanLabel = (label: string): string => {
 };
 
 const getImageUrl = (imagePath: string): string => {
-  // If it's an external URL (starts with http/https), return as is
   if (imagePath.startsWith("http://") || imagePath.startsWith("https://")) {
     return imagePath;
   }
-  // Otherwise, treat as local storage path
   return `/storage/${imagePath}`;
 };
 

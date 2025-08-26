@@ -36,6 +36,10 @@ return [
     'monthly_reports' => 'Monthly performance reports and optimization',
     'no_additional_cost' => 'No additional cost - included with your listing',
     'learn_more_meta_ads' => 'Learn More About Meta Ads',
+    'image_heading'=>'Professional Meta Advertising',
+    'image_p'=>'Reach millions of potential customers',
+
+
     
     'what_we_deliver' => 'What We Deliver',
     'what_we_deliver_description' => 'Comprehensive solutions to elevate your business presence and connect you with the right audience',

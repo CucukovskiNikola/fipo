@@ -73,12 +73,12 @@ const logout = () => {
 
 <template>
   <Head>
-    <title>{{ meta?.title || "findemich - Profile Settings" }}</title>
+    <title>{{ meta?.title || "findemich - Profileinstellungen" }}</title>
     <meta
       name="description"
       :content="
         meta?.description ||
-        'Manage your findemich profile, account settings, and preferences. Update personal information, security settings, and appearance options.'
+        'Verwalten Sie Ihr findemich-Profil, Kontoeinstellungen und Präferenzen. Aktualisieren Sie persönliche Informationen, Sicherheitseinstellungen und Anzeigeoptionen.'
       "
     />
   </Head>
@@ -86,7 +86,7 @@ const logout = () => {
   <div class="min-h-screen text-white p-2 bg-black bg-image">
     <!-- Navigation -->
     <DashboardNavbar
-      title="Profile Settings"
+      title="Profileinstellungen"
       title-icon="user"
       :home-route="route('dashboard')"
       :navigation-links="navigationLinks"
@@ -112,11 +112,11 @@ const logout = () => {
                 class="flex items-center text-green-400 text-sm"
               >
                 <Icon name="check-circle" class="h-4 w-4 mr-1" />
-                Email Verified
+                E-Mail verifiziert
               </div>
               <div v-else class="flex items-center text-yellow-400 text-sm">
                 <Icon name="exclamation-triangle" class="h-4 w-4 mr-1" />
-                Email Not Verified
+                E-Mail nicht verifiziert
               </div>
             </div>
           </div>
@@ -136,7 +136,7 @@ const logout = () => {
                   : 'border-transparent text-gray-300 hover:text-white hover:border-gray-300',
               ]"
             >
-              Profile Information
+              Profilinformationen
             </button>
             <button
               @click="activeTab = 'password'"
@@ -147,7 +147,7 @@ const logout = () => {
                   : 'border-transparent text-gray-300 hover:text-white hover:border-gray-300',
               ]"
             >
-              Change Password
+              Passwort ändern
             </button>
             <button
               @click="activeTab = 'account'"
@@ -158,7 +158,7 @@ const logout = () => {
                   : 'border-transparent text-gray-300 hover:text-white hover:border-gray-300',
               ]"
             >
-              Account Settings
+              Kontoeinstellungen
             </button>
           </nav>
         </div>
@@ -171,7 +171,7 @@ const logout = () => {
                 for="name"
                 class="block text-sm font-medium text-gray-300 mb-2"
               >
-                Full Name <span class="text-red-400">*</span>
+                Vollständiger Name <span class="text-red-400">*</span>
               </label>
               <input
                 id="name"
@@ -179,7 +179,7 @@ const logout = () => {
                 type="text"
                 required
                 class="w-full px-3 py-2 bg-white/10 border border-white/20 rounded-md text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-white/20 focus:border-transparent"
-                placeholder="Enter your full name"
+                placeholder="Geben Sie Ihren vollständigen Namen ein"
               />
               <InputError
                 :message="form.errors.name"
@@ -192,7 +192,7 @@ const logout = () => {
                 for="email"
                 class="block text-sm font-medium text-gray-300 mb-2"
               >
-                Email Address <span class="text-red-400">*</span>
+                E-Mail-Adresse <span class="text-red-400">*</span>
               </label>
               <input
                 id="email"
@@ -200,7 +200,7 @@ const logout = () => {
                 type="email"
                 required
                 class="w-full px-3 py-2 bg-white/10 border border-white/20 rounded-md text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-white/20 focus:border-transparent"
-                placeholder="Enter your email address"
+                placeholder="Geben Sie Ihre E-Mail-Adresse ein"
               />
               <InputError
                 :message="form.errors.email"
@@ -213,14 +213,14 @@ const logout = () => {
               class="p-4 bg-yellow-500/20 border border-yellow-500/40 rounded-md"
             >
               <p class="text-sm text-yellow-200">
-                Your email address is unverified.
+                Ihre E-Mail-Adresse ist nicht verifiziert.
                 <Link
                   :href="route('verification.send')"
                   method="post"
                   as="button"
                   class="text-yellow-100 underline hover:text-white transition-colors"
                 >
-                  Click here to resend the verification email.
+                  Klicken Sie hier, um die Bestätigungs-E-Mail erneut zu senden.
                 </Link>
               </p>
 
@@ -228,7 +228,8 @@ const logout = () => {
                 v-if="status === 'verification-link-sent'"
                 class="mt-2 text-sm font-medium text-green-400"
               >
-                A new verification link has been sent to your email address.
+                Ein neuer Bestätigungslink wurde an Ihre E-Mail-Adresse
+                gesendet.
               </div>
             </div>
 
@@ -238,7 +239,7 @@ const logout = () => {
                 :disabled="form.processing"
                 class="px-4 py-2 bg-white/10 border border-white/20 rounded-md text-white hover:bg-white/20 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                {{ form.processing ? "Saving..." : "Save Changes" }}
+                {{ form.processing ? "Speichern..." : "Änderungen speichern" }}
               </button>
 
               <Transition
@@ -251,7 +252,7 @@ const logout = () => {
                   v-show="form.recentlySuccessful"
                   class="text-sm text-green-400"
                 >
-                  Saved successfully!
+                  Erfolgreich gespeichert!
                 </p>
               </Transition>
             </div>
@@ -266,7 +267,7 @@ const logout = () => {
                 for="current_password"
                 class="block text-sm font-medium text-gray-300 mb-2"
               >
-                Current Password <span class="text-red-400">*</span>
+                Aktuelles Passwort <span class="text-red-400">*</span>
               </label>
               <input
                 id="current_password"
@@ -274,7 +275,7 @@ const logout = () => {
                 type="password"
                 required
                 class="w-full px-3 py-2 bg-white/10 border border-white/20 rounded-md text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-white/20 focus:border-transparent"
-                placeholder="Enter current password"
+                placeholder="Aktuelles Passwort eingeben"
               />
               <InputError
                 :message="passwordForm.errors.current_password"
@@ -287,7 +288,7 @@ const logout = () => {
                 for="password"
                 class="block text-sm font-medium text-gray-300 mb-2"
               >
-                New Password <span class="text-red-400">*</span>
+                Neues Passwort <span class="text-red-400">*</span>
               </label>
               <input
                 id="password"
@@ -295,7 +296,7 @@ const logout = () => {
                 type="password"
                 required
                 class="w-full px-3 py-2 bg-white/10 border border-white/20 rounded-md text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-white/20 focus:border-transparent"
-                placeholder="Enter new password"
+                placeholder="Neues Passwort eingeben"
               />
               <InputError
                 :message="passwordForm.errors.password"
@@ -308,7 +309,7 @@ const logout = () => {
                 for="password_confirmation"
                 class="block text-sm font-medium text-gray-300 mb-2"
               >
-                Confirm Password <span class="text-red-400">*</span>
+                Passwort bestätigen <span class="text-red-400">*</span>
               </label>
               <input
                 id="password_confirmation"
@@ -316,7 +317,7 @@ const logout = () => {
                 type="password"
                 required
                 class="w-full px-3 py-2 bg-white/10 border border-white/20 rounded-md text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-white/20 focus:border-transparent"
-                placeholder="Confirm new password"
+                placeholder="Passwort bestätigen"
               />
               <InputError
                 :message="passwordForm.errors.password_confirmation"
@@ -331,7 +332,9 @@ const logout = () => {
                 class="px-4 py-2 bg-white/10 border border-white/20 rounded-md text-white hover:bg-white/20 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {{
-                  passwordForm.processing ? "Updating..." : "Update Password"
+                  passwordForm.processing
+                    ? "Aktualisieren..."
+                    : "Passwort aktualisieren"
                 }}
               </button>
 
@@ -345,7 +348,7 @@ const logout = () => {
                   v-show="passwordForm.recentlySuccessful"
                   class="text-sm text-green-400"
                 >
-                  Password updated successfully!
+                  Passwort erfolgreich aktualisiert!
                 </p>
               </Transition>
             </div>
@@ -357,7 +360,7 @@ const logout = () => {
           <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
             <!-- Account Actions -->
             <div class="space-y-4">
-              <h3 class="text-lg font-semibold text-white">Quick Actions</h3>
+              <h3 class="text-lg font-semibold text-white">Schnellaktionen</h3>
 
               <div class="space-y-3">
                 <Link
@@ -365,7 +368,7 @@ const logout = () => {
                   class="flex items-center p-3 bg-white/10 rounded-md hover:bg-white/20 transition-colors"
                 >
                   <Icon name="home" class="h-5 w-5 text-white mr-3" />
-                  <span class="text-white">Go to Dashboard</span>
+                  <span class="text-white">Zum Dashboard</span>
                 </Link>
 
                 <Link
@@ -376,7 +379,7 @@ const logout = () => {
                     name="building-office"
                     class="h-5 w-5 text-white mr-3"
                   />
-                  <span class="text-white">Manage Partners</span>
+                  <span class="text-white">Partner verwalten</span>
                 </Link>
 
                 <button
@@ -387,7 +390,7 @@ const logout = () => {
                     name="arrow-right-on-rectangle"
                     class="h-5 w-5 text-red-400 mr-3"
                   />
-                  <span class="text-red-400">Sign Out</span>
+                  <span class="text-red-400">Abmelden</span>
                 </button>
               </div>
             </div>
@@ -395,26 +398,26 @@ const logout = () => {
             <!-- Account Info -->
             <div class="space-y-4">
               <h3 class="text-lg font-semibold text-white">
-                Account Information
+                Kontoinformationen
               </h3>
 
               <div class="space-y-3 text-sm">
                 <div class="flex justify-between p-3 bg-white/10 rounded-md">
-                  <span class="text-gray-300">Member Since</span>
+                  <span class="text-gray-300">Mitglied seit</span>
                   <span class="text-white">{{
                     new Date(user.created_at).toLocaleDateString()
                   }}</span>
                 </div>
 
                 <div class="flex justify-between p-3 bg-white/10 rounded-md">
-                  <span class="text-gray-300">Last Updated</span>
+                  <span class="text-gray-300">Zuletzt aktualisiert</span>
                   <span class="text-white">{{
                     new Date(user.updated_at).toLocaleDateString()
                   }}</span>
                 </div>
 
                 <div class="flex justify-between p-3 bg-white/10 rounded-md">
-                  <span class="text-gray-300">Account ID</span>
+                  <span class="text-gray-300">Konto-ID</span>
                   <span class="text-white font-mono">#{{ user.id }}</span>
                 </div>
               </div>
@@ -423,7 +426,9 @@ const logout = () => {
 
           <!-- Danger Zone -->
           <div class="border-t border-red-500/20 pt-6">
-            <h3 class="text-lg font-semibold text-red-400 mb-4">Danger Zone</h3>
+            <h3 class="text-lg font-semibold text-red-400 mb-4">
+              Gefahrenbereich
+            </h3>
             <DeleteUser />
           </div>
         </div>

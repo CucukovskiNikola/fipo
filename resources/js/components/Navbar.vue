@@ -2,12 +2,14 @@
   <nav class="liquid-glass max-w-6xl mx-auto rounded-4xl shadow-lg">
     <!-- Desktop Navigation -->
     <div class="hidden md:flex items-center justify-between px-6 py-2">
-      <img
-        src="/images/logo.svg"
-        alt="Logo"
-        class="w-[150px] lg:w-[150px]"
-        fetchpriority="high"
-      />
+      <Link :href="route('home')">
+        <img
+          src="/images/logo.svg"
+          alt="Logo"
+          class="w-[150px] lg:w-[150px]"
+          fetchpriority="high"
+        />
+      </Link>
       <!-- Menu -->
       <div class="flex space-x-2">
         <button

@@ -2,7 +2,7 @@
   <div class="min-h-screen text-white p-2 bg-black bg-image">
     <!-- Navigation -->
     <DashboardNavbar
-      title="Create Partner"
+      title="Partner erstellen"
       title-icon="home"
       :home-route="route('dashboard')"
       :navigation-links="navigationLinks"
@@ -10,62 +10,64 @@
 
     <div class="w-full max-w-6xl mx-auto space-y-6">
       <form @submit.prevent="submit" class="space-y-6">
-        <!-- Basic Information -->
+        <!-- Grundinformationen -->
         <div class="liquid-glass text-white rounded-4xl p-8 mt-4 shadow-lg">
           <h3 class="text-lg font-semibold text-white mb-6">
-            Basic Information
+            Grundinformationen
           </h3>
 
           <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <!-- Title -->
+            <!-- Titel -->
             <div class="md:col-span-2">
               <Label
                 for="title"
                 class="block text-sm font-medium text-gray-300 mb-2"
               >
-                Title <span class="text-red-400">*</span>
+                Titel <span class="text-red-400">*</span>
               </Label>
               <Input
                 id="title"
                 v-model="form.title"
                 required
-                placeholder="Enter partner title"
+                maxlength="100"
+                placeholder="Gib den Titel des Partners ein"
                 class="w-full rounded-2xl bg-white/10 border border-white/20 text-white placeholder:text-gray-400 focus:border-white/40"
               />
               <InputError :message="errors.title" class="mt-1" />
             </div>
 
-            <!-- Name of Owner -->
+            <!-- Name des Inhabers -->
             <div>
               <Label
                 for="name_of_owner"
                 class="block text-sm font-medium text-gray-300 mb-2"
               >
-                Name of Owner
+                Name des Inhabers
               </Label>
               <Input
                 id="name_of_owner"
+                maxlength="100"
                 v-model="form.name_of_owner"
-                placeholder="Enter owner name (optional)"
+                placeholder="Optional: Name des Inhabers"
                 class="w-full rounded-2xl bg-white/10 border border-white/20 text-white placeholder:text-gray-400 focus:border-white/40"
               />
               <InputError :message="errors.name_of_owner" class="mt-1" />
             </div>
 
-            <!-- Category -->
+            <!-- Kategorie -->
             <div>
               <Label
                 for="category"
                 class="block text-sm font-medium text-gray-300 mb-2"
               >
-                Category <span class="text-red-400">*</span>
+                Kategorie <span class="text-red-400">*</span>
               </Label>
               <Select id="category" v-model="form.category" required>
                 <SelectTrigger
                   class="w-full text-md rounded-2xl bg-white/20 border border-white/20 text-white px-4 py-5.5"
                 >
                   <SelectValue
-                    placeholder="Select a category"
+                    placeholder="Wähle eine Kategorie"
                     class="text-white"
                   />
                 </SelectTrigger>
@@ -79,39 +81,40 @@
                       :value="category.id"
                       class="rounded-2xl text-md"
                     >
-                      {{ category.icon }} {{ category.name }}</SelectItem
-                    >
+                      {{ category.icon }} {{ category.name }}
+                    </SelectItem>
                   </SelectGroup>
                 </SelectContent>
               </Select>
             </div>
 
-            <!-- Description -->
+            <!-- Beschreibung -->
             <div class="md:col-span-2">
               <label
                 for="description"
                 class="block text-sm font-medium text-gray-300 mb-2"
               >
-                Description <span class="text-red-400">*</span>
+                Beschreibung <span class="text-red-400">*</span>
               </label>
               <Textarea
                 id="description"
                 v-model="form.description"
                 rows="4"
+                maxlength="500"
                 required
-                placeholder="Enter partner description"
+                placeholder="Beschreibe den Partner"
                 class="w-full min-h-[100px] border border-white/20"
               />
               <InputError :message="errors.description" class="mt-1" />
             </div>
 
-            <!-- Image Upload -->
+            <!-- Bilder hochladen -->
             <div class="md:col-span-2">
               <label
                 for="images"
                 class="block text-sm font-medium text-gray-300 mb-2"
               >
-                Partner Images
+                Partner‑Bilder
               </label>
               <input
                 type="file"
@@ -122,12 +125,12 @@
                 class="block w-full text-sm text-white file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-white/10 file:text-white hover:file:bg-white/30"
               />
               <p class="mt-1 text-xs text-gray-400">
-                Optional: Upload up to 15 images for this partner (JPEG, PNG,
-                JPG, GIF, SVG, max 5MB each)
+                Optional: Lade bis zu 15 Bilder hoch (JPEG, PNG, JPG, GIF, SVG,
+                max. 5MB pro Datei)
               </p>
               <InputError :message="errors.images" class="mt-1" />
 
-              <!-- Image Previews -->
+              <!-- Bildvorschau -->
               <div
                 v-if="selectedImages.length > 0"
                 class="mt-4 grid grid-cols-6 md:grid-cols-9 gap-4"
@@ -139,7 +142,7 @@
                 >
                   <img
                     :src="image.preview"
-                    :alt="`Preview ${index + 1}`"
+                    :alt="`Vorschau ${index + 1}`"
                     class="w-full h-24 object-cover rounded-lg border border-[#e3e3e0]"
                   />
                   <button
@@ -155,33 +158,33 @@
           </div>
         </div>
 
-        <!-- Location Information -->
+        <!-- Standortinformationen -->
         <div class="liquid-glass text-white rounded-4xl p-8 shadow-lg">
           <h3 class="text-lg font-semibold text-white mb-6">
-            Location Information
+            Standortinformationen
           </h3>
 
-          <!-- Location Picker -->
+          <!-- Karten‑Auswahl -->
           <LocationPicker
             v-model="locationData"
             :user="props.user"
             class="mb-6"
           />
 
-          <!-- Manual Location Fields -->
+          <!-- Manuelle Eingabe -->
           <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
               <label
                 for="city"
                 class="block text-sm font-medium text-gray-300 mb-2"
               >
-                City <span class="text-red-400">*</span>
+                Stadt <span class="text-red-400">*</span>
               </label>
               <Input
                 id="city"
                 v-model="form.city"
                 required
-                placeholder="Enter city name"
+                placeholder="Stadt eingeben"
                 class="w-full rounded-2xl bg-white/10 border border-white/20 text-white placeholder:text-gray-400 focus:border-white/40"
               />
               <InputError :message="errors.city" class="mt-1" />
@@ -192,13 +195,13 @@
                 for="zip_code"
                 class="block text-sm font-medium text-gray-300 mb-2"
               >
-                Zip Code <span class="text-red-400">*</span>
+                Postleitzahl <span class="text-red-400">*</span>
               </label>
               <Input
                 id="zip_code"
                 v-model="form.zip_code"
                 required
-                placeholder="Enter zip code"
+                placeholder="PLZ eingeben"
                 class="w-full rounded-2xl bg-white/10 border border-white/20 text-white placeholder:text-gray-400 focus:border-white/40"
               />
               <InputError :message="errors.zip_code" class="mt-1" />
@@ -209,7 +212,7 @@
                 for="latitude"
                 class="block text-sm font-medium text-gray-300 mb-2"
               >
-                Latitude <span class="text-red-400">*</span>
+                Breitengrad <span class="text-red-400">*</span>
               </label>
               <Input
                 id="latitude"
@@ -219,7 +222,7 @@
                 max="90"
                 step="0.00000001"
                 required
-                placeholder="Enter latitude"
+                placeholder="Breitengrad eingeben"
                 class="w-full rounded-2xl bg-white/10 border border-white/20 text-white placeholder:text-gray-400 focus:border-white/40"
               />
               <InputError :message="errors.latitude" class="mt-1" />
@@ -230,7 +233,7 @@
                 for="longitude"
                 class="block text-sm font-medium text-gray-300 mb-2"
               >
-                Longitude <span class="text-red-400">*</span>
+                Längengrad <span class="text-red-400">*</span>
               </label>
               <Input
                 id="longitude"
@@ -240,7 +243,7 @@
                 max="180"
                 step="0.00000001"
                 required
-                placeholder="Enter longitude"
+                placeholder="Längengrad eingeben"
                 class="w-full rounded-2xl bg-white/10 border border-white/20 text-white placeholder:text-gray-400 focus:border-white/40"
               />
               <InputError :message="errors.longitude" class="mt-1" />
@@ -248,7 +251,7 @@
           </div>
         </div>
 
-        <!-- Form Actions -->
+        <!-- Aktionen -->
         <div class="liquid-glass text-white rounded-4xl p-8 shadow-lg">
           <div class="flex items-center justify-end space-x-4">
             <Button
@@ -257,7 +260,7 @@
               @click="$inertia.visit(route('partners.index'))"
               class="rounded-2xl bg-white/10 border border-white/20 text-white hover:bg-white/20 transition-colors"
             >
-              Cancel
+              Abbrechen
             </Button>
             <Button
               type="submit"
@@ -267,7 +270,7 @@
               class="min-w-32 rounded-2xl bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white border-0 transition-colors disabled:opacity-50"
             >
               <Icon name="plus" class="h-4 w-4 mr-2" />
-              {{ processing ? "Creating..." : "Create Partner" }}
+              {{ processing ? "Wird erstellt..." : "Partner erstellen" }}
             </Button>
           </div>
         </div>
@@ -284,7 +287,8 @@ import Icon from "@/components/Icon.vue";
 import DashboardNavbar from "@/components/DashboardNavbar.vue";
 import InputError from "@/components/InputError.vue";
 import LocationPicker from "@/components/LocationPicker.vue";
-import categories from "@/data/categories.json";
+import { useCategories } from "@/composables/useCategories";
+import { useTranslations } from "@/composables/useTranslations";
 import { type User } from "@/types";
 
 const page = usePage();
@@ -393,6 +397,9 @@ watch(
 );
 
 const { errors, processing } = form;
+
+const { trans } = useTranslations();
+const { categories, getCategoryName } = useCategories();
 
 const handleImagesUpload = (event: Event) => {
   const target = event.target as HTMLInputElement;

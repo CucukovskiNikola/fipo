@@ -10,28 +10,28 @@
     "icon": "🏨"
   },
   {
-    "id": "shopping",
-    "name": "Shopping Center",
+    "id": "einkaufszentrum",
+    "name": "Einkaufszentrum",
     "icon": "🛍️"
   },
   {
-    "id": "entertainment",
-    "name": "Entertainment",
+    "id": "unterhaltung",
+    "name": "Unterhaltung",
     "icon": "🎬"
   },
   {
-    "id": "healthcare",
-    "name": "Healthcare",
+    "id": "gesundheitswesen",
+    "name": "Gesundheitswesen",
     "icon": "🏥"
   },
   {
-    "id": "education",
-    "name": "Education",
+    "id": "bildung",
+    "name": "Bildung",
     "icon": "🏫"
   },
   {
-    "id": "gas_station",
-    "name": "Gas Station",
+    "id": "tankstelle",
+    "name": "Tankstelle",
     "icon": "⛽"
   },
   {
@@ -45,43 +45,43 @@
     "icon": "🌳"
   },
   {
-    "id": "gym",
-    "name": "Gym/Fitness",
+    "id": "fitnessstudio",
+    "name": "Fitnessstudio",
     "icon": "💪"
   },
   {
     "id": "cafe",
-    "name": "Cafe",
+    "name": "Café",
     "icon": "☕"
   },
   {
-    "id": "pharmacy",
-    "name": "Pharmacy",
+    "id": "apotheke",
+    "name": "Apotheke",
     "icon": "💊"
   },
   {
-    "id": "supermarket",
-    "name": "Supermarket",
+    "id": "supermarkt",
+    "name": "Supermarkt",
     "icon": "🛒"
   },
   {
-    "id": "church",
-    "name": "Church",
+    "id": "kirche",
+    "name": "Kirche",
     "icon": "⛪"
   },
   {
-    "id": "library",
-    "name": "Library",
+    "id": "bibliothek",
+    "name": "Bibliothek",
     "icon": "📚"
   },
   {
-    "id": "office",
-    "name": "Office",
+    "id": "buero",
+    "name": "Büro",
     "icon": "🏢"
   },
   {
-    "id": "other",
-    "name": "Other",
+    "id": "andere",
+    "name": "Andere",
     "icon": "📍"
   }
 ]

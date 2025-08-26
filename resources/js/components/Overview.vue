@@ -28,9 +28,16 @@
       <div>
         <div class="flex justify-end items-center mb-4">
           <span v-if="!loading && totalPartners > 0" class="text-sm text-white">
-            {{ trans('home.showing_partners', { showing: partners.length, total: totalPartners }) }}
+            {{
+              trans("home.showing_partners", {
+                showing: partners.length,
+                total: totalPartners,
+              })
+            }}
           </span>
-          <span v-if="loading" class="text-sm text-gray-500">{{ trans('home.loading') }}</span>
+          <span v-if="loading" class="text-sm text-gray-500">{{
+            trans("home.loading")
+          }}</span>
         </div>
 
         <div v-if="!loading && partners.length > 0" class="space-y-6">
@@ -56,8 +63,9 @@
               <i v-if="!loadingMore" class="pi pi-plus mr-2"></i>
               {{
                 loadingMore
-                  ? trans('home.loading')
-                  : trans('home.load_more') + ` (${totalPartners - partners.length} remaining)`
+                  ? trans("home.loading")
+                  : trans("home.load_more") +
+                    ` (${totalPartners - partners.length} remaining)`
               }}
             </Button>
           </div>
@@ -68,7 +76,7 @@
             class="text-center pt-4 text-sm text-white"
           >
             <i class="pi pi-check mr-2"></i>
-            {{ trans('home.all_partners_loaded', { total: totalPartners }) }}
+            {{ trans("home.all_partners_loaded", { total: totalPartners }) }}
           </div>
         </div>
 
@@ -78,9 +86,11 @@
         >
           <div class="flex flex-col items-center">
             <i class="pi pi-search text-4xl mb-4 text-gray-300"></i>
-            <p class="text-lg font-medium mb-2">{{ trans('home.no_partners_found') }}</p>
+            <p class="text-lg font-medium mb-2">
+              {{ trans("home.no_partners_found") }}
+            </p>
             <p class="text-sm">
-              {{ trans('home.try_different_filters') }}
+              {{ trans("home.try_different_filters") }}
             </p>
           </div>
         </div>
@@ -89,7 +99,7 @@
           v-if="loading"
           class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
         >
-          <PartnerCardSkeleton v-for="n in 12" :key="n" />
+          <PartnerCardSkeleton v-for="n in 6" :key="n" />
         </div>
       </div>
     </section>

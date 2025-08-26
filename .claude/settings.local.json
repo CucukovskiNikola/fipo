@@ -20,10 +20,16 @@
       "mcp__laravel-boost__last-error",
       "mcp__laravel-boost__read-log-entries",
       "mcp__laravel-boost__get-absolute-url",
-      "WebSearch"
+      "WebSearch",
+      "mcp__laravel-boost__list-routes",
+      "mcp__laravel-boost__browser-logs",
+      "mcp__laravel-boost__database-query"
     ],
     "deny": [],
-    "defaultMode": "acceptEdits"
+    "defaultMode": "acceptEdits",
+    "additionalDirectories": [
+      "C:\\c\\Users\\Asus\\Desktop\\Builds"
+    ]
   },
   "enableAllProjectMcpServers": true,
   "enabledMcpjsonServers": [

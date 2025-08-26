@@ -1,11 +1,11 @@
 <template>
   <Head>
-    <title>{{ meta?.title || `findemich - ${partner?.title}` }}</title>
+    <title>{{ meta?.title || `findemich - ${partner.title}` }}</title>
     <meta
       name="description"
       :content="
         meta?.description ||
-        `View ${partner?.title} - ${partner?.category} business partner in ${partner?.city}. Contact information, services, and location details available.`
+        `View ${partner.title} - ${categoryInfo.name} business partner in ${partner?.city}. Contact information, services, and location details available.`
       "
     />
   </Head>
@@ -44,7 +44,7 @@
               color="white"
               class="mr-2"
             />
-            Back
+            {{ trans("common.back") }}
           </Button>
         </div>
 
@@ -136,7 +136,7 @@
                   <CircumIcons name="user" class="text-2xl" color="white" />
                 </div>
                 <div>
-                  <p class="text-white/50">Owner</p>
+                  <p class="text-white/50">{{ trans("common.owner") }}</p>
                   <p class="font-semibold text-xl text-white">
                     {{ partner.name_of_owner }}
                   </p>
@@ -151,7 +151,9 @@
                   <CircumIcons name="star" class="text-2xl" color="white" />
                 </div>
                 <div>
-                  <p class="font-semibold text-white">Rating</p>
+                  <p class="font-semibold text-white">
+                    {{ trans("common.rating") }}
+                  </p>
                   <div class="flex items-center space-x-2">
                     <div
                       class="flex text-yellow-400 space-x-1 max-w-[70%] overflow-visible"
@@ -197,6 +199,33 @@
             <div>
               <h1 class="text-3xl font-bold text-white mb-4">
                 {{ partner.title }}
+                <!-- Translation indicator -->
+                <span
+                  v-if="shouldTranslate && isTranslating"
+                  class="inline-flex items-center px-2 py-1 bg-blue-500/20 border border-blue-400/30 text-blue-300 text-xs rounded-lg ml-3"
+                >
+                  <svg
+                    class="animate-spin -ml-1 mr-1 h-3 w-3 text-blue-300"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                  >
+                    <circle
+                      class="opacity-25"
+                      cx="12"
+                      cy="12"
+                      r="10"
+                      stroke="currentColor"
+                      stroke-width="4"
+                    ></circle>
+                    <path
+                      class="opacity-75"
+                      fill="currentColor"
+                      d="m4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                    ></path>
+                  </svg>
+                  Translating...
+                </span>
               </h1>
               <div class="flex items-center space-x-4 mb-4">
                 <span
@@ -209,9 +238,11 @@
 
             <!-- Description -->
             <div class="space-y-4">
-              <h2 class="text-xl text-white">About this business:</h2>
+              <h2 class="text-xl text-white">
+                {{ trans("common.about_this_business") }}:
+              </h2>
               <p class="text-white/80 leading-relaxed text-lg">
-                {{ partner.description }}
+                {{ displayDescription }}
               </p>
             </div>
           </div>
@@ -226,9 +257,12 @@
       <div class="space-y-6">
         <!-- Map Header -->
         <div class="text-center">
-          <h2 class="text-2xl font-bold text-white mb-2">Location</h2>
+          <h2 class="text-2xl font-bold text-white mb-2">
+            {{ trans("common.location") }}
+          </h2>
           <p class="text-white/70">
-            Find {{ partner.title }} at {{ partner.city }},
+            {{ trans("common.find") }} {{ partner.title }}
+            {{ trans("common.at") }} {{ partner.city }},
             {{ partner.zip_code }}
           </p>
         </div>
@@ -256,7 +290,9 @@
               color="white"
               class="mb-2 mx-auto"
             />
-            <p class="font-semibold text-white">Address</p>
+            <p class="font-semibold text-white">
+              {{ trans("common.address") }}
+            </p>
             <p class="text-white/70 text-sm">
               {{ partner.city }}, {{ partner.zip_code }}
             </p>
@@ -269,7 +305,9 @@
               color="white"
               class="mb-2 mx-auto"
             />
-            <p class="font-semibold text-white">Coordinates</p>
+            <p class="font-semibold text-white">
+              {{ trans("common.coordinates") }}
+            </p>
             <p class="text-white/70 text-sm">
               {{ Number(partner.latitude)?.toFixed(4) }},
               {{ Number(partner.longitude)?.toFixed(4) }}
@@ -283,13 +321,15 @@
               color="white"
               class="mb-2 mx-auto"
             />
-            <p class="font-semibold text-white">Get Directions</p>
+            <p class="font-semibold text-white">
+              {{ trans("common.get_directions") }}
+            </p>
             <a
               :href="`https://www.google.com/maps/dir/?api=1&destination=${Number(partner.latitude)},${Number(partner.longitude)}`"
               target="_blank"
               class="text-blue-400 hover:text-blue-300 text-sm underline transition-colors"
             >
-              Open in Google Maps
+              {{ trans("common.open_in_google_maps") }}
             </a>
           </div>
         </div>
@@ -301,12 +341,14 @@
 </template>
 
 <script setup>
-import { computed, ref, onMounted, onUnmounted } from "vue";
-import { router, Head } from "@inertiajs/vue3";
+import { computed, ref, onMounted, onUnmounted, watch } from "vue";
+import { router, Head, usePage } from "@inertiajs/vue3";
 import Button from "@/components/ui/button/Button.vue";
 import Navbar from "@/components/Navbar.vue";
 import Footer from "@/components/Footer.vue";
-import categories from "@/data/categories.json";
+import { useCategories } from "@/composables/useCategories";
+import { useTranslations } from "@/composables/useTranslations";
+import { useLibreTranslate } from "@/composables/useLibreTranslate";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 
@@ -317,16 +359,100 @@ const props = defineProps({
   meta: Object,
 });
 
+const page = usePage();
 const currentImageIndex = ref(0);
 const mapContainer = ref(null);
 let map = null;
 
-// Get category icon and name
+const { trans } = useTranslations();
+const { categories, getCategoryName } = useCategories();
+const { translateText, isTranslating } = useLibreTranslate();
+
+// Translation state
+const translatedDescription = ref("");
+const translatedCategoryName = ref("");
+
+// Check if translation should be enabled
+const shouldTranslate = computed(() => {
+  const currentLocale = page.props.locale || "de";
+  return currentLocale === "en" && props.partner?.original_lang === "de";
+});
+
+// Perform translations
+const performTranslations = async () => {
+  if (!shouldTranslate.value || !props.partner) return;
+
+  try {
+    // Translate description
+    if (props.partner.description) {
+      translatedDescription.value = await translateText(
+        props.partner.description,
+        "de",
+        "en"
+      );
+    }
+
+    // Translate category name
+    if (props.partner.category) {
+      translatedCategoryName.value = await translateText(
+        props.partner.category,
+        "de",
+        "en"
+      );
+    }
+  } catch (error) {
+    console.error("Translation failed:", error);
+  }
+};
+
+// Clear translations
+const clearTranslations = () => {
+  translatedDescription.value = "";
+  translatedCategoryName.value = "";
+};
+
+// Initialize translations on mount
+onMounted(() => {
+  performTranslations();
+});
+
+// Watch for changes to enableTranslation prop or locale
+watch(
+  [() => shouldTranslate.value, () => page.props.locale],
+  ([newTranslationValue, newLocale]) => {
+    console.log(
+      "Translation state changed - shouldTranslate:",
+      newTranslationValue,
+      "locale:",
+      newLocale
+    );
+    if (newTranslationValue) {
+      performTranslations();
+    } else {
+      clearTranslations();
+    }
+  }
+);
+
+// Get category icon and name (with translation support)
 const categoryInfo = computed(() => {
-  const category = categories.find((cat) => cat.id === props.partner.category);
-  return category
-    ? { icon: category.icon, name: category.name }
-    : { icon: "📍", name: props.partner.category };
+  const category = categories.value.find(
+    (cat) => cat.id === props.partner.category
+  );
+  const name =
+    shouldTranslate.value && translatedCategoryName.value
+      ? translatedCategoryName.value
+      : category
+        ? category.name
+        : props.partner.category;
+
+  return category ? { icon: category.icon, name } : { icon: "📍", name };
+});
+
+const displayDescription = computed(() => {
+  return shouldTranslate.value && translatedDescription.value
+    ? translatedDescription.value
+    : props.partner.description;
 });
 
 // Get current image URL
@@ -407,7 +533,7 @@ const initializeMap = () => {
           <a href="https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}" 
              target="_blank" 
              class="inline-block mt-2 px-3 py-1 bg-white/10 text-white text-xs rounded-full hover:bg-white/20 transition-colors">
-            Get Directions
+            ${trans("common.get_directions")}
           </a>
         </div>
       `

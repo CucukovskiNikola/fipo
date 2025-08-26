@@ -2,7 +2,7 @@
   <div class="min-h-screen text-white p-2 bg-black bg-image">
     <!-- Navigation -->
     <DashboardNavbar
-      title="Edit Partner"
+      title="Partner bearbeiten"
       title-icon="home"
       :home-route="route('dashboard')"
       :navigation-links="navigationLinks"
@@ -10,61 +10,64 @@
 
     <div class="w-full max-w-6xl mx-auto space-y-6">
       <form @submit.prevent="submit" class="space-y-6">
-        <!-- Basic Information -->
+        <!-- Grundinformationen -->
         <div class="liquid-glass text-white rounded-4xl p-8 mt-4 shadow-lg">
           <h3 class="text-lg font-semibold text-white mb-6">
-            Basic Information
+            Grundinformationen
           </h3>
 
           <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <!-- Title -->
+            <!-- Titel -->
             <div class="md:col-span-2">
               <label
                 for="title"
                 class="block text-sm font-medium text-gray-300 mb-2"
               >
-                Title <span class="text-red-400">*</span>
+                Titel <span class="text-red-400">*</span>
               </label>
               <Input
                 id="title"
                 v-model="form.title"
+                maxlength="100"
                 required
-                placeholder="Enter partner title"
+                placeholder="Titel des Partners eingeben"
                 class="w-full rounded-2xl bg-white/10 border border-white/20 text-white placeholder:text-gray-400 focus:border-white/40"
               />
               <InputError :message="errors.title" class="mt-1" />
             </div>
 
-            <!-- Name of Owner -->
+            <!-- Name des Inhabers -->
             <div>
               <label
                 for="name_of_owner"
                 class="block text-sm font-medium text-gray-300 mb-2"
               >
-                Name of Owner
+                Name des Inhabers
               </label>
               <Input
                 id="name_of_owner"
+                maxlength="100"
                 v-model="form.name_of_owner"
-                placeholder="Enter owner name (optional)"
+                placeholder="Name des Inhabers (optional)"
                 class="w-full rounded-2xl bg-white/10 border border-white/20 text-white placeholder:text-gray-400 focus:border-white/40"
               />
               <InputError :message="errors.name_of_owner" class="mt-1" />
             </div>
 
+            <!-- Kategorie -->
             <div>
               <Label
                 for="category"
                 class="block text-sm font-medium text-gray-300 mb-2"
               >
-                Category <span class="text-red-400">*</span>
+                Kategorie <span class="text-red-400">*</span>
               </Label>
               <Select id="category" v-model="form.category" required>
                 <SelectTrigger
                   class="w-full text-md rounded-2xl bg-white/20 border border-white/20 text-white px-4 py-5.5"
                 >
                   <SelectValue
-                    placeholder="Select a category"
+                    placeholder="Kategorie auswählen"
                     class="text-white"
                   />
                 </SelectTrigger>
@@ -78,47 +81,48 @@
                       :value="category.id"
                       class="rounded-2xl text-md"
                     >
-                      {{ category.icon }} {{ category.name }}</SelectItem
-                    >
+                      {{ category.icon }} {{ category.name }}
+                    </SelectItem>
                   </SelectGroup>
                 </SelectContent>
               </Select>
             </div>
 
-            <!-- Description -->
+            <!-- Beschreibung -->
             <div class="md:col-span-2">
               <label
                 for="description"
                 class="block text-sm font-medium text-gray-300 mb-2"
               >
-                Description <span class="text-red-400">*</span>
+                Beschreibung <span class="text-red-400">*</span>
               </label>
               <Textarea
                 id="description"
                 v-model="form.description"
                 rows="4"
+                maxlength="500"
                 required
-                placeholder="Enter partner description"
+                placeholder="Beschreibung des Partners eingeben"
                 class="w-full min-h-[100px] border border-white/20 rounded-2xl"
               />
               <InputError :message="errors.description" class="mt-1" />
             </div>
 
-            <!-- Image Upload -->
+            <!-- Bilder hochladen -->
             <div class="md:col-span-2">
               <label
                 for="images"
                 class="block text-sm font-medium text-gray-300 mb-2"
               >
-                Partner Images
+                Partner-Bilder
               </label>
 
-              <!-- Current Images Display -->
+              <!-- Aktuelle Bilder -->
               <div
                 v-if="partner.images && partner.images.length > 0"
                 class="mb-4"
               >
-                <p class="text-sm text-gray-300 mb-2">Current Images:</p>
+                <p class="text-sm text-gray-300 mb-2">Aktuelle Bilder:</p>
                 <div class="grid grid-cols-6 md:grid-cols-9 gap-4 mb-4">
                   <div
                     v-for="image in partner.images.filter(
@@ -143,9 +147,9 @@
                 </div>
               </div>
 
-              <!-- Fallback to legacy single image -->
+              <!-- Einzelnes Bild (Fallback) -->
               <div v-else-if="partner.image" class="mb-4">
-                <p class="text-sm text-gray-300 mb-2">Current Image:</p>
+                <p class="text-sm text-gray-300 mb-2">Aktuelles Bild:</p>
                 <img
                   :src="getImageUrl(partner.image)"
                   :alt="partner.title"
@@ -162,14 +166,16 @@
                 class="block w-full text-sm text-white file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-white/10 file:text-white hover:file:bg-white/30"
               />
               <p class="mt-1 text-xs text-gray-300">
-                Optional: Upload up to 15 images for this partner (JPEG, PNG,
-                JPG, GIF, SVG, max 5MB each)
+                Optional: Lade bis zu 15 Bilder hoch (JPEG, PNG, JPG, GIF, SVG,
+                max. 5MB pro Datei)
               </p>
               <InputError :message="errors.images" class="mt-1" />
 
-              <!-- New Image Previews -->
+              <!-- Neue Bildvorschau -->
               <div v-if="selectedImages.length > 0" class="mt-4">
-                <p class="text-sm text-gray-300 mb-2">New Images to Add:</p>
+                <p class="text-sm text-gray-300 mb-2">
+                  Neue Bilder zum Hinzufügen:
+                </p>
                 <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
                   <div
                     v-for="(image, index) in selectedImages"
@@ -178,7 +184,7 @@
                   >
                     <img
                       :src="image.preview"
-                      :alt="`Preview ${index + 1}`"
+                      :alt="`Vorschau ${index + 1}`"
                       class="w-full h-24 object-cover rounded-lg border border-[#e3e3e0]"
                     />
                     <button
@@ -195,33 +201,33 @@
           </div>
         </div>
 
-        <!-- Location Information -->
+        <!-- Standortinformationen -->
         <div class="liquid-glass text-white rounded-4xl p-8 shadow-lg">
           <h3 class="text-lg font-semibold text-white mb-6">
-            Location Information
+            Standortinformationen
           </h3>
 
-          <!-- Location Picker -->
+          <!-- Karten‑Auswahl -->
           <LocationPicker
             v-model="locationData"
             :user="props.user"
             class="mb-6"
           />
 
-          <!-- Manual Location Fields -->
+          <!-- Manuelle Felder -->
           <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
               <label
                 for="city"
                 class="block text-sm font-medium text-gray-300 mb-2"
               >
-                City <span class="text-red-400">*</span>
+                Stadt <span class="text-red-400">*</span>
               </label>
               <Input
                 id="city"
                 v-model="form.city"
                 required
-                placeholder="Enter city name"
+                placeholder="Stadt eingeben"
                 class="w-full rounded-2xl bg-white/10 border border-white/20 text-white placeholder:text-gray-400 focus:border-white/40"
               />
               <InputError :message="errors.city" class="mt-1" />
@@ -232,13 +238,13 @@
                 for="zip_code"
                 class="block text-sm font-medium text-gray-300 mb-2"
               >
-                Zip Code <span class="text-red-400">*</span>
+                Postleitzahl <span class="text-red-400">*</span>
               </label>
               <Input
                 id="zip_code"
                 v-model="form.zip_code"
                 required
-                placeholder="Enter zip code"
+                placeholder="PLZ eingeben"
                 class="w-full rounded-2xl bg-white/10 border border-white/20 text-white placeholder:text-gray-400 focus:border-white/40"
               />
               <InputError :message="errors.zip_code" class="mt-1" />
@@ -249,7 +255,7 @@
                 for="latitude"
                 class="block text-sm font-medium text-gray-300 mb-2"
               >
-                Latitude <span class="text-red-400">*</span>
+                Breitengrad <span class="text-red-400">*</span>
               </label>
               <Input
                 id="latitude"
@@ -259,7 +265,7 @@
                 min="-90"
                 max="90"
                 required
-                placeholder="Enter latitude"
+                placeholder="Breitengrad eingeben"
                 class="w-full rounded-2xl bg-white/10 border border-white/20 text-white placeholder:text-gray-400 focus:border-white/40"
               />
               <InputError :message="errors.latitude" class="mt-1" />
@@ -270,7 +276,7 @@
                 for="longitude"
                 class="block text-sm font-medium text-gray-300 mb-2"
               >
-                Longitude <span class="text-red-400">*</span>
+                Längengrad <span class="text-red-400">*</span>
               </label>
               <Input
                 id="longitude"
@@ -280,7 +286,7 @@
                 min="-180"
                 max="180"
                 required
-                placeholder="Enter longitude"
+                placeholder="Längengrad eingeben"
                 class="w-full rounded-2xl bg-white/10 border border-white/20 text-white placeholder:text-gray-400 focus:border-white/40"
               />
               <InputError :message="errors.longitude" class="mt-1" />
@@ -288,26 +294,26 @@
           </div>
         </div>
 
-        <!-- Meta Information -->
+        <!-- Meta‑Informationen -->
         <div class="liquid-glass text-white rounded-4xl p-8 shadow-lg">
-          <h3 class="text-lg font-semibold text-white mb-4">Information</h3>
+          <h3 class="text-lg font-semibold text-white mb-4">Informationen</h3>
           <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
             <div>
-              <span class="font-medium text-gray-300">Created by:</span>
+              <span class="font-medium text-gray-300">Erstellt von:</span>
               <p class="text-white">{{ partner.user?.name }}</p>
             </div>
             <div>
-              <span class="font-medium text-gray-300">Created at:</span>
+              <span class="font-medium text-gray-300">Erstellt am:</span>
               <p class="text-white">{{ formatDate(partner.created_at) }}</p>
             </div>
             <div>
-              <span class="font-medium text-gray-300">Last updated:</span>
+              <span class="font-medium text-gray-300">Zuletzt bearbeitet:</span>
               <p class="text-white">{{ formatDate(partner.updated_at) }}</p>
             </div>
           </div>
         </div>
 
-        <!-- Form Actions -->
+        <!-- Aktionen -->
         <div class="liquid-glass text-white rounded-4xl p-8 shadow-lg">
           <div class="flex items-center justify-end space-x-4">
             <Button
@@ -315,7 +321,7 @@
               class="bg-white/20 border border-white/20 text-white"
               @click="router.visit(route('partners.index'))"
             >
-              Cancel
+              Abbrechen
             </Button>
             <Button
               type="submit"
@@ -324,7 +330,7 @@
               variant="gradient"
             >
               <Icon name="pencil" class="h-4 w-4 mr-2" />
-              {{ processing ? "Updating..." : "Update Partner" }}
+              {{ processing ? "Aktualisieren..." : "Partner aktualisieren" }}
             </Button>
           </div>
         </div>
@@ -341,9 +347,14 @@ import Icon from "@/components/Icon.vue";
 import DashboardNavbar from "@/components/DashboardNavbar.vue";
 import InputError from "@/components/InputError.vue";
 import LocationPicker from "@/components/LocationPicker.vue";
-import categories from "@/data/categories.json";
+import { useCategories } from "@/composables/useCategories";
+import { useTranslations } from "@/composables/useTranslations";
 
 const page = usePage();
+
+// Use composables
+const { categories } = useCategories();
+const { trans } = useTranslations();
 
 // Navigation configuration
 const navigationLinks = [

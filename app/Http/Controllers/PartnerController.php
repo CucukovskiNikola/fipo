@@ -134,32 +134,54 @@ class PartnerController extends Controller
     /**
      * Display the specified resource for public viewing (SEO-friendly format).
      */
-    public function showPublic(Request $request)
+    public function showPublic(Request $request, $id = null)
     {
         \Log::info('SEO route hit', [
             'query_params' => $request->all(),
-            'id' => $request->query('id'),
+            'route_id' => $id,
+            'query_id' => $request->query('id'),
             'title' => $request->query('title'),
             'url' => $request->fullUrl()
         ]);
         
-        // Get the ID from query parameters
-        $id = $request->query('id');
+        // Get the ID from route parameter or query parameters
+        $partnerId = $id ?? $request->query('id');
         
-        if (!$id) {
-            \Log::error('Partner ID missing in request', ['query' => $request->all()]);
+        if (!$partnerId) {
+            \Log::error('Partner ID missing in request', ['route_id' => $id, 'query' => $request->all()]);
             abort(404, 'Partner ID is required');
         }
 
-        $partner = Partner::with(['user', 'images'])->findOrFail($id);
+        $partner = Partner::with(['user', 'images'])->findOrFail($partnerId);
         
         \Log::info('Partner found successfully', [
             'partner_id' => $partner->id,
             'partner_title' => $partner->title
         ]);
 
+        // Transform partner data to include original language for frontend translation
+        $transformedPartner = [
+            'id' => $partner->id,
+            'title' => $partner->title,
+            'name_of_owner' => $partner->name_of_owner,
+            'category' => $partner->category,
+            'description' => $partner->description,
+            'image' => $partner->image,
+            'city' => $partner->city,
+            'zip_code' => $partner->zip_code,
+            'longitude' => $partner->longitude,
+            'latitude' => $partner->latitude,
+            'created_at' => $partner->created_at,
+            'updated_at' => $partner->updated_at,
+            'images' => $partner->images,
+            // Mark original language for translation
+            'original_lang' => 'de',
+            // Fields that should be translated
+            'translatable_fields' => ['title', 'description', 'category']
+        ];
+
         return Inertia::render('Partners/Show', [
-            'partner' => $partner,
+            'partner' => $transformedPartner,
             'meta' => [
                 'title' => "findemich - {$partner->title} in {$partner->city}",
                 'description' => "View {$partner->title} - {$partner->category} business partner in {$partner->city}. Contact information, services, and location details available.",

@@ -44,7 +44,7 @@
       >
         <!-- Header -->
         <div class="flex items-center justify-between">
-          <h4 class="font-medium">{{ trans('home.categories') }}</h4>
+          <h4 class="font-medium">{{ trans("home.categories") }}</h4>
           <Button
             v-if="hasActiveFilters"
             @click="handleResetFilters"
@@ -53,13 +53,15 @@
             class="h-8 px-3 text-sm border"
           >
             <X class="h-3 w-3 mr-1" />
-            {{ trans('home.reset_filters') }}
+            {{ trans("home.reset_filters") }}
           </Button>
         </div>
 
         <!-- Categories Multi-select -->
         <div>
-          <label class="text-sm font-medium mb-3 block">{{ trans('home.categories') }}</label>
+          <label class="text-sm font-medium mb-3 block">{{
+            trans("home.categories")
+          }}</label>
           <div class="space-y-3">
             <!-- All Categories Button -->
             <button
@@ -73,7 +75,7 @@
             >
               <div class="flex items-center">
                 <span class="mr-2">📁</span>
-                <span>{{ trans('home.all_categories') }}</span>
+                <span>{{ trans("home.all_categories") }}</span>
               </div>
               <div
                 v-if="selectedCategories.length === 0"
@@ -86,17 +88,16 @@
               <div class="flex flex-wrap gap-2">
                 <button
                   v-for="category in categories"
-                  :key="category"
-                  @click="toggleCategory(category)"
+                  :key="category.id"
+                  @click="toggleCategory(category.id)"
                   class="inline-flex items-center px-3 py-1.5 rounded-full text-xs font-medium transition-all duration-200 hover:scale-105"
                   :class="
-                    selectedCategories.includes(category)
+                    selectedCategories.includes(category.id)
                       ? 'bg-gradient-to-r from-emerald-500/30 to-teal-500/30 border border-emerald-400/50 text-white shadow-lg shadow-emerald-500/20'
                       : 'bg-white/5 border border-white/20 text-white/70 hover:bg-white/10 hover:text-white hover:border-white/30'
                   "
                 >
-                  <span class="mr-1.5">{{ getCategoryIcon(category) }}</span>
-                  <span>{{ getCategoryName(category) }}</span>
+                  <span>{{ getLocalCategoryName(category.name) }}</span>
                   <div
                     v-if="selectedCategories.includes(category)"
                     class="ml-1.5 w-1.5 h-1.5 bg-emerald-400 rounded-full"
@@ -109,7 +110,9 @@
 
         <!-- Cities Multi-select -->
         <div>
-          <label class="text-sm font-medium mb-3 block">{{ trans('home.cities') }}</label>
+          <label class="text-sm font-medium mb-3 block">{{
+            trans("home.cities")
+          }}</label>
           <div class="space-y-3">
             <!-- All Cities Button -->
             <button
@@ -123,7 +126,7 @@
             >
               <div class="flex items-center">
                 <MapPin class="mr-2 h-4 w-4" />
-                <span>{{ trans('home.all_cities') }}</span>
+                <span>{{ trans("home.all_cities") }}</span>
               </div>
               <div
                 v-if="selectedCities.length === 0"
@@ -171,11 +174,12 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { Search, X, MapPin } from "lucide-vue-next";
-import categoriesData from "@/data/categories.json";
+import { useCategories } from "@/composables/useCategories";
 import { useTranslations } from "@/composables/useTranslations";
 
 const isFilterOpen = ref(false);
 const { trans } = useTranslations();
+const { categories, getCategoryName } = useCategories();
 
 const props = defineProps({
   searchTerm: String,
@@ -253,13 +257,15 @@ const handleResetFilters = () => {
 };
 
 const getCategoryIcon = (categoryId) => {
-  const category = categoriesData.find((cat) => cat.id === categoryId);
+  const category = categories.value.find((cat) => cat.id === categoryId);
   return category ? category.icon : "📍";
 };
 
-const getCategoryName = (categoryId) => {
-  const category = categoriesData.find((cat) => cat.id === categoryId);
-  return category ? category.name : categoryId;
+const getLocalCategoryName = (category) => {
+  // Access the category translations directly from the translations object
+  const { translations } = useTranslations();
+  const categoryTranslations = translations.value?.categories;
+  return categoryTranslations?.[category] || category;
 };
 </script>
 

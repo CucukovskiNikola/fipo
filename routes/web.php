@@ -19,6 +19,7 @@ Route::group(['middleware' => ['locale:de']], function () {
     })->name('home');
 
     Route::get('/partners', [App\Http\Controllers\PartnerController::class, 'showPublic'])->name('partners.public.show');
+    Route::get('/partners/{id}', [App\Http\Controllers\PartnerController::class, 'showPublic'])->name('partners.public.show.id');
 
     Route::prefix('dashboard')->middleware(['auth', 'verified', 'admin'])->group(function () {
         Route::get('/', [App\Http\Controllers\DashboardController::class, 'index'])->name('dashboard');
@@ -40,6 +41,7 @@ Route::group(['prefix' => 'en', 'middleware' => ['locale:en']], function () {
     })->name('en.home');
 
     Route::get('/partners', [App\Http\Controllers\PartnerController::class, 'showPublic'])->name('en.partners.public.show');
+    Route::get('/partners/{id}', [App\Http\Controllers\PartnerController::class, 'showPublic'])->name('en.partners.public.show.id');
 
     Route::prefix('dashboard')->middleware(['auth', 'verified', 'admin'])->group(function () {
         Route::get('/', [App\Http\Controllers\DashboardController::class, 'index'])->name('en.dashboard');
@@ -53,6 +55,12 @@ Route::get('/api/partners', [App\Http\Controllers\PartnerController::class, 'get
 Route::get('/api/search-location', [App\Http\Controllers\PartnerController::class, 'searchLocation']);
 Route::get('/api/reverse-geocode', [App\Http\Controllers\PartnerController::class, 'reverseGeocode']);
 Route::put('/api/user/location', [App\Http\Controllers\UserController::class, 'updateLocation'])->middleware('auth');
+
+// Translation API routes
+Route::post('/api/translate', [App\Http\Controllers\TranslationController::class, 'translate']);
+Route::post('/api/is-german', [App\Http\Controllers\TranslationController::class, 'isGerman']);
+Route::get('/api/translate/stats', [App\Http\Controllers\TranslationController::class, 'stats']);
+Route::delete('/api/translate/cache', [App\Http\Controllers\TranslationController::class, 'clearCache']);
 
 // Contact form routes (not localized)
 Route::get('/api/contact/captcha', [App\Http\Controllers\ContactController::class, 'getCaptcha']);

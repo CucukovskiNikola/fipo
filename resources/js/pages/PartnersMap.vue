@@ -123,7 +123,8 @@ import { route } from "ziggy-js";
 import Icon from "@/components/Icon.vue";
 import DashboardNavbar from "@/components/DashboardNavbar.vue";
 import MapComponent from "@/components/MapComponent.vue";
-import categories from "@/data/categories.json";
+import { useCategories } from "@/composables/useCategories";
+import { useTranslations } from "@/composables/useTranslations";
 
 // Shadcn Components
 import Button from "@/components/ui/button/Button.vue";
@@ -188,18 +189,15 @@ const selectedCategory = ref<string | null>(null);
 const mapCenter = ref<[number, number]>([41.9, 22.4]); // Default to Macedonia region
 const mapZoom = ref<number>(8);
 
-// Category options for filter
-const categoryOptions = computed(() => [
-  { id: null, name: "All Categories", icon: "🔍" },
-  ...categories,
-]);
+const { trans } = useTranslations();
+const { categories, getCategoryName } = useCategories();
 
 // Display text for selected category
 const selectedCategoryDisplay = computed(() => {
   if (!selectedCategory.value) {
     return "All Categories";
   }
-  const category = categories.find((cat) => cat.id === selectedCategory.value);
+  const category = categories.value.find((cat) => cat.id === selectedCategory.value);
   return category ? category.name : "All Categories";
 });
 
@@ -237,13 +235,8 @@ const filteredMarkers = computed(() => {
 });
 
 // Helper functions
-const getCategoryName = (categoryId: string): string => {
-  const category = categories.find((cat) => cat.id === categoryId);
-  return category ? category.name : categoryId;
-};
-
 const getCategoryIcon = (categoryId: string): string => {
-  const category = categories.find((cat) => cat.id === categoryId);
+  const category = categories.value.find((cat) => cat.id === categoryId);
   return category ? category.icon : "📍";
 };
 
@@ -279,9 +272,13 @@ const filterMarkers = () => {
   // Optionally center the map on filtered partners
   if (filteredPartners.value.length > 0) {
     // Calculate center of filtered partners
-    const lats = filteredPartners.value.map((p) => p.latitude).filter(lat => !isNaN(lat));
-    const lngs = filteredPartners.value.map((p) => p.longitude).filter(lng => !isNaN(lng));
-    
+    const lats = filteredPartners.value
+      .map((p) => p.latitude)
+      .filter((lat) => !isNaN(lat));
+    const lngs = filteredPartners.value
+      .map((p) => p.longitude)
+      .filter((lng) => !isNaN(lng));
+
     if (lats.length > 0 && lngs.length > 0) {
       const centerLat = lats.reduce((sum, lat) => sum + lat, 0) / lats.length;
       const centerLng = lngs.reduce((sum, lng) => sum + lng, 0) / lngs.length;
@@ -311,9 +308,13 @@ const centerOnPartner = (partner: Partner) => {
 onMounted(() => {
   if (props.partners.length > 0) {
     // Calculate center of all partners
-    const lats = props.partners.map((p) => p.latitude).filter(lat => !isNaN(lat));
-    const lngs = props.partners.map((p) => p.longitude).filter(lng => !isNaN(lng));
-    
+    const lats = props.partners
+      .map((p) => p.latitude)
+      .filter((lat) => !isNaN(lat));
+    const lngs = props.partners
+      .map((p) => p.longitude)
+      .filter((lng) => !isNaN(lng));
+
     if (lats.length > 0 && lngs.length > 0) {
       const centerLat = lats.reduce((sum, lat) => sum + lat, 0) / lats.length;
       const centerLng = lngs.reduce((sum, lng) => sum + lng, 0) / lngs.length;

@@ -1,15 +1,15 @@
 <template>
   <div class="space-y-4">
-    <!-- Search Input -->
+    <!-- Suchfeld -->
     <div>
       <label class="block text-sm font-medium text-[#706f6c] mb-2">
-        Search Location
+        Standort suchen
       </label>
       <div class="flex gap-2">
         <div class="relative flex-1">
           <Input
             v-model="searchQuery"
-            placeholder="Enter city name or address..."
+            placeholder="Stadt oder Adresse eingeben..."
             class="w-full pl-10 rounded-2xl border border-white/20 placeholder:text-white"
             @keyup.enter="searchLocation"
           />
@@ -24,7 +24,7 @@
           size="normal"
           class="rounded-2xl liquid-glass text-white border border-white/20"
         >
-          {{ isSearching ? "Searching..." : "Search" }}
+          {{ isSearching ? "Suche läuft..." : "Suchen" }}
         </Button>
         <Button
           @click="getCurrentLocation"
@@ -33,15 +33,17 @@
           class="rounded-2xl liquid-glass text-white border border-white/20"
         >
           <Icon name="location-dot" class="w-4 h-4 mr-1 text-white" />
-          {{ isGettingLocation ? "Getting..." : "My Location" }}
+          {{
+            isGettingLocation ? "Standort wird ermittelt..." : "Mein Standort"
+          }}
         </Button>
       </div>
     </div>
 
-    <!-- Map Container -->
+    <!-- Kartencontainer -->
     <div class="space-y-2">
       <label class="block text-sm font-medium text-[#706f6c]">
-        Select Location on Map
+        Standort auf der Karte auswählen
       </label>
       <div
         class="h-96 rounded-lg border border-[#e3e3e0] overflow-hidden relative"
@@ -49,12 +51,12 @@
         <div ref="mapContainer" class="h-full w-full absolute" />
       </div>
       <p class="text-xs text-[#706f6c]">
-        Click on the map to select a location. The marker will show your
-        selected point.
+        Klicken Sie auf die Karte, um einen Standort auszuwählen. Die Markierung
+        zeigt den gewählten Punkt an.
       </p>
     </div>
 
-    <!-- Error Message -->
+    <!-- Fehlermeldung -->
     <div
       v-if="searchError"
       class="p-3 bg-red-50 border border-red-200 rounded-lg"

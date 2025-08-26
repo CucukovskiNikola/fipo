@@ -1,27 +1,25 @@
 <script setup lang="ts">
-import AppLayout from "@/layouts/AppLayout.vue";
 import { type BreadcrumbItem, type User } from "@/types";
 import { Link, Head, usePage, router } from "@inertiajs/vue3";
 import Icon from "@/components/Icon.vue";
 import DashboardNavbar from "@/components/DashboardNavbar.vue";
-import { computed, ref, onMounted, onUnmounted } from "vue";
 import { route } from "ziggy-js";
 
 const page = usePage();
 const user = page.props.auth.user as User;
 
-// Navigation configuration
+// Navigationskonfiguration
 const navigationLinks = [
   {
-    label: "Partners",
+    label: "Partner",
     href: route("partners.index"),
   },
   {
-    label: "Create Partner",
+    label: "Partner erstellen",
     href: route("partners.create"),
   },
   {
-    label: "Home",
+    label: "Startseite",
     href: "/",
   },
 ];
@@ -65,37 +63,38 @@ const breadcrumbs: BreadcrumbItem[] = [
 
 const quickActions = [
   {
-    title: "Create Partner",
-    description: "Add a new partner location",
+    title: "Partner erstellen",
+    description: "Neuen Partnerstandort hinzufügen",
     icon: "plus",
     route: "partners.create",
   },
   {
-    title: "View All Partners",
-    description: "Browse and manage partners",
+    title: "Alle Partner ansehen",
+    description: "Partner durchsuchen und verwalten",
     icon: "users",
     route: "partners.index",
   },
   {
-    title: "Edit Partners",
-    description: "Update partner information",
+    title: "Partner bearbeiten",
+    description: "Partnerinformationen aktualisieren",
     icon: "pencil",
     route: "partners.index",
   },
   {
-    title: "Delete Partners",
-    description: "Remove partner locations",
+    title: "Partner löschen",
+    description: "Partnerstandorte entfernen",
     icon: "trash",
     route: "partners.index",
   },
   {
-    title: "Map Overview",
-    description: "View partners on map",
+    title: "Kartenübersicht",
+    description: "Partner auf der Karte anzeigen",
     icon: "map",
     route: "map",
   },
 ];
 
+// Formatierung: Zeitangabe relativ ("vor 3 Tagen", "gerade eben" etc.)
 const formatTimeAgo = (dateString: string) => {
   const date = new Date(dateString);
   const now = new Date();
@@ -103,30 +102,30 @@ const formatTimeAgo = (dateString: string) => {
     (now.getTime() - date.getTime()) / (1000 * 60)
   );
 
-  if (diffInMinutes < 1) return "Just now";
+  if (diffInMinutes < 1) return "Gerade eben";
   if (diffInMinutes < 60)
-    return `${diffInMinutes} minute${diffInMinutes === 1 ? "" : "s"} ago`;
+    return `${diffInMinutes} Minute${diffInMinutes === 1 ? "" : "n"} zuvor`;
 
   const diffInHours = Math.floor(diffInMinutes / 60);
   if (diffInHours < 24)
-    return `${diffInHours} hour${diffInHours === 1 ? "" : "s"} ago`;
+    return `${diffInHours} Stunde${diffInHours === 1 ? "" : "n"} zuvor`;
 
   const diffInDays = Math.floor(diffInHours / 24);
   if (diffInDays < 30)
-    return `${diffInDays} day${diffInDays === 1 ? "" : "s"} ago`;
+    return `${diffInDays} Tag${diffInDays === 1 ? "" : "e"} zuvor`;
 
-  return date.toLocaleDateString();
+  return date.toLocaleDateString("de-DE");
 };
 </script>
 
 <template>
   <Head>
-    <title>{{ meta?.title || "findemich - Admin Dashboard" }}</title>
+    <title>{{ meta?.title || "findemich - Admin-Dashboard" }}</title>
     <meta
       name="description"
       :content="
         meta?.description ||
-        'findemich Admin Dashboard - Manage business partners, view analytics, and oversee platform operations with comprehensive admin tools.'
+        'findemich Admin-Dashboard – Verwalten Sie Geschäftspartner, sehen Sie sich Analysen an und überwachen Sie Plattformvorgänge mit umfassenden Admin-Tools.'
       "
     />
   </Head>
@@ -144,17 +143,17 @@ const formatTimeAgo = (dateString: string) => {
       <!-- Welcome Section -->
       <div class="liquid-glass text-white rounded-4xl p-8 mt-4 shadow-lg">
         <h1 class="mb-2 text-2xl font-semibold text-white">
-          Partner Management Dashboard
+          Partnerverwaltungs-Dashboard
         </h1>
         <p class="text-gray-300">
-          Manage your partner locations, categories, and view analytics from
-          this central hub.
+          Verwalten Sie Ihre Partnerstandorte, Kategorien und Analysen von
+          dieser zentralen Stelle aus.
         </p>
       </div>
 
       <!-- Quick Actions -->
       <div class="liquid-glass text-white rounded-4xl p-8 mt-4 shadow-lg">
-        <h2 class="mb-6 text-lg font-semibold text-white">Quick Actions</h2>
+        <h2 class="mb-6 text-lg font-semibold text-white">Schnellaktionen</h2>
         <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
           <Link
             v-for="action in quickActions"
@@ -216,12 +215,12 @@ const formatTimeAgo = (dateString: string) => {
         <!-- Recent Activity -->
         <div class="liquid-glass text-white rounded-4xl p-8 shadow-lg">
           <div class="mb-6 flex items-center justify-between">
-            <h2 class="text-lg font-semibold text-white">Recent Activity</h2>
+            <h2 class="text-lg font-semibold text-white">Letzte Aktivitäten</h2>
             <Link
               :href="route('partners.index')"
               class="text-sm text-gray-300 hover:text-white transition-colors"
             >
-              View all →
+              Alle anzeigen →
             </Link>
           </div>
           <div class="space-y-4">
@@ -234,7 +233,7 @@ const formatTimeAgo = (dateString: string) => {
                 class="mx-auto h-8 w-8 text-gray-400"
               />
               <p class="mt-2 text-sm text-gray-300">
-                No recent partner activity
+                Keine aktuellen Partneraktivitäten
               </p>
             </div>
             <div
@@ -248,7 +247,7 @@ const formatTimeAgo = (dateString: string) => {
               </div>
               <div class="flex-1">
                 <p class="text-sm font-medium text-white">
-                  "{{ partner.title }}" {{ partner.action }} by
+                  "{{ partner.title }}" {{ partner.action }} von
                   {{ partner.created_by }}
                 </p>
                 <p class="text-xs text-gray-300">
@@ -261,7 +260,7 @@ const formatTimeAgo = (dateString: string) => {
 
         <!-- System Overview -->
         <div class="liquid-glass text-white rounded-4xl p-8 shadow-lg">
-          <h2 class="mb-6 text-lg font-semibold text-white">System Overview</h2>
+          <h2 class="mb-6 text-lg font-semibold text-white">Systemübersicht</h2>
           <div class="space-y-4">
             <div
               class="flex items-center justify-between rounded-md bg-white/10 p-3 backdrop-blur-sm"
@@ -269,18 +268,17 @@ const formatTimeAgo = (dateString: string) => {
               <div class="flex items-center space-x-3">
                 <Icon name="check-circle" class="h-5 w-5 text-green-400" />
                 <span class="text-sm font-medium text-white"
-                  >Partner
-                                    System</span
+                  >Partnersystem</span
                 >
               </div>
-              <span class="text-xs text-gray-300">Operational</span>
+              <span class="text-xs text-gray-300">In Betrieb</span>
             </div>
             <div
               class="flex items-center justify-between rounded-md bg-white/10 p-3 backdrop-blur-sm"
             >
               <div class="flex items-center space-x-3">
                 <Icon name="users" class="h-5 w-5 text-blue-400" />
-                <span class="text-sm font-medium text-white">Total Users</span>
+                <span class="text-sm font-medium text-white">Gesamtnutzer</span>
               </div>
               <span class="text-xs text-gray-300">{{ props.totalUsers }}</span>
             </div>
@@ -290,8 +288,7 @@ const formatTimeAgo = (dateString: string) => {
               <div class="flex items-center space-x-3">
                 <Icon name="clock" class="h-5 w-5 text-purple-400" />
                 <span class="text-sm font-medium text-white"
-                  >Active This
-                                    Week</span
+                  >Aktiv diese Woche</span
                 >
               </div>
               <span class="text-xs text-gray-300">{{ props.activeUsers }}</span>

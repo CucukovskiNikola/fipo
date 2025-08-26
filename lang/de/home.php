@@ -36,6 +36,9 @@ return [
     'monthly_reports' => 'Monatliche Leistungsberichte und Optimierung',
     'no_additional_cost' => 'Keine zusätzlichen Kosten - in Ihrem Listing enthalten',
     'learn_more_meta_ads' => 'Mehr über Meta Ads erfahren',
+    'image_heading'=>'Professionelle Meta-Werbung',
+    'image_p'=>'Erreichen Sie Millionen potenzieller Kunden',
+
     
     'what_we_deliver' => 'Was wir bieten',
     'what_we_deliver_description' => 'Umfassende Lösungen, um Ihre Unternehmenspräsenz zu verbessern und Sie mit der richtigen Zielgruppe zu verbinden',

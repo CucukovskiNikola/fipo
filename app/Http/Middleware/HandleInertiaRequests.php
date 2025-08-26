@@ -39,6 +39,18 @@ class HandleInertiaRequests extends Middleware
     {
         [$message, $author] = str(Inspiring::quotes()->random())->explode('-');
 
+        $locale = app()->getLocale();
+        $sessionLocale = session('locale');
+        
+        // Log locale information for debugging
+        \Log::info('Inertia: Sharing props', [
+            'app_locale' => $locale,
+            'session_locale' => $sessionLocale,
+            'url' => $request->fullUrl(),
+            'path' => $request->path(),
+            'user_agent' => $request->userAgent()
+        ]);
+
         return [
             ...parent::share($request),
             'name' => config('app.name'),
@@ -52,8 +64,9 @@ class HandleInertiaRequests extends Middleware
                 'contact' => __('contact'),
                 'auth' => __('auth'),
                 'home' => __('home'),
+                'categories' => __('categories'),
             ],
-            'locale' => app()->getLocale(),
+            'locale' => $locale,
             'ziggy' => [
                 ...(new Ziggy)->toArray(),
                 'location' => $request->url(),

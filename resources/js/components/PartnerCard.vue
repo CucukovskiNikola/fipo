@@ -9,7 +9,7 @@
         v-if="displayImage"
         :src="displayImage"
         :alt="partner.title"
-        class="w-full h-full object-cover shadow-2xl rounded-xl"
+        class="w-full h-full object-cover shadow-2xl rounded-xl transition-opacity duration-500"
         loading="lazy"
         decoding="async"
         @error="handleImageError"
@@ -40,13 +40,40 @@
     </div>
 
     <CardContent class="p-2">
-      <div>
+      <div class="flex items-center justify-between">
         <span
           class="inline-flex items-center px-3 py-1 border bg-white/10 backdrop-blur-sm border-white/20 text-white text-xs rounded-2xl"
         >
           <span>{{ categoryInfo.icon }}</span>
           {{ categoryInfo.name }}
         </span>
+        <!-- Translation indicator -->
+        <div
+          v-if="shouldTranslate && isTranslating"
+          class="inline-flex items-center px-2 py-1 bg-blue-500/20 border border-blue-400/30 text-blue-300 text-xs rounded-lg"
+        >
+          <svg
+            class="animate-spin -ml-1 mr-1 h-3 w-3 text-blue-300"
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+          >
+            <circle
+              class="opacity-25"
+              cx="12"
+              cy="12"
+              r="10"
+              stroke="currentColor"
+              stroke-width="4"
+            ></circle>
+            <path
+              class="opacity-75"
+              fill="currentColor"
+              d="m4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+            ></path>
+          </svg>
+          Translating...
+        </div>
       </div>
       <div class="my-3">
         <h1 class="font-semibold text-lg text-white line-clamp-2 min-h-14">
@@ -55,7 +82,7 @@
       </div>
 
       <p class="text-sm text-white mb-3 line-clamp-3 min-h-16">
-        {{ partner.description }}
+        {{ displayDescription }}
       </p>
 
       <div class="space-y-1 text-xs text-white">
@@ -87,20 +114,97 @@
 </template>
 
 <script setup>
-import { computed } from "vue";
+import { computed, onMounted, ref, watch } from "vue";
+import { usePage, router } from "@inertiajs/vue3";
 import { Card, CardContent } from "@/components/ui/card";
-import { router } from "@inertiajs/vue3";
-import categories from "@/data/categories.json";
+import { useCategories } from "@/composables/useCategories";
+import { useLibreTranslate } from "@/composables/useLibreTranslate";
+import { getLocalizedPartnerUrl } from "@/lib/utils";
 
 const props = defineProps({
   partner: Object,
+  enableTranslation: {
+    type: Boolean,
+    default: false,
+  },
 });
 
+// Get current page data to access locale
+const page = usePage();
+
+// Translation composable
+const { translateText, autoTranslate, isTranslating } = useLibreTranslate();
+
+// Categories composable
+const { categories, getCategoryName } = useCategories();
+// Translated text refs
+const translatedDescription = ref("");
+const translatedCategoryName = ref("");
+
+// Compute whether translation should be enabled based on locale or manual prop
+const shouldTranslate = computed(() => {
+  const currentLocale = page.props.locale || "de";
+  return props.enableTranslation || currentLocale === "en";
+});
+
+// Function to perform translations
+const performTranslations = async () => {
+  if (shouldTranslate.value) {
+    translatedDescription.value = await autoTranslate(
+      props.partner.description
+    );
+
+    // Translate category name if it's German
+    const category = categories.value.find(
+      (cat) => cat.id === props.partner.category
+    );
+    if (category) {
+      translatedCategoryName.value = await autoTranslate(category.name);
+    }
+  } else {
+    // Clear translations when disabled
+    translatedDescription.value = "";
+    translatedCategoryName.value = "";
+  }
+};
+
+// Initialize translations on mount
+onMounted(() => {
+  performTranslations();
+});
+
+// Watch for changes to enableTranslation prop or locale
+watch(
+  [() => props.enableTranslation, () => page.props.locale],
+  ([newTranslationValue, newLocale]) => {
+    console.log(
+      "Translation state changed - enableTranslation:",
+      newTranslationValue,
+      "locale:",
+      newLocale
+    );
+    performTranslations();
+  }
+);
+
 const categoryInfo = computed(() => {
-  const category = categories.find((cat) => cat.id === props.partner.category);
-  return category
-    ? { icon: category.icon, name: category.name }
-    : { icon: "📍", name: props.partner.category };
+  const category = categories.value.find(
+    (cat) => cat.id === props.partner.category
+  );
+  const name =
+    shouldTranslate.value && translatedCategoryName.value
+      ? translatedCategoryName.value
+      : category
+        ? category.name
+        : props.partner.category;
+
+  return category ? { icon: category.icon, name } : { icon: "📍", name };
+});
+
+const displayDescription = computed(() => {
+  return shouldTranslate.value && translatedDescription.value
+    ? translatedDescription.value
+    : props.partner.description;
 });
 
 const displayImage = computed(() => {
@@ -119,27 +223,15 @@ const handleImageError = (event) => {
   event.target.style.display = "none";
 };
 
-const createSlug = (title) => {
-  return title
-    .toLowerCase()
-    .replace(/[^a-z0-9]+/g, "-")
-    .replace(/(^-|-$)/g, "");
-};
-
 const navigateToPartner = () => {
   if (!props.partner.id) return;
 
-  const slug = createSlug(props.partner.title);
-
-  const params = new URLSearchParams({
-    id: props.partner.id,
-    title: slug,
-    category: props.partner.category,
-    city: props.partner.city,
-    location: `${props.partner.city}-${props.partner.zip_code}`,
-  });
-
-  const finalUrl = `/partners?${params.toString()}`;
+  const currentLocale = page.props.locale || "de";
+  const finalUrl = getLocalizedPartnerUrl(
+    props.partner.id,
+    props.partner.title,
+    currentLocale
+  );
   router.visit(finalUrl);
 };
 </script>

@@ -48,36 +48,36 @@ class DashboardController extends Controller
             });
 
         // Prepare stats data
-        $stats = [
-            [
-                'name' => 'Total Partners',
-                'value' => (string) $totalPartners,
-                'icon' => 'users',
-                'change' => $totalPartners > 0 ? '+' . $totalPartners . ' total' : 'No partners yet',
-                'changeType' => $totalPartners > 0 ? 'increase' : 'neutral'
-            ],
-            [
-                'name' => 'New This Month',
-                'value' => (string) $partnersThisMonth,
-                'icon' => 'trending-up',
-                'change' => $monthlyChange > 0 ? '+' . $monthlyChange . '%' : ($monthlyChange < 0 ? $monthlyChange . '%' : 'No change'),
-                'changeType' => $monthlyChange > 0 ? 'increase' : ($monthlyChange < 0 ? 'decrease' : 'neutral')
-            ],
-            [
-                'name' => 'Categories',
-                'value' => (string) $categoriesCount,
-                'icon' => 'chart-bar',
-                'change' => $categoriesCount > 0 ? $categoriesCount . ' active' : 'No categories',
-                'changeType' => 'neutral'
-            ],
-            [
-                'name' => 'Cities Covered',
-                'value' => (string) $citiesCount,
-                'icon' => 'map',
-                'change' => $citiesCount > 0 ? $citiesCount . ' locations' : 'No cities',
-                'changeType' => $citiesCount > 0 ? 'increase' : 'neutral'
-            ]
-        ];
+$stats = [
+    [
+        'name' => 'Gesamtanzahl Partner',
+        'value' => (string) $totalPartners,
+        'icon' => 'users',
+        'change' => $totalPartners > 0 ? '+' . $totalPartners . ' insgesamt' : 'Noch keine Partner',
+        'changeType' => $totalPartners > 0 ? 'increase' : 'neutral'
+    ],
+    [
+        'name' => 'Neu in diesem Monat',
+        'value' => (string) $partnersThisMonth,
+        'icon' => 'trending-up',
+        'change' => $monthlyChange > 0 ? '+' . $monthlyChange . '%' : ($monthlyChange < 0 ? $monthlyChange . '%' : 'Keine Veränderung'),
+        'changeType' => $monthlyChange > 0 ? 'increase' : ($monthlyChange < 0 ? 'decrease' : 'neutral')
+    ],
+    [
+        'name' => 'Kategorien',
+        'value' => (string) $categoriesCount,
+        'icon' => 'chart-bar',
+        'change' => $categoriesCount > 0 ? $categoriesCount . ' aktiv' : 'Keine Kategorien',
+        'changeType' => 'neutral'
+    ],
+    [
+        'name' => 'Abgedeckte Städte',
+        'value' => (string) $citiesCount,
+        'icon' => 'map',
+        'change' => $citiesCount > 0 ? $citiesCount . ' Standorte' : 'Keine Städte',
+        'changeType' => $citiesCount > 0 ? 'increase' : 'neutral'
+    ]
+];
 
         return Inertia::render('Dashboard', [
             'stats' => $stats,
