@@ -101,9 +101,31 @@
     <link rel="preload" as="image" href="{{ asset('images/bg.webp') }}" type="image/webp" fetchpriority="high">
     <link rel="preload" as="image" href="{{ asset('images/logo.svg') }}" type="image/svg+xml" fetchpriority="high">
 
+    <!-- Critical resource preloading for LCP optimization -->
+    <link rel="preconnect" href="{{ url('/api/translate') }}" crossorigin>
+    <link rel="dns-prefetch" href="//tile.openstreetmap.org">
+    <link rel="dns-prefetch" href="//fonts.bunny.net">
+    
+    <!-- Resource hints for better performance -->
+    <!-- Vite handles module preloading automatically, removing manual preload -->
+    
+    <!-- Preload critical CSS for immediate render -->
+    <style>
+        /* Critical CSS for immediate LCP element styling */
+        .liquid-glass {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        .aspect-video {
+            aspect-ratio: 16 / 9;
+        }
+        .h-55 {
+            height: 13.75rem;
+        }
+    </style>
 
-
-    <link rel="preconnect" href="https://fonts.bunny.net">
+    <link rel="preconnect" href="https://fonts.bunny.net" crossorigin>
 
     @routes
     @vite(['resources/js/app.ts', "resources/js/pages/{$page['component']}.vue"])

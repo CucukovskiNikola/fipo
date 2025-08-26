@@ -15,6 +15,17 @@ interface TranslationStats {
   lastUsed: number;
 }
 
+interface TranslationQueueItem {
+  id: string;
+  text: string;
+  from: string;
+  to: string;
+  priority: 'high' | 'normal' | 'low';
+  resolve: (value: string) => void;
+  reject: (reason?: any) => void;
+  timestamp: number;
+}
+
 export function useLibreTranslate() {
   const isTranslating = ref(false);
   const cache: TranslationCache = reactive({});
@@ -25,10 +36,23 @@ export function useLibreTranslate() {
     lastUsed: Date.now(),
   });
 
+  // Queue management
+  const translationQueue: TranslationQueueItem[] = [];
+  const isProcessingQueue = ref(false);
+  const activeTranslations = new Set<string>();
+  
+  // Debounce timers
+  const debounceTimers = new Map<string, NodeJS.Timeout>();
+
   // Cache configuration
   const CACHE_DURATION = 24 * 60 * 60 * 1000; // 24 hours in milliseconds
   const LOCAL_STORAGE_KEY = "translation_cache";
   const STATS_STORAGE_KEY = "translation_stats";
+  
+  // Queue configuration
+  const DEBOUNCE_DELAY = 300; // 300ms debounce
+  const QUEUE_PROCESS_DELAY = 200; // 200ms between queue items
+  const MAX_CONCURRENT_TRANSLATIONS = 1; // Process one at a time
 
   // Use our backend API to avoid CORS issues
   const API_URL = "/api/translate";
@@ -147,9 +171,109 @@ export function useLibreTranslate() {
   };
 
   /**
-   * Translate text using our backend API
+   * Generate unique ID for translation requests
    */
-  const translateText = async (
+  const generateTranslationId = (text: string, from: string, to: string): string => {
+    return `${from}-${to}-${text.slice(0, 50)}-${Date.now()}`;
+  };
+
+  /**
+   * Process the translation queue sequentially
+   */
+  const processQueue = async (): Promise<void> => {
+    if (isProcessingQueue.value || translationQueue.length === 0) {
+      return;
+    }
+
+    isProcessingQueue.value = true;
+    isTranslating.value = true;
+
+    while (translationQueue.length > 0) {
+      // Sort by priority: high -> normal -> low, then by timestamp
+      translationQueue.sort((a, b) => {
+        const priorityOrder = { high: 3, normal: 2, low: 1 };
+        if (priorityOrder[a.priority] !== priorityOrder[b.priority]) {
+          return priorityOrder[b.priority] - priorityOrder[a.priority];
+        }
+        return a.timestamp - b.timestamp;
+      });
+
+      const item = translationQueue.shift();
+      if (!item) break;
+
+      try {
+        const result = await translateTextDirect(item.text, item.from, item.to);
+        item.resolve(result);
+      } catch (error) {
+        item.reject(error);
+      }
+
+      // Remove from active translations
+      activeTranslations.delete(item.id);
+
+      // Delay before processing next item
+      if (translationQueue.length > 0) {
+        await new Promise(resolve => setTimeout(resolve, QUEUE_PROCESS_DELAY));
+      }
+    }
+
+    isProcessingQueue.value = false;
+    isTranslating.value = false;
+  };
+
+  /**
+   * Add translation to queue
+   */
+  const addToQueue = (
+    text: string,
+    from: string,
+    to: string,
+    priority: 'high' | 'normal' | 'low' = 'normal'
+  ): Promise<string> => {
+    const id = generateTranslationId(text, from, to);
+    
+    // Check if already in queue or being processed
+    if (activeTranslations.has(id)) {
+      return Promise.resolve(text); // Return original text if already processing
+    }
+
+    activeTranslations.add(id);
+
+    return new Promise((resolve, reject) => {
+      const queueItem: TranslationQueueItem = {
+        id,
+        text,
+        from,
+        to,
+        priority,
+        resolve,
+        reject,
+        timestamp: Date.now(),
+      };
+
+      translationQueue.push(queueItem);
+      
+      // Start processing if not already running
+      if (!isProcessingQueue.value) {
+        processQueue();
+      }
+    });
+  };
+
+  /**
+   * Clear translation queue
+   */
+  const clearQueue = (): void => {
+    translationQueue.length = 0;
+    activeTranslations.clear();
+    debounceTimers.forEach(timer => clearTimeout(timer));
+    debounceTimers.clear();
+  };
+
+  /**
+   * Direct translation without queue (for internal use)
+   */
+  const translateTextDirect = async (
     text: string,
     from = "de",
     to = "en"
@@ -170,9 +294,6 @@ export function useLibreTranslate() {
 
     stats.cacheMisses++;
     stats.totalTranslations++;
-
-    // Set translating state
-    isTranslating.value = true;
 
     try {
       const response = await fetch(API_URL, {
@@ -215,9 +336,78 @@ export function useLibreTranslate() {
       console.error("Translation error:", error);
       // Return original text on error
       return text;
-    } finally {
-      isTranslating.value = false;
     }
+  };
+
+  /**
+   * Optimized translation with caching and queueing
+   */
+  const translateText = async (
+    text: string,
+    from = "de",
+    to = "en",
+    priority: 'high' | 'normal' | 'low' = 'normal'
+  ): Promise<string> => {
+    // Return original text if empty
+    if (!text || text.trim() === "") {
+      return text;
+    }
+
+    // Create cache key
+    const cacheKey = `${from}-${to}-${text}`;
+
+    // Check cache first
+    const cached = getFromCache(cacheKey);
+    if (cached) {
+      return cached;
+    }
+
+    // Add to queue for processing
+    return addToQueue(text, from, to, priority);
+  };
+
+  /**
+   * Debounced translation function
+   */
+  const translateTextDebounced = async (
+    text: string,
+    from = "de",
+    to = "en",
+    priority: 'high' | 'normal' | 'low' = 'normal',
+    debounceKey = text
+  ): Promise<string> => {
+    // Return original text if empty
+    if (!text || text.trim() === "") {
+      return text;
+    }
+
+    // Check cache first for immediate response
+    const cacheKey = `${from}-${to}-${text}`;
+    const cached = getFromCache(cacheKey);
+    if (cached) {
+      return cached;
+    }
+
+    // Clear existing debounce timer for this key
+    if (debounceTimers.has(debounceKey)) {
+      clearTimeout(debounceTimers.get(debounceKey)!);
+    }
+
+    return new Promise((resolve) => {
+      const timer = setTimeout(async () => {
+        try {
+          const result = await translateText(text, from, to, priority);
+          resolve(result);
+        } catch (error) {
+          console.error('Debounced translation error:', error);
+          resolve(text);
+        } finally {
+          debounceTimers.delete(debounceKey);
+        }
+      }, DEBOUNCE_DELAY);
+
+      debounceTimers.set(debounceKey, timer);
+    });
   };
 
   /**
@@ -227,24 +417,12 @@ export function useLibreTranslate() {
     texts: string[],
     from = "de",
     to = "en",
-    batchSize = 5
+    priority: 'high' | 'normal' | 'low' = 'normal'
   ): Promise<string[]> => {
-    const results: string[] = [];
-
-    // Process in batches to avoid overwhelming the API
-    for (let i = 0; i < texts.length; i += batchSize) {
-      const batch = texts.slice(i, i + batchSize);
-      const batchResults = await Promise.all(
-        batch.map((text) => translateText(text, from, to))
-      );
-      results.push(...batchResults);
-
-      // Small delay between batches
-      if (i + batchSize < texts.length) {
-        await new Promise((resolve) => setTimeout(resolve, 100));
-      }
-    }
-
+    // Use the queue system for all translations
+    const results = await Promise.all(
+      texts.map((text) => translateText(text, from, to, priority))
+    );
     return results;
   };
 
@@ -354,9 +532,26 @@ export function useLibreTranslate() {
   /**
    * Auto-translate text if it appears to be German
    */
-  const autoTranslate = async (text: string): Promise<string> => {
+  const autoTranslate = async (
+    text: string,
+    priority: 'high' | 'normal' | 'low' = 'normal'
+  ): Promise<string> => {
     if (await isGerman(text)) {
-      return await translateText(text);
+      return await translateText(text, "de", "en", priority);
+    }
+    return text;
+  };
+
+  /**
+   * Auto-translate with debouncing
+   */
+  const autoTranslateDebounced = async (
+    text: string,
+    priority: 'high' | 'normal' | 'low' = 'normal',
+    debounceKey = text
+  ): Promise<string> => {
+    if (await isGerman(text)) {
+      return await translateTextDebounced(text, "de", "en", priority, debounceKey);
     }
     return text;
   };
@@ -376,11 +571,15 @@ export function useLibreTranslate() {
 
   return {
     translateText,
+    translateTextDebounced,
     translateTexts,
     autoTranslate,
+    autoTranslateDebounced,
     isTranslating,
+    isProcessingQueue,
     cache,
     clearCache,
+    clearQueue,
     cleanupExpiredCache,
     isGerman,
     getCacheStats,

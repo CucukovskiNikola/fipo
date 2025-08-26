@@ -12,6 +12,9 @@
         class="w-full h-full object-cover shadow-2xl rounded-xl transition-opacity duration-500"
         loading="lazy"
         decoding="async"
+        width="400"
+        height="220"
+        :fetchpriority="isAboveFold ? 'high' : 'low'"
         @error="handleImageError"
       />
 
@@ -49,7 +52,7 @@
         </span>
         <!-- Translation indicator -->
         <div
-          v-if="shouldTranslate && isTranslating"
+          v-if="isTranslatingDescription"
           class="inline-flex items-center px-2 py-1 bg-blue-500/20 border border-blue-400/30 text-blue-300 text-xs rounded-lg"
         >
           <svg
@@ -82,7 +85,15 @@
       </div>
 
       <p class="text-sm text-white mb-3 line-clamp-3 min-h-16">
-        {{ displayDescription }}
+        <span v-if="displayDescription || !shouldTranslate">
+          {{ displayDescription }}
+        </span>
+        <span v-else-if="isTranslatingDescription" class="animate-pulse">
+          <!-- Skeleton placeholder to prevent layout shift -->
+          <span class="block h-4 bg-white/20 rounded mb-1 w-full"></span>
+          <span class="block h-4 bg-white/20 rounded mb-1 w-4/5"></span>
+          <span class="block h-4 bg-white/20 rounded w-3/4"></span>
+        </span>
       </p>
 
       <div class="space-y-1 text-xs text-white">
@@ -114,11 +125,11 @@
 </template>
 
 <script setup>
-import { computed, onMounted, ref, watch } from "vue";
+import { computed } from "vue";
 import { usePage, router } from "@inertiajs/vue3";
 import { Card, CardContent } from "@/components/ui/card";
 import { useCategories } from "@/composables/useCategories";
-import { useLibreTranslate } from "@/composables/useLibreTranslate";
+import { usePartnerTranslation } from "@/composables/usePartnerTranslation";
 import { getLocalizedPartnerUrl } from "@/lib/utils";
 
 const props = defineProps({
@@ -127,84 +138,44 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
+  index: {
+    type: Number,
+    default: 0,
+  },
 });
 
 // Get current page data to access locale
 const page = usePage();
 
-// Translation composable
-const { translateText, autoTranslate, isTranslating } = useLibreTranslate();
-
 // Categories composable
 const { categories, getCategoryName } = useCategories();
-// Translated text refs
-const translatedDescription = ref("");
-const translatedCategoryName = ref("");
 
-// Compute whether translation should be enabled based on locale or manual prop
-const shouldTranslate = computed(() => {
-  const currentLocale = page.props.locale || "de";
-  return props.enableTranslation || currentLocale === "en";
+// Translation composable with shared logic
+const { 
+  displayDescription, 
+  shouldTranslate, 
+  isTranslatingDescription 
+} = usePartnerTranslation({
+  partner: props.partner,
+  enableTranslation: props.enableTranslation,
+  priority: 'normal',
+  contextPrefix: 'card'
 });
 
-// Function to perform translations
-const performTranslations = async () => {
-  if (shouldTranslate.value) {
-    translatedDescription.value = await autoTranslate(
-      props.partner.description
-    );
-
-    // Translate category name if it's German
-    const category = categories.value.find(
-      (cat) => cat.id === props.partner.category
-    );
-    if (category) {
-      translatedCategoryName.value = await autoTranslate(category.name);
-    }
-  } else {
-    // Clear translations when disabled
-    translatedDescription.value = "";
-    translatedCategoryName.value = "";
-  }
-};
-
-// Initialize translations on mount
-onMounted(() => {
-  performTranslations();
+// Determine if this card is above the fold (first 4-6 cards typically)
+const isAboveFold = computed(() => {
+  return props.index < 6; // Assume first 6 cards are above fold
 });
-
-// Watch for changes to enableTranslation prop or locale
-watch(
-  [() => props.enableTranslation, () => page.props.locale],
-  ([newTranslationValue, newLocale]) => {
-    console.log(
-      "Translation state changed - enableTranslation:",
-      newTranslationValue,
-      "locale:",
-      newLocale
-    );
-    performTranslations();
-  }
-);
 
 const categoryInfo = computed(() => {
   const category = categories.value.find(
     (cat) => cat.id === props.partner.category
   );
-  const name =
-    shouldTranslate.value && translatedCategoryName.value
-      ? translatedCategoryName.value
-      : category
-        ? category.name
-        : props.partner.category;
+  
+  // Categories are already localized through Laravel translations
+  const name = category ? category.name : props.partner.category;
 
   return category ? { icon: category.icon, name } : { icon: "📍", name };
-});
-
-const displayDescription = computed(() => {
-  return shouldTranslate.value && translatedDescription.value
-    ? translatedDescription.value
-    : props.partner.description;
 });
 
 const displayImage = computed(() => {

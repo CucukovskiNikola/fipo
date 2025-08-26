@@ -44,9 +44,10 @@
           <!-- Partners Grid -->
           <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             <PartnerCard
-              v-for="partner in partners"
+              v-for="(partner, index) in partners"
               :key="partner.id"
               :partner="partner"
+              :index="index"
             />
           </div>
 
@@ -120,38 +121,6 @@ const props = defineProps({
 });
 
 const { trans } = useTranslations();
-
-// Static cards about the business
-const aboutCards = [
-  {
-    title: "Find Partners",
-    description:
-      "Discover local businesses and partners in your area to collaborate and grow together.",
-    image:
-      "https://images.unsplash.com/photo-1521737711867-e3b97375f902?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80",
-  },
-  {
-    title: "Promote Your Business",
-    description:
-      "List your business and reach potential customers in your local community.",
-    image:
-      "https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80",
-  },
-  {
-    title: "Local Network",
-    description:
-      "Build connections with local entrepreneurs and expand your business network.",
-    image:
-      "https://images.unsplash.com/photo-1582213782179-e0d53f98f2ca?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80",
-  },
-  {
-    title: "Business Growth",
-    description:
-      "Access resources and opportunities to help your business thrive in the local market.",
-    image:
-      "https://images.unsplash.com/photo-1460925895917-afdab827c52f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80",
-  },
-];
 
 // Partners data
 const partners = ref([]);
@@ -289,7 +258,3 @@ const resetFilters = () => {
   fetchPartners(true);
 };
 </script>
-
-<style scoped>
-/* Custom styling for shadcn components */
-</style>

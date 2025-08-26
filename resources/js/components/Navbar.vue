@@ -77,12 +77,14 @@
       <!-- Mobile Header -->
       <div class="flex items-center justify-between px-4 py-3">
         <!-- Logo -->
-        <img
-          src="/images/logo.svg"
-          alt="Logo"
-          class="w-[120px]"
-          fetchpriority="high"
-        />
+        <Link :href="route('home')">
+          <img
+            src="/images/logo.svg"
+            alt="Logo"
+            class="w-[150px] lg:w-[150px]"
+            fetchpriority="high"
+          />
+        </Link>
 
         <!-- Mobile Menu Button -->
         <button

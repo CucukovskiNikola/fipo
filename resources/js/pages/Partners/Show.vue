@@ -8,6 +8,12 @@
         `View ${partner.title} - ${categoryInfo.name} business partner in ${partner?.city}. Contact information, services, and location details available.`
       "
     />
+    <!-- Preload critical resources -->
+    <link rel="preload" as="image" href="/images/bg.webp" />
+    <link rel="preconnect" href="/api/translate" />
+    <link v-if="currentImageUrl" rel="preload" as="image" :href="currentImageUrl" />
+    <!-- Leaflet CSS is critical for map rendering -->
+    <link rel="preload" as="style" href="/node_modules/leaflet/dist/leaflet.css" />
   </Head>
 
   <div
@@ -63,6 +69,10 @@
                   :src="currentImageUrl"
                   :alt="partner.title"
                   class="w-full h-full object-cover"
+                  loading="eager"
+                  fetchpriority="high"
+                  width="800"
+                  height="450"
                   @error="handleImageError"
                 />
               </div>
@@ -85,6 +95,9 @@
                       :src="getImageUrl(image.path)"
                       :alt="`${partner.title} - Image ${index + 1}`"
                       class="w-full h-full object-cover"
+                      loading="lazy"
+                      width="64"
+                      height="64"
                     />
                   </button>
                 </div>
@@ -103,6 +116,10 @@
                 :src="getImageUrl(partner.image)"
                 :alt="partner.title"
                 class="w-full h-full object-cover"
+                loading="eager"
+                fetchpriority="high"
+                width="800"
+                height="450"
                 @error="handleImageError"
               />
             </div>
@@ -201,7 +218,7 @@
                 {{ partner.title }}
                 <!-- Translation indicator -->
                 <span
-                  v-if="shouldTranslate && isTranslating"
+                  v-if="isTranslatingDescription"
                   class="inline-flex items-center px-2 py-1 bg-blue-500/20 border border-blue-400/30 text-blue-300 text-xs rounded-lg ml-3"
                 >
                   <svg
@@ -241,9 +258,18 @@
               <h2 class="text-xl text-white">
                 {{ trans("common.about_this_business") }}:
               </h2>
-              <p class="text-white/80 leading-relaxed text-lg">
-                {{ displayDescription }}
-              </p>
+              <div class="text-white/80 leading-relaxed text-lg min-h-[6rem]">
+                <p v-if="displayDescription || !shouldTranslate">
+                  {{ displayDescription }}
+                </p>
+                <div v-else-if="isTranslatingDescription" class="animate-pulse space-y-2">
+                  <!-- Skeleton placeholder to prevent layout shift -->
+                  <div class="h-5 bg-white/20 rounded w-full"></div>
+                  <div class="h-5 bg-white/20 rounded w-11/12"></div>
+                  <div class="h-5 bg-white/20 rounded w-4/5"></div>
+                  <div class="h-5 bg-white/20 rounded w-3/4"></div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -341,14 +367,14 @@
 </template>
 
 <script setup>
-import { computed, ref, onMounted, onUnmounted, watch } from "vue";
+import { computed, ref, onMounted, onUnmounted } from "vue";
 import { router, Head, usePage } from "@inertiajs/vue3";
 import Button from "@/components/ui/button/Button.vue";
 import Navbar from "@/components/Navbar.vue";
 import Footer from "@/components/Footer.vue";
 import { useCategories } from "@/composables/useCategories";
 import { useTranslations } from "@/composables/useTranslations";
-import { useLibreTranslate } from "@/composables/useLibreTranslate";
+import { usePartnerTranslation } from "@/composables/usePartnerTranslation";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 
@@ -366,93 +392,35 @@ let map = null;
 
 const { trans } = useTranslations();
 const { categories, getCategoryName } = useCategories();
-const { translateText, isTranslating } = useLibreTranslate();
 
-// Translation state
-const translatedDescription = ref("");
-const translatedCategoryName = ref("");
-
-// Check if translation should be enabled
-const shouldTranslate = computed(() => {
+// Check if translation should be enabled (Show.vue specific logic)
+const shouldTranslateShow = computed(() => {
   const currentLocale = page.props.locale || "de";
   return currentLocale === "en" && props.partner?.original_lang === "de";
 });
 
-// Perform translations
-const performTranslations = async () => {
-  if (!shouldTranslate.value || !props.partner) return;
-
-  try {
-    // Translate description
-    if (props.partner.description) {
-      translatedDescription.value = await translateText(
-        props.partner.description,
-        "de",
-        "en"
-      );
-    }
-
-    // Translate category name
-    if (props.partner.category) {
-      translatedCategoryName.value = await translateText(
-        props.partner.category,
-        "de",
-        "en"
-      );
-    }
-  } catch (error) {
-    console.error("Translation failed:", error);
-  }
-};
-
-// Clear translations
-const clearTranslations = () => {
-  translatedDescription.value = "";
-  translatedCategoryName.value = "";
-};
-
-// Initialize translations on mount
-onMounted(() => {
-  performTranslations();
+// Translation composable with shared logic
+const { 
+  displayDescription, 
+  shouldTranslate, 
+  isTranslatingDescription 
+} = usePartnerTranslation({
+  partner: props.partner,
+  enableTranslation: shouldTranslateShow.value,
+  priority: 'high',
+  contextPrefix: 'show'
 });
 
-// Watch for changes to enableTranslation prop or locale
-watch(
-  [() => shouldTranslate.value, () => page.props.locale],
-  ([newTranslationValue, newLocale]) => {
-    console.log(
-      "Translation state changed - shouldTranslate:",
-      newTranslationValue,
-      "locale:",
-      newLocale
-    );
-    if (newTranslationValue) {
-      performTranslations();
-    } else {
-      clearTranslations();
-    }
-  }
-);
-
-// Get category icon and name (with translation support)
+// Get category icon and name (categories are already localized through Laravel)
 const categoryInfo = computed(() => {
   const category = categories.value.find(
     (cat) => cat.id === props.partner.category
   );
-  const name =
-    shouldTranslate.value && translatedCategoryName.value
-      ? translatedCategoryName.value
-      : category
-        ? category.name
-        : props.partner.category;
+  
+  // Categories are already localized through Laravel translations
+  const name = category ? category.name : props.partner.category;
 
   return category ? { icon: category.icon, name } : { icon: "📍", name };
-});
-
-const displayDescription = computed(() => {
-  return shouldTranslate.value && translatedDescription.value
-    ? translatedDescription.value
-    : props.partner.description;
 });
 
 // Get current image URL
