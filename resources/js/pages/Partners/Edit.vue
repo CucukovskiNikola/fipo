@@ -19,12 +19,12 @@
           <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
             <!-- Titel -->
             <div class="md:col-span-2">
-              <label
+              <Label
                 for="title"
                 class="block text-sm font-medium text-gray-300 mb-2"
               >
                 Titel <span class="text-red-400">*</span>
-              </label>
+              </Label>
               <Input
                 id="title"
                 v-model="form.title"
@@ -38,12 +38,12 @@
 
             <!-- Name des Inhabers -->
             <div>
-              <label
+              <Label
                 for="name_of_owner"
                 class="block text-sm font-medium text-gray-300 mb-2"
               >
                 Name des Inhabers
-              </label>
+              </Label>
               <Input
                 id="name_of_owner"
                 maxlength="100"
@@ -56,13 +56,18 @@
 
             <!-- Kategorie -->
             <div>
-              <Label
+              <p
                 for="category"
                 class="block text-sm font-medium text-gray-300 mb-2"
               >
                 Kategorie <span class="text-red-400">*</span>
-              </Label>
-              <Select id="category" v-model="form.category" required>
+              </p>
+              <Select
+                name="category"
+                id="category"
+                v-model="form.category"
+                required
+              >
                 <SelectTrigger
                   class="w-full text-md rounded-2xl bg-white/20 border border-white/20 text-white px-4 py-5.5"
                 >
@@ -90,12 +95,12 @@
 
             <!-- Beschreibung -->
             <div class="md:col-span-2">
-              <label
+              <Label
                 for="description"
                 class="block text-sm font-medium text-gray-300 mb-2"
               >
                 Beschreibung <span class="text-red-400">*</span>
-              </label>
+              </Label>
               <Textarea
                 id="description"
                 v-model="form.description"
@@ -110,12 +115,12 @@
 
             <!-- Bilder hochladen -->
             <div class="md:col-span-2">
-              <label
+              <Label
                 for="images"
                 class="block text-sm font-medium text-gray-300 mb-2"
               >
                 Partner-Bilder
-              </label>
+              </Label>
 
               <!-- Aktuelle Bilder -->
               <div
@@ -161,15 +166,56 @@
                 type="file"
                 id="images"
                 @change="handleImagesUpload"
-                accept="image/jpeg,image/png,image/jpg,image/gif,image/svg+xml"
+                accept="image/jpeg,image/png,image/jpg,image/gif,image/svg+xml,image/webp"
                 multiple
                 class="block w-full text-sm text-white file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-white/10 file:text-white hover:file:bg-white/30"
               />
               <p class="mt-1 text-xs text-gray-300">
                 Optional: Lade bis zu 15 Bilder hoch (JPEG, PNG, JPG, GIF, SVG,
-                max. 5MB pro Datei)
+                WebP, max. 5MB pro Datei) - Bilder werden automatisch zu WebP
+                komprimiert
               </p>
               <InputError :message="errors.images" class="mt-1" />
+
+              <!-- Progress Bar -->
+              <div
+                v-if="uploadProgress.show"
+                class="mt-4 p-4 bg-white/5 rounded-lg border border-white/20"
+              >
+                <div class="flex items-center justify-between mb-2">
+                  <span class="text-sm text-white font-medium">
+                    Compressing Images
+                  </span>
+                  <span class="text-xs text-white/70">
+                    {{ uploadProgress.current }}/{{ uploadProgress.total }}
+                  </span>
+                </div>
+
+                <!-- Progress Bar -->
+                <div class="w-full bg-white/10 rounded-full h-2 mb-2">
+                  <div
+                    class="bg-gradient-to-r from-blue-500 to-purple-500 h-2 rounded-full transition-all duration-300 ease-out"
+                    :style="{ width: `${uploadProgress.overall}%` }"
+                  ></div>
+                </div>
+
+                <!-- Status Text -->
+                <div class="flex items-center justify-between">
+                  <span class="text-xs text-white/60">
+                    {{ uploadProgress.status }}
+                  </span>
+                  <span class="text-xs text-white/60">
+                    {{ uploadProgress.overall }}%
+                  </span>
+                </div>
+
+                <!-- Current File -->
+                <div v-if="uploadProgress.currentFile" class="mt-1">
+                  <span class="text-xs text-blue-400 font-mono">
+                    {{ uploadProgress.currentFile }}
+                  </span>
+                </div>
+              </div>
 
               <!-- Neue Bildvorschau -->
               <div v-if="selectedImages.length > 0" class="mt-4">
@@ -217,12 +263,12 @@
           <!-- Manuelle Felder -->
           <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
-              <label
+              <Label
                 for="city"
                 class="block text-sm font-medium text-gray-300 mb-2"
               >
                 Stadt <span class="text-red-400">*</span>
-              </label>
+              </Label>
               <Input
                 id="city"
                 v-model="form.city"
@@ -234,12 +280,12 @@
             </div>
 
             <div>
-              <label
+              <Label
                 for="zip_code"
                 class="block text-sm font-medium text-gray-300 mb-2"
               >
                 Postleitzahl <span class="text-red-400">*</span>
-              </label>
+              </Label>
               <Input
                 id="zip_code"
                 v-model="form.zip_code"
@@ -251,12 +297,12 @@
             </div>
 
             <div>
-              <label
+              <Label
                 for="latitude"
                 class="block text-sm font-medium text-gray-300 mb-2"
               >
                 Breitengrad <span class="text-red-400">*</span>
-              </label>
+              </Label>
               <Input
                 id="latitude"
                 v-model="form.latitude"
@@ -272,12 +318,12 @@
             </div>
 
             <div>
-              <label
+              <Label
                 for="longitude"
                 class="block text-sm font-medium text-gray-300 mb-2"
               >
                 Längengrad <span class="text-red-400">*</span>
-              </label>
+              </Label>
               <Input
                 id="longitude"
                 v-model="form.longitude"
@@ -349,11 +395,24 @@ import InputError from "@/components/InputError.vue";
 import LocationPicker from "@/components/LocationPicker.vue";
 import { useCategories } from "@/composables/useCategories";
 import { useTranslations } from "@/composables/useTranslations";
+import { useImageCompression } from "@/composables/useImageCompression";
 
 const page = usePage();
 
 // Use composables
 const { categories } = useCategories();
+const { processImages, getCompressionPresets, createCustomSettings } =
+  useImageCompression();
+
+// Progress state
+const uploadProgress = ref({
+  show: false,
+  overall: 0,
+  current: 0,
+  total: 0,
+  status: "",
+  currentFile: "",
+});
 const { trans } = useTranslations();
 
 // Navigation configuration
@@ -507,22 +566,116 @@ const formatDate = (dateString: string): string => {
   return new Date(dateString).toLocaleDateString();
 };
 
-const handleImagesUpload = (event: Event) => {
+const handleImagesUpload = async (event: Event) => {
   const target = event.target as HTMLInputElement;
   if (target.files && target.files.length > 0) {
-    const newImages: SelectedImage[] = [];
     const currentImageCount =
       (props.partner.images?.length || 0) - imagesToRemove.value.length;
     const maxNewImages = Math.min(15 - currentImageCount, target.files.length);
 
-    for (let i = 0; i < maxNewImages; i++) {
-      const file = target.files[i];
-      const preview = URL.createObjectURL(file);
-      newImages.push({ file, preview });
+    const filesToProcess = Array.from(target.files).slice(0, maxNewImages);
+
+    try {
+      // Show progress
+      uploadProgress.value.show = true;
+      uploadProgress.value.overall = 0;
+      uploadProgress.value.current = 0;
+      uploadProgress.value.total = filesToProcess.length;
+      uploadProgress.value.status = "Starting compression...";
+
+      // Show loading state
+      const loadingImages = filesToProcess.map((file) => ({
+        file,
+        preview: URL.createObjectURL(file),
+        loading: true,
+      }));
+
+      selectedImages.value = [...selectedImages.value, ...loadingImages];
+
+      // Progress callback
+      const onProgress = (
+        overall: number,
+        current: number,
+        total: number,
+        status?: string,
+        filename?: string
+      ) => {
+        uploadProgress.value.overall = Math.round(overall);
+        uploadProgress.value.current = current;
+        uploadProgress.value.total = total;
+        uploadProgress.value.currentFile = filename || "";
+
+        switch (status) {
+          case "processing":
+            uploadProgress.value.status = `Processing ${filename}...`;
+            break;
+          case "completed":
+            uploadProgress.value.status = `Completed ${filename}`;
+            break;
+          case "error":
+            uploadProgress.value.status = `Error processing ${filename}`;
+            break;
+          case "skipped":
+            uploadProgress.value.status = `Skipped non-image file`;
+            break;
+          case "skipped_optimized":
+            uploadProgress.value.status = `Already optimized`;
+            break;
+        }
+      };
+
+      // Process images to WebP with standard quality settings
+      const compressionSettings = createCustomSettings({
+        quality: 0.8,
+        maxWidth: 1920,
+        maxHeight: 1080,
+      });
+
+      const compressedFiles = await processImages(
+        filesToProcess,
+        compressionSettings,
+        onProgress
+      );
+
+      // Update with compressed images
+      const newImages: SelectedImage[] = compressedFiles.map((file) => {
+        const preview = URL.createObjectURL(file);
+        return { file, preview };
+      });
+
+      // Remove loading images and add compressed ones
+      selectedImages.value = [
+        ...selectedImages.value.slice(
+          0,
+          selectedImages.value.length - filesToProcess.length
+        ),
+        ...newImages,
+      ];
+
+      form.images = selectedImages.value.map((img) => img.file);
+
+      // Hide progress after a short delay
+      setTimeout(() => {
+        uploadProgress.value.show = false;
+      }, 1500);
+    } catch (error) {
+      console.error("Error processing images:", error);
+      uploadProgress.value.status = "Error occurred during compression";
+
+      // Remove loading images on error
+      selectedImages.value = selectedImages.value.slice(
+        0,
+        selectedImages.value.length - filesToProcess.length
+      );
+
+      // Hide progress after error
+      setTimeout(() => {
+        uploadProgress.value.show = false;
+      }, 3000);
     }
 
-    selectedImages.value = [...selectedImages.value, ...newImages];
-    form.images = selectedImages.value.map((img) => img.file);
+    // Clear input
+    target.value = "";
   }
 };
 
@@ -581,9 +734,7 @@ const submit = () => {
       selectedImages.value = [];
       imagesToRemove.value = [];
     },
-    onError: (errors) => {
-      console.log("Form submission errors:", errors);
-    },
+    onError: (errors) => {},
   });
 };
 </script>

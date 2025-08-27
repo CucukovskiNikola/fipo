@@ -6,7 +6,7 @@
         <img
           src="/images/logo.svg"
           alt="Logo"
-          class="w-[150px] lg:w-[150px]"
+          class="w-[150px] h-12 lg:w-[150px]"
           fetchpriority="high"
         />
       </Link>
@@ -81,7 +81,7 @@
           <img
             src="/images/logo.svg"
             alt="Logo"
-            class="w-[150px] lg:w-[150px]"
+            class="w-[150px] h-12 lg:w-[150px]"
             fetchpriority="high"
           />
         </Link>

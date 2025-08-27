@@ -99,7 +99,9 @@
 
 
     <link rel="preload" as="image" href="{{ asset('images/bg.webp') }}" type="image/webp" fetchpriority="high">
+    @unless(request()->is('dashboard*'))
     <link rel="preload" as="image" href="{{ asset('images/logo.svg') }}" type="image/svg+xml" fetchpriority="high">
+    @endunless
 
     <!-- Critical resource preloading for LCP optimization -->
     <link rel="preconnect" href="{{ url('/api/translate') }}" crossorigin>

@@ -11,12 +11,12 @@
             <img
               src="/images/logo.svg"
               alt="Logo"
-              class="w-32 h-auto"
+              class="w-32 h-12"
               fetchpriority="high"
             />
           </div>
           <p class="text-gray-300 text-sm leading-relaxed mb-6 max-w-md">
-            {{ trans('home.footer_description') }}
+            {{ trans("home.footer_description") }}
           </p>
 
           <!-- Social Media -->
@@ -49,14 +49,16 @@
 
         <!-- Quick Links -->
         <div>
-          <h1 class="text-white font-semibold mb-4">{{ trans('home.quick_links') }}</h1>
+          <h1 class="text-white font-semibold mb-4">
+            {{ trans("home.quick_links") }}
+          </h1>
           <ul class="space-y-2">
             <li>
               <button
                 @click="handleNavigate('overview')"
                 class="text-gray-300 hover:text-white text-sm transition-colors hover:translate-x-1 transform duration-200"
               >
-                {{ trans('home.overview') }}
+                {{ trans("home.overview") }}
               </button>
             </li>
             <li>
@@ -64,7 +66,7 @@
                 @click="handleNavigate('whatwedo')"
                 class="text-gray-300 hover:text-white text-sm transition-colors hover:translate-x-1 transform duration-200"
               >
-                {{ trans('home.what_we_do') }}
+                {{ trans("home.what_we_do") }}
               </button>
             </li>
             <li>
@@ -72,7 +74,7 @@
                 @click="handleNavigate('contact')"
                 class="text-gray-300 hover:text-white text-sm transition-colors hover:translate-x-1 transform duration-200"
               >
-                {{ trans('common.contact') }}
+                {{ trans("common.contact") }}
               </button>
             </li>
           </ul>
@@ -80,14 +82,16 @@
 
         <!-- Legal -->
         <div>
-          <h1 class="text-white font-semibold mb-4">{{ trans('home.legal') }}</h1>
+          <h1 class="text-white font-semibold mb-4">
+            {{ trans("home.legal") }}
+          </h1>
           <ul class="space-y-2">
             <li>
               <button
                 @click="handleNavigate('privacy')"
                 class="text-gray-300 hover:text-white text-sm transition-colors hover:translate-x-1 transform duration-200"
               >
-                {{ trans('home.privacy_policy') }}
+                {{ trans("home.privacy_policy") }}
               </button>
             </li>
             <li>
@@ -95,7 +99,7 @@
                 @click="handleNavigate('terms')"
                 class="text-gray-300 hover:text-white text-sm transition-colors hover:translate-x-1 transform duration-200"
               >
-                {{ trans('home.terms_conditions') }}
+                {{ trans("home.terms_conditions") }}
               </button>
             </li>
           </ul>
@@ -109,10 +113,11 @@
         class="flex flex-col md:flex-row justify-between items-center space-y-2 md:space-y-0"
       >
         <p class="text-gray-400 text-xs">
-          © {{ new Date().getFullYear() }} findemich. {{ trans('home.all_rights_reserved') }}
+          © {{ new Date().getFullYear() }} findemich.
+          {{ trans("home.all_rights_reserved") }}
         </p>
         <div class="flex items-center space-x-4 text-xs text-gray-400">
-          <span>{{ trans('home.made_with_love') }}</span>
+          <span>{{ trans("home.made_with_love") }}</span>
           <div class="w-1 h-1 bg-gray-500 rounded-full"></div>
           <span>v1.0.0</span>
         </div>

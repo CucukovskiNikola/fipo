@@ -4,7 +4,6 @@ import { createInertiaApp } from "@inertiajs/vue3";
 import { resolvePageComponent } from "laravel-vite-plugin/inertia-helpers";
 import PrimeVue from "primevue/config";
 import Aura from "@primevue/themes/aura";
-import "primeicons/primeicons.css";
 import type { DefineComponent } from "vue";
 import { createApp, h } from "vue";
 import { ZiggyVue } from "ziggy-js";

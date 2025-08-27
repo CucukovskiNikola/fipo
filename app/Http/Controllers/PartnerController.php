@@ -13,7 +13,6 @@ use Inertia\Inertia;
 
 class PartnerController extends Controller
 {
-
     /**
      * Display a listing of the resource.
      */
@@ -28,8 +27,8 @@ class PartnerController extends Controller
             'meta' => [
                 'title' => 'findemich - Manage Business Partners',
                 'description' => 'Manage business partner listings, review applications, and maintain partner database with advanced filtering and search tools.',
-                'keywords' => 'partner management, business administration, findemich admin, partner listings'
-            ]
+                'keywords' => 'partner management, business administration, findemich admin, partner listings',
+            ],
         ]);
     }
 
@@ -39,14 +38,14 @@ class PartnerController extends Controller
     public function create()
     {
         $user = Auth::user();
-        
+
         return Inertia::render('Partners/Create', [
             'user' => $user->only(['city', 'zip_code', 'latitude', 'longitude']),
             'meta' => [
                 'title' => 'findemich - Add New Business Partner',
                 'description' => 'Add new business partners to the findemich platform. Enter partner details, location data, and business information through our admin form.',
-                'keywords' => 'add partner, new business, partner registration, findemich admin'
-            ]
+                'keywords' => 'add partner, new business, partner registration, findemich admin',
+            ],
         ]);
     }
 
@@ -59,7 +58,7 @@ class PartnerController extends Controller
             'has_images' => $request->hasFile('images'),
             'images_count' => $request->hasFile('images') ? count($request->file('images')) : 0,
             'has_single_image' => $request->hasFile('image'),
-            'all_files' => array_keys($request->allFiles())
+            'all_files' => array_keys($request->allFiles()),
         ]);
 
         $validated = $request->validate([
@@ -67,9 +66,9 @@ class PartnerController extends Controller
             'name_of_owner' => 'nullable|string|max:255',
             'category' => 'required|string|max:255',
             'description' => 'required|string',
-            'image' => 'nullable|file|mimes:jpeg,png,jpg,gif,svg|max:5120',
+            'image' => 'nullable|file|mimes:jpeg,png,jpg,gif,svg,webp|max:5120',
             'images' => 'nullable|array|max:15',
-            'images.*' => 'file|mimes:jpeg,png,jpg,gif,svg|max:5120',
+            'images.*' => 'file|mimes:jpeg,png,jpg,gif,svg,webp|max:5120',
             'city' => 'required|string|max:255',
             'zip_code' => 'required|string|max:20',
             'longitude' => 'required|numeric|between:-180,180',
@@ -94,11 +93,11 @@ class PartnerController extends Controller
             $sortOrder = 0;
             foreach ($request->file('images') as $image) {
                 \Log::info('Optimizing image:', ['original_name' => $image->getClientOriginalName(), 'size' => $image->getSize()]);
-                
+
                 // Optimize each image
                 $imagePath = ImageOptimizer::optimizeImage($image);
                 \Log::info('Image optimized and stored:', ['path' => $imagePath]);
-                
+
                 $partnerImage = PartnerImage::create([
                     'partner_id' => $partner->id,
                     'path' => $imagePath,
@@ -126,8 +125,8 @@ class PartnerController extends Controller
             'meta' => [
                 'title' => "findemich - {$partner->title}",
                 'description' => "View detailed business partner information for {$partner->title} in {$partner->city}. Contact details, services, and administrative management options.",
-                'keywords' => "business partner, {$partner->title}, {$partner->city}, {$partner->category}"
-            ]
+                'keywords' => "business partner, {$partner->title}, {$partner->city}, {$partner->category}",
+            ],
         ]);
     }
 
@@ -141,22 +140,22 @@ class PartnerController extends Controller
             'route_id' => $id,
             'query_id' => $request->query('id'),
             'title' => $request->query('title'),
-            'url' => $request->fullUrl()
+            'url' => $request->fullUrl(),
         ]);
-        
+
         // Get the ID from route parameter or query parameters
         $partnerId = $id ?? $request->query('id');
-        
-        if (!$partnerId) {
+
+        if (! $partnerId) {
             \Log::error('Partner ID missing in request', ['route_id' => $id, 'query' => $request->all()]);
             abort(404, 'Partner ID is required');
         }
 
         $partner = Partner::with(['user', 'images'])->findOrFail($partnerId);
-        
+
         \Log::info('Partner found successfully', [
             'partner_id' => $partner->id,
-            'partner_title' => $partner->title
+            'partner_title' => $partner->title,
         ]);
 
         // Transform partner data to include original language for frontend translation
@@ -177,7 +176,7 @@ class PartnerController extends Controller
             // Mark original language for translation
             'original_lang' => 'de',
             // Fields that should be translated
-            'translatable_fields' => ['title', 'description', 'category']
+            'translatable_fields' => ['title', 'description', 'category'],
         ];
 
         return Inertia::render('Partners/Show', [
@@ -185,8 +184,8 @@ class PartnerController extends Controller
             'meta' => [
                 'title' => "findemich - {$partner->title} in {$partner->city}",
                 'description' => "View {$partner->title} - {$partner->category} business partner in {$partner->city}. Contact information, services, and location details available.",
-                'keywords' => "business partner, {$partner->title}, {$partner->city}, {$partner->category}, local services"
-            ]
+                'keywords' => "business partner, {$partner->title}, {$partner->city}, {$partner->category}, local services",
+            ],
         ]);
     }
 
@@ -197,10 +196,10 @@ class PartnerController extends Controller
     {
         $partner->load(['images', 'user']);
         $user = Auth::user();
-        
+
         return Inertia::render('Partners/Edit', [
             'partner' => $partner,
-            'user' => $user->only(['city', 'zip_code', 'latitude', 'longitude'])
+            'user' => $user->only(['city', 'zip_code', 'latitude', 'longitude']),
         ]);
     }
 
@@ -220,17 +219,17 @@ class PartnerController extends Controller
                         'name' => $file->getClientOriginalName(),
                         'size' => $file->getSize(),
                         'mime' => $file->getMimeType(),
-                        'extension' => $file->getClientOriginalExtension()
+                        'extension' => $file->getClientOriginalExtension(),
                     ];
                 } else {
                     $imageDetails[] = [
                         'index' => $index,
-                        'status' => 'invalid_or_empty'
+                        'status' => 'invalid_or_empty',
                     ];
                 }
             }
         }
-        
+
         \Log::info('Partner update request data:', [
             'partner_id' => $partner->id,
             'partner_title' => $partner->title,
@@ -241,7 +240,7 @@ class PartnerController extends Controller
             'remove_images' => $request->input('remove_images'),
             'has_images_file' => $request->hasFile('images'),
             'request_method' => $request->method(),
-            '_method' => $request->input('_method')
+            '_method' => $request->input('_method'),
         ]);
 
         try {
@@ -250,9 +249,9 @@ class PartnerController extends Controller
                 'name_of_owner' => 'nullable|string|max:255',
                 'category' => 'required|string|max:255',
                 'description' => 'required|string',
-                'image' => 'nullable|file|mimes:jpeg,png,jpg,gif,svg|max:5120',
+                'image' => 'nullable|file|mimes:jpeg,png,jpg,gif,svg,webp|max:5120',
                 'images' => 'nullable|array|max:15',
-                'images.*' => 'file|mimes:jpeg,png,jpg,gif,svg|max:5120',
+                'images.*' => 'file|mimes:jpeg,png,jpg,gif,svg,webp|max:5120',
                 'remove_images' => 'nullable|array',
                 'remove_images.*' => 'nullable|integer|exists:partner_images,id',
                 'city' => 'required|string|max:255',
@@ -264,7 +263,7 @@ class PartnerController extends Controller
             \Log::error('Validation failed', ['errors' => $e->errors()]);
             throw $e;
         }
-        
+
         \Log::info('Validation passed successfully');
 
         // Handle legacy single image upload
@@ -273,7 +272,7 @@ class PartnerController extends Controller
             if ($partner->image) {
                 Storage::disk('public')->delete($partner->image);
             }
-            
+
             \Log::info('Processing single image upload for update');
             $imagePath = ImageOptimizer::optimizeImage($request->file('image'));
             $validated['image'] = $imagePath;
@@ -283,12 +282,12 @@ class PartnerController extends Controller
         $partner->update($validated);
 
         // Handle image removal
-        if ($request->has('remove_images') && is_array($request->remove_images) && !empty($request->remove_images)) {
+        if ($request->has('remove_images') && is_array($request->remove_images) && ! empty($request->remove_images)) {
             \Log::info('Processing image removals', ['remove_images' => $request->remove_images]);
             $imagesToRemove = PartnerImage::whereIn('id', $request->remove_images)
                 ->where('partner_id', $partner->id)
                 ->get();
-                
+
             foreach ($imagesToRemove as $imageToRemove) {
                 \Log::info('Removing image', ['id' => $imageToRemove->id, 'path' => $imageToRemove->path]);
                 Storage::disk('public')->delete($imageToRemove->path);
@@ -301,18 +300,20 @@ class PartnerController extends Controller
             \Log::info('Processing new images upload');
             $currentImageCount = $partner->images()->count();
             $maxNewImages = min(15 - $currentImageCount, count($request->file('images')));
-            
+
             \Log::info('Image upload details:', [
                 'current_count' => $currentImageCount,
                 'max_new' => $maxNewImages,
-                'files_received' => count($request->file('images'))
+                'files_received' => count($request->file('images')),
             ]);
-            
+
             $sortOrder = $partner->images()->max('sort_order') + 1;
-            if ($sortOrder === null) $sortOrder = 1;
-            
+            if ($sortOrder === null) {
+                $sortOrder = 1;
+            }
+
             $uploadedImages = array_slice($request->file('images'), 0, $maxNewImages);
-            
+
             foreach ($uploadedImages as $index => $image) {
                 try {
                     \Log::info("Optimizing image {$index} for update", ['original_name' => $image->getClientOriginalName(), 'size' => $image->getSize()]);
@@ -322,15 +323,15 @@ class PartnerController extends Controller
                         'path' => $imagePath,
                         'sort_order' => $sortOrder++,
                     ]);
-                    \Log::info("Successfully created optimized partner image", ['id' => $partnerImage->id, 'path' => $imagePath]);
+                    \Log::info('Successfully created optimized partner image', ['id' => $partnerImage->id, 'path' => $imagePath]);
                 } catch (\Exception $e) {
-                    \Log::error("Failed to process image {$index}: " . $e->getMessage());
+                    \Log::error("Failed to process image {$index}: ".$e->getMessage());
                 }
             }
         }
 
         \Log::info('Partner update completed successfully', ['partner_id' => $partner->id]);
-        
+
         return redirect()->route('partners.index')
             ->with('success', 'Partner updated successfully.');
     }
@@ -358,12 +359,12 @@ class PartnerController extends Controller
         if ($partner->image) {
             Storage::disk('public')->delete($partner->image);
         }
-        
+
         // Delete all associated images
         foreach ($partner->images as $image) {
             Storage::disk('public')->delete($image->path);
         }
-        
+
         $partner->delete();
 
         return redirect()->route('partners.index')
@@ -381,15 +382,15 @@ class PartnerController extends Controller
         if ($request->has('search') && $request->search) {
             $search = $request->search;
             $query->where(function ($q) use ($search) {
-                $q->where('title', 'like', '%' . $search . '%')
-                  ->orWhere('description', 'like', '%' . $search . '%')
-                  ->orWhere('category', 'like', '%' . $search . '%')
-                  ->orWhere('city', 'like', '%' . $search . '%');
+                $q->where('title', 'like', '%'.$search.'%')
+                    ->orWhere('description', 'like', '%'.$search.'%')
+                    ->orWhere('category', 'like', '%'.$search.'%')
+                    ->orWhere('city', 'like', '%'.$search.'%');
             });
         }
 
         // Category filter (supports multiple categories)
-        if ($request->has('categories') && is_array($request->categories) && !empty($request->categories)) {
+        if ($request->has('categories') && is_array($request->categories) && ! empty($request->categories)) {
             $query->whereIn('category', $request->categories);
         } elseif ($request->has('category') && $request->category && $request->category !== 'all') {
             // Backward compatibility for single category
@@ -397,7 +398,7 @@ class PartnerController extends Controller
         }
 
         // City filter (supports multiple cities)
-        if ($request->has('cities') && is_array($request->cities) && !empty($request->cities)) {
+        if ($request->has('cities') && is_array($request->cities) && ! empty($request->cities)) {
             $query->whereIn('city', $request->cities);
         } elseif ($request->has('city') && $request->city && $request->city !== 'all') {
             // Backward compatibility for single city
@@ -407,14 +408,14 @@ class PartnerController extends Controller
         // Pagination - default 12 per page for "Load More" functionality
         $perPage = $request->get('per_page', 12);
         $page = $request->get('page', 1);
-        
+
         $partners = $query->orderBy('created_at', 'desc')
             ->paginate($perPage, ['*'], 'page', $page);
 
         // For initial load (page 1), also get categories and cities for filters
         $categories = [];
         $cities = [];
-        if ($page == 1 && !$request->has('search') && !$request->has('category') && !$request->has('city') && !$request->has('categories') && !$request->has('cities')) {
+        if ($page == 1 && ! $request->has('search') && ! $request->has('category') && ! $request->has('city') && ! $request->has('categories') && ! $request->has('cities')) {
             $allPartners = Partner::all();
             $categories = $allPartners->pluck('category')->unique()->filter()->values()->toArray();
             $cities = $allPartners->pluck('city')->unique()->filter()->values()->toArray();
@@ -439,7 +440,7 @@ class PartnerController extends Controller
                 // Mark original language for translation
                 'original_lang' => 'de',
                 // Fields that should be translated
-                'translatable_fields' => ['title', 'description', 'category']
+                'translatable_fields' => ['title', 'description', 'category'],
             ];
         });
 
@@ -468,12 +469,12 @@ class PartnerController extends Controller
 
         try {
             $response = Http::withHeaders([
-                'User-Agent' => 'Partner Management App'
+                'User-Agent' => 'Partner Management App',
             ])->get('https://nominatim.openstreetmap.org/search', [
                 'format' => 'json',
                 'q' => $query,
                 'limit' => 5,
-                'addressdetails' => 1
+                'addressdetails' => 1,
             ]);
 
             if ($response->successful()) {
@@ -501,13 +502,13 @@ class PartnerController extends Controller
 
         try {
             $response = Http::withHeaders([
-                'User-Agent' => 'Partner Management App'
+                'User-Agent' => 'Partner Management App',
             ])->get('https://nominatim.openstreetmap.org/reverse', [
                 'format' => 'json',
                 'lat' => $lat,
                 'lon' => $lng,
                 'zoom' => 18,
-                'addressdetails' => 1
+                'addressdetails' => 1,
             ]);
 
             if ($response->successful()) {

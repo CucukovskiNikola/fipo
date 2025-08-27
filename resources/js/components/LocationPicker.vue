@@ -2,12 +2,17 @@
   <div class="space-y-4">
     <!-- Suchfeld -->
     <div>
-      <label class="block text-sm font-medium text-[#706f6c] mb-2">
+      <label
+        for="searchLocation"
+        class="block text-sm font-medium text-[#706f6c] mb-2"
+      >
         Standort suchen
       </label>
       <div class="flex gap-2">
         <div class="relative flex-1">
           <Input
+            id="searchLocation"
+            name="searchLocation"
             v-model="searchQuery"
             placeholder="Stadt oder Adresse eingeben..."
             class="w-full pl-10 rounded-2xl border border-white/20 placeholder:text-white"
@@ -42,9 +47,9 @@
 
     <!-- Kartencontainer -->
     <div class="space-y-2">
-      <label class="block text-sm font-medium text-[#706f6c]">
+      <p class="block text-sm font-medium text-[#706f6c]">
         Standort auf der Karte auswählen
-      </label>
+      </p>
       <div
         class="h-96 rounded-lg border border-[#e3e3e0] overflow-hidden relative"
       >

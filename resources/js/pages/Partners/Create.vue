@@ -56,13 +56,19 @@
 
             <!-- Kategorie -->
             <div>
-              <Label
+              <p
+                name="category"
                 for="category"
                 class="block text-sm font-medium text-gray-300 mb-2"
               >
                 Kategorie <span class="text-red-400">*</span>
-              </Label>
-              <Select id="category" v-model="form.category" required>
+              </p>
+              <Select
+                name="category"
+                id="category"
+                v-model="form.category"
+                required
+              >
                 <SelectTrigger
                   class="w-full text-md rounded-2xl bg-white/20 border border-white/20 text-white px-4 py-5.5"
                 >
@@ -90,12 +96,12 @@
 
             <!-- Beschreibung -->
             <div class="md:col-span-2">
-              <label
+              <Label
                 for="description"
                 class="block text-sm font-medium text-gray-300 mb-2"
               >
                 Beschreibung <span class="text-red-400">*</span>
-              </label>
+              </Label>
               <Textarea
                 id="description"
                 v-model="form.description"
@@ -110,25 +116,66 @@
 
             <!-- Bilder hochladen -->
             <div class="md:col-span-2">
-              <label
+              <Label
                 for="images"
                 class="block text-sm font-medium text-gray-300 mb-2"
               >
                 Partner‑Bilder
-              </label>
+              </Label>
               <input
                 type="file"
                 id="images"
                 @change="handleImagesUpload"
-                accept="image/jpeg,image/png,image/jpg,image/gif,image/svg+xml"
+                accept="image/jpeg,image/png,image/jpg,image/gif,image/svg+xml,image/webp"
                 multiple
                 class="block w-full text-sm text-white file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-white/10 file:text-white hover:file:bg-white/30"
               />
               <p class="mt-1 text-xs text-gray-400">
                 Optional: Lade bis zu 15 Bilder hoch (JPEG, PNG, JPG, GIF, SVG,
-                max. 5MB pro Datei)
+                WebP, max. 5MB pro Datei) - Bilder werden automatisch zu WebP
+                komprimiert
               </p>
               <InputError :message="errors.images" class="mt-1" />
+
+              <!-- Progress Bar -->
+              <div
+                v-if="uploadProgress.show"
+                class="mt-4 p-4 bg-white/5 rounded-lg border border-white/20"
+              >
+                <div class="flex items-center justify-between mb-2">
+                  <span class="text-sm text-white font-medium">
+                    Compressing Images
+                  </span>
+                  <span class="text-xs text-white/70">
+                    {{ uploadProgress.current }}/{{ uploadProgress.total }}
+                  </span>
+                </div>
+
+                <!-- Progress Bar -->
+                <div class="w-full bg-white/10 rounded-full h-2 mb-2">
+                  <div
+                    class="bg-gradient-to-r from-blue-500 to-purple-500 h-2 rounded-full transition-all duration-300 ease-out"
+                    :style="{ width: `${uploadProgress.overall}%` }"
+                  ></div>
+                </div>
+
+                <!-- Status Text -->
+                <div class="flex items-center justify-between">
+                  <span class="text-xs text-white/60">
+                    {{ uploadProgress.status }}
+                  </span>
+                  <span class="text-xs text-white/60">
+                    {{ uploadProgress.overall }}%
+                  </span>
+                </div>
+
+                <!-- Current File -->
+                <div v-if="uploadProgress.currentFile" class="mt-1">
+                  <span class="text-xs text-blue-400 font-mono">
+                    {{ uploadProgress.currentFile }}
+                  </span>
+                </div>
+              </div>
 
               <!-- Bildvorschau -->
               <div
@@ -140,12 +187,25 @@
                   :key="index"
                   class="relative"
                 >
-                  <img
-                    :src="image.preview"
-                    :alt="`Vorschau ${index + 1}`"
-                    class="w-full h-24 object-cover rounded-lg border border-[#e3e3e0]"
-                  />
+                  <div class="relative">
+                    <img
+                      :src="image.preview"
+                      :alt="`Vorschau ${index + 1}`"
+                      class="w-full h-24 object-cover rounded-lg border border-[#e3e3e0]"
+                      :class="{ 'opacity-50': image.loading }"
+                    />
+                    <!-- Loading indicator -->
+                    <div
+                      v-if="image.loading"
+                      class="absolute inset-0 flex items-center justify-center bg-black/20 rounded-lg"
+                    >
+                      <div
+                        class="w-6 h-6 border-2 border-white border-t-transparent rounded-full animate-spin"
+                      ></div>
+                    </div>
+                  </div>
                   <button
+                    v-if="!image.loading"
                     type="button"
                     @click="removeSelectedImage(index)"
                     class="absolute top-1 left-17 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs hover:bg-red-600"
@@ -166,6 +226,7 @@
 
           <!-- Karten‑Auswahl -->
           <LocationPicker
+            name="locationPicker"
             v-model="locationData"
             :user="props.user"
             class="mb-6"
@@ -174,12 +235,12 @@
           <!-- Manuelle Eingabe -->
           <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
-              <label
+              <Label
                 for="city"
                 class="block text-sm font-medium text-gray-300 mb-2"
               >
                 Stadt <span class="text-red-400">*</span>
-              </label>
+              </Label>
               <Input
                 id="city"
                 v-model="form.city"
@@ -191,12 +252,12 @@
             </div>
 
             <div>
-              <label
+              <Label
                 for="zip_code"
                 class="block text-sm font-medium text-gray-300 mb-2"
               >
                 Postleitzahl <span class="text-red-400">*</span>
-              </label>
+              </Label>
               <Input
                 id="zip_code"
                 v-model="form.zip_code"
@@ -208,12 +269,12 @@
             </div>
 
             <div>
-              <label
+              <Label
                 for="latitude"
                 class="block text-sm font-medium text-gray-300 mb-2"
               >
                 Breitengrad <span class="text-red-400">*</span>
-              </label>
+              </Label>
               <Input
                 id="latitude"
                 v-model="form.latitude"
@@ -229,12 +290,12 @@
             </div>
 
             <div>
-              <label
+              <Label
                 for="longitude"
                 class="block text-sm font-medium text-gray-300 mb-2"
               >
                 Längengrad <span class="text-red-400">*</span>
-              </label>
+              </Label>
               <Input
                 id="longitude"
                 v-model="form.longitude"
@@ -289,6 +350,7 @@ import InputError from "@/components/InputError.vue";
 import LocationPicker from "@/components/LocationPicker.vue";
 import { useCategories } from "@/composables/useCategories";
 import { useTranslations } from "@/composables/useTranslations";
+import { useImageCompression } from "@/composables/useImageCompression";
 import { type User } from "@/types";
 
 const page = usePage();
@@ -325,6 +387,7 @@ import SelectItem from "@/components/ui/select/SelectItem.vue";
 interface SelectedImage {
   file: File;
   preview: string;
+  loading?: boolean;
 }
 
 interface Props {
@@ -400,34 +463,130 @@ const { errors, processing } = form;
 
 const { trans } = useTranslations();
 const { categories, getCategoryName } = useCategories();
+const { processImages, getCompressionPresets, createCustomSettings } =
+  useImageCompression();
 
-const handleImagesUpload = (event: Event) => {
+// Progress state
+const uploadProgress = ref({
+  show: false,
+  overall: 0,
+  current: 0,
+  total: 0,
+  status: "",
+  currentFile: "",
+});
+
+const handleImagesUpload = async (event: Event) => {
   const target = event.target as HTMLInputElement;
   if (target.files && target.files.length > 0) {
-    console.log("Files selected:", target.files.length);
-    const newImages: SelectedImage[] = [];
     const maxImages = Math.min(
       15 - selectedImages.value.length,
       target.files.length
     );
 
-    for (let i = 0; i < maxImages; i++) {
-      const file = target.files[i];
-      console.log(
-        "Processing file:",
-        file.name,
-        "Size:",
-        file.size,
-        "Type:",
-        file.type
+    const filesToProcess = Array.from(target.files).slice(0, maxImages);
+
+    try {
+      // Show progress
+      uploadProgress.value.show = true;
+      uploadProgress.value.overall = 0;
+      uploadProgress.value.current = 0;
+      uploadProgress.value.total = filesToProcess.length;
+      uploadProgress.value.status = "Starting compression...";
+
+      // Show loading state
+      const loadingImages = filesToProcess.map((file, index) => ({
+        file,
+        preview: URL.createObjectURL(file),
+        loading: true,
+      }));
+
+      selectedImages.value = [...selectedImages.value, ...loadingImages];
+
+      // Progress callback
+      const onProgress = (
+        overall: number,
+        current: number,
+        total: number,
+        status?: string,
+        filename?: string
+      ) => {
+        uploadProgress.value.overall = Math.round(overall);
+        uploadProgress.value.current = current;
+        uploadProgress.value.total = total;
+        uploadProgress.value.currentFile = filename || "";
+
+        switch (status) {
+          case "processing":
+            uploadProgress.value.status = `Processing ${filename}...`;
+            break;
+          case "completed":
+            uploadProgress.value.status = `Completed ${filename}`;
+            break;
+          case "error":
+            uploadProgress.value.status = `Error processing ${filename}`;
+            break;
+          case "skipped":
+            uploadProgress.value.status = `Skipped non-image file`;
+            break;
+          case "skipped_optimized":
+            uploadProgress.value.status = `Already optimized`;
+            break;
+        }
+      };
+
+      // Process images to WebP with standard quality settings
+      const compressionSettings = createCustomSettings({
+        quality: 0.8,
+        maxWidth: 1920,
+        maxHeight: 1080,
+      });
+
+      const compressedFiles = await processImages(
+        filesToProcess,
+        compressionSettings,
+        onProgress
       );
-      const preview = URL.createObjectURL(file);
-      newImages.push({ file, preview });
+
+      // Update with compressed images
+      const newImages: SelectedImage[] = compressedFiles.map((file, index) => {
+        const preview = URL.createObjectURL(file);
+        return { file, preview };
+      });
+
+      // Remove loading images and add compressed ones
+      selectedImages.value = [
+        ...selectedImages.value.slice(
+          0,
+          selectedImages.value.length - filesToProcess.length
+        ),
+        ...newImages,
+      ];
+
+      form.images = selectedImages.value.map((img) => img.file);
+
+      // Hide progress after a short delay
+      setTimeout(() => {
+        uploadProgress.value.show = false;
+      }, 1500);
+    } catch (error) {
+      console.error("Error processing images:", error);
+      uploadProgress.value.status = "Error occurred during compression";
+
+      // Remove loading images on error
+      selectedImages.value = selectedImages.value.slice(
+        0,
+        selectedImages.value.length - filesToProcess.length
+      );
+
+      // Hide progress after error
+      setTimeout(() => {
+        uploadProgress.value.show = false;
+      }, 3000);
     }
 
-    selectedImages.value = [...selectedImages.value, ...newImages];
-    form.images = selectedImages.value.map((img) => img.file);
-    console.log("Total images selected:", selectedImages.value.length);
+    // Clear input
+    target.value = "";
   }
 };
 
@@ -439,19 +598,9 @@ const removeSelectedImage = (index: number) => {
 };
 
 const submit = () => {
-  console.log("Submitting form with images:", form.images.length);
-  console.log("Form data:", {
-    title: form.title,
-    category: form.category,
-    description: form.description,
-    images_count: form.images.length,
-  });
-
   form.post(route("partners.store"), {
     forceFormData: true,
-    onSuccess: (response) => {
-      console.log("Form submitted successfully:", response);
-    },
+    onSuccess: (response) => {},
     onError: (errors) => {
       console.error("Form submission errors:", errors);
     },
