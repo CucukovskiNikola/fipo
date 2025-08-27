@@ -73,7 +73,7 @@
 
           <!-- All Loaded Message -->
           <div
-            v-else-if="partners.length > 12"
+            v-else-if="partners.length > 6"
             class="text-center pt-4 text-sm text-white"
           >
             <i class="pi pi-check mr-2"></i>
@@ -181,7 +181,7 @@ const fetchPartners = async (reset = true) => {
       });
     }
     params.append("page", currentPage.value.toString());
-    params.append("per_page", "12");
+    params.append("per_page", "6");
 
     const url = `/api/partners?${params.toString()}`;
     const response = await fetch(url);

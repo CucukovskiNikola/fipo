@@ -35,6 +35,7 @@
       :isActive="activeSection === 'terms'"
     />
     <Footer v-if="activeSection === 'overview'" @navigate-to="changeSection" />
+    <CookieConsent />
   </div>
 </template>
 
@@ -45,6 +46,7 @@ import { useTranslations } from "@/composables/useTranslations";
 
 import Navbar from "@/components/Navbar.vue";
 import Overview from "@/components/Overview.vue";
+import CookieConsent from "@/components/CookieConsent.vue";
 
 const ContactForm = defineAsyncComponent(
   () => import("@/components/ContactForm.vue")

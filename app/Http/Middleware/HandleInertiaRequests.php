@@ -65,6 +65,7 @@ class HandleInertiaRequests extends Middleware
                 'auth' => __('auth'),
                 'home' => __('home'),
                 'categories' => __('categories'),
+                'cookies' => __('cookies'),
             ],
             'locale' => $locale,
             'ziggy' => [

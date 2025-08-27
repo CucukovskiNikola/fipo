@@ -261,7 +261,7 @@
                 id="latitude"
                 v-model="form.latitude"
                 type="number"
-                step="0.00000001"
+                step="any"
                 min="-90"
                 max="90"
                 required
@@ -282,7 +282,7 @@
                 id="longitude"
                 v-model="form.longitude"
                 type="number"
-                step="0.00000001"
+                step="any"
                 min="-180"
                 max="180"
                 required

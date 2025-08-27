@@ -220,7 +220,7 @@
                 type="number"
                 min="-90"
                 max="90"
-                step="0.00000001"
+                step="any"
                 required
                 placeholder="Breitengrad eingeben"
                 class="w-full rounded-2xl bg-white/10 border border-white/20 text-white placeholder:text-gray-400 focus:border-white/40"
@@ -241,7 +241,7 @@
                 type="number"
                 min="-180"
                 max="180"
-                step="0.00000001"
+                step="any"
                 required
                 placeholder="Längengrad eingeben"
                 class="w-full rounded-2xl bg-white/10 border border-white/20 text-white placeholder:text-gray-400 focus:border-white/40"
