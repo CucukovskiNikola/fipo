@@ -351,12 +351,9 @@ import LocationPicker from "@/components/LocationPicker.vue";
 import { useCategories } from "@/composables/useCategories";
 import { useTranslations } from "@/composables/useTranslations";
 import { useImageCompression } from "@/composables/useImageCompression";
-import { type User } from "@/types";
 
 const page = usePage();
-const user = page.props.auth.user as User;
 
-// Navigation configuration
 const navigationLinks = [
   {
     label: "Partners",
@@ -372,7 +369,6 @@ const navigationLinks = [
   },
 ];
 
-// Shadcn/UI Components
 import Input from "@/components/ui/input/Input.vue";
 import Textarea from "@/components/ui/textarea/Textarea.vue";
 import Button from "@/components/ui/button/Button.vue";
@@ -425,7 +421,6 @@ const form = useForm({
 
 const locationData = ref<LocationData | null>(null);
 
-// Watch for location picker changes and update form
 watch(
   locationData,
   (newLocation) => {
@@ -439,7 +434,6 @@ watch(
   { deep: true }
 );
 
-// Watch for manual form changes and update location picker
 watch(
   [
     () => form.city,
@@ -461,10 +455,8 @@ watch(
 
 const { errors, processing } = form;
 
-const { trans } = useTranslations();
-const { categories, getCategoryName } = useCategories();
-const { processImages, getCompressionPresets, createCustomSettings } =
-  useImageCompression();
+const { categories } = useCategories();
+const { processImages, createCustomSettings } = useImageCompression();
 
 // Progress state
 const uploadProgress = ref({

@@ -48,14 +48,14 @@
                 class="flex items-center px-4 py-2 text-sm text-white hover:bg-white/10 transition-colors"
               >
                 <Icon name="user" class="h-4 w-4 mr-3" />
-                Profile Settings
+                Profileinstellungen
               </Link>
               <Link
                 :href="route('home')"
                 class="flex items-center px-4 py-2 text-sm text-white hover:bg-white/10 transition-colors"
               >
                 <Icon name="home" class="h-4 w-4 mr-3" />
-                Home
+                Startseite
               </Link>
               <hr class="border-white/20 my-2" />
               <button
@@ -63,7 +63,7 @@
                 class="flex items-center w-full px-4 py-2 text-sm text-red-400 hover:bg-red-500/20 transition-colors"
               >
                 <Icon name="logout" class="h-4 w-4 mr-3" />
-                Sign Out
+                Abmelden
               </button>
             </div>
           </div>
@@ -144,14 +144,14 @@
             class="flex items-center w-full text-left rounded-4xl px-4 py-3 text-sm text-[#EDEDEC] hover:bg-white/10 transition-colors"
           >
             <Icon name="user" class="h-4 w-4 mr-3" />
-            Profile Settings
+            Profileinstellungen
           </Link>
           <button
             @click="logout"
             class="flex items-center w-full text-left rounded-4xl px-4 py-3 text-sm text-red-400 hover:bg-red-500/20 transition-colors"
           >
             <Icon name="logout" class="h-4 w-4 mr-3" />
-            Sign Out
+            Abmelden
           </button>
         </div>
       </div>

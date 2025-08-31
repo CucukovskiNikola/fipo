@@ -6,7 +6,6 @@ import DashboardNavbar from "@/components/DashboardNavbar.vue";
 import { route } from "ziggy-js";
 
 const page = usePage();
-const user = page.props.auth.user as User;
 
 // Navigationskonfiguration
 const navigationLinks = [

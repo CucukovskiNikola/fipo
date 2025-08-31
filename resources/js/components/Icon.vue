@@ -23,8 +23,9 @@ import {
   Languages,
   LogOut,
   House,
+  Cookie,
+  Mail,
 } from "lucide-vue-next";
-import Chart from "primevue/chart";
 
 interface Props {
   name: string;
@@ -63,6 +64,8 @@ const iconMap: Record<string, any> = {
   language: Languages,
   logout: LogOut,
   home: House,
+  cookie: Cookie,
+  mail: Mail,
 };
 
 const icon = computed(() => {

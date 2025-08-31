@@ -32,7 +32,7 @@
     }
     </style>
 
-    <title inertia>{{ config('app.name', 'Laravel') }}</title>
+    <title inertia>{{ config('app.name', 'findemich') }}</title>
 
     {{-- SEO Meta Tags --}}
     @if(isset($page['props']['meta']))

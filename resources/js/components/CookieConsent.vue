@@ -10,7 +10,7 @@
   >
     <div
       v-if="showConsent"
-      class="fixed bottom-4 left-4 right-4 z-50 max-w-lg mx-auto md:left-auto md:right-4 md:max-w-md"
+      class="fixed bottom-4 left-4 right-4 z-50 backdrop-blur-2xl max-w-lg mx-auto md:left-auto md:right-4 md:max-w-md"
     >
       <div
         class="liquid-glass rounded-2xl p-6 shadow-xl border border-white/20"
@@ -19,7 +19,7 @@
           <div
             class="w-10 h-10 gradient-color rounded-full flex items-center justify-center flex-shrink-0"
           >
-            <i class="pi pi-shield-check text-white"></i>
+            <Icon name="cookie" class="h-6 w-6" />
           </div>
           <div>
             <h3 class="text-white font-semibold text-sm mb-2">
@@ -143,6 +143,7 @@ import {
 } from "@/composables/useCookieManager";
 import CookieSettingsModal from "./CookieSettingsModal.vue";
 import CookieSettingsButton from "./CookieSettingsButton.vue";
+import Icon from "./Icon.vue";
 
 const { cookieTrans } = useCookieTranslations();
 const {

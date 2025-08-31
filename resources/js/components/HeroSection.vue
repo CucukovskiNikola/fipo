@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import Icon from "./Icon.vue";
 import Button from "./ui/button/Button.vue";
 import { useTranslations } from "@/composables/useTranslations";
 
@@ -37,7 +38,7 @@ const handleContactClick = () => {
           @click="handleContactClick"
         >
           {{ trans("home.contact_us_button") }}
-          <i class="pi pi-phone mr-2"></i>
+          <Icon name="mail" />
         </Button>
 
         <!-- Avatars and Text -->
