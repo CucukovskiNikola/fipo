@@ -146,12 +146,14 @@
     background: linear-gradient(to right, #2563eb, #9333ea);
   }
 
-  body {
+  .bg-image {
     background-image: url("/images/bg.webp");
     background-size: cover;
     background-repeat: no-repeat;
     background-position: center;
     background-attachment: fixed;
+  }
+  body {
     background-color: black;
   }
 }

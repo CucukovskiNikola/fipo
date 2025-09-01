@@ -168,54 +168,6 @@
                   </p>
                 </div>
               </div>
-
-              <!-- Google Rating Placeholder -->
-              <div class="flex items-center space-x-3">
-                <div
-                  class="w-16 h-16 bg-white/10 rounded-2xl flex items-center justify-center"
-                >
-                  <CircumIcons name="star" class="text-2xl" color="white" />
-                </div>
-                <div>
-                  <p class="font-semibold text-white">
-                    {{ trans("common.rating") }}
-                  </p>
-                  <div class="flex items-center space-x-2">
-                    <div
-                      class="flex text-yellow-400 space-x-1 max-w-[70%] overflow-visible"
-                    >
-                      <CircumIcons
-                        name="star"
-                        size="20px"
-                        color="currentColor"
-                      />
-                      <CircumIcons
-                        name="star"
-                        size="20px"
-                        color="currentColor"
-                      />
-                      <CircumIcons
-                        name="star"
-                        size="20px"
-                        color="currentColor"
-                      />
-                      <CircumIcons
-                        name="star"
-                        size="20px"
-                        color="currentColor"
-                      />
-                      <CircumIcons
-                        name="star"
-                        size="20px"
-                        color="currentColor"
-                      />
-                    </div>
-                    <span class="text-white/70 text-sm truncate"
-                      >4.2 (Google Reviews)</span
-                    >
-                  </div>
-                </div>
-              </div>
             </div>
           </div>
 

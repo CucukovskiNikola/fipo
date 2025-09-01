@@ -11,7 +11,7 @@
     />
   </Head>
 
-  <div class="min-h-screen text-white p-2">
+  <div class="min-h-screen text-white p-2 bg-image">
     <Navbar :activeSection="activeSection" @change-section="changeSection" />
     <Overview
       v-if="activeSection === 'overview'"

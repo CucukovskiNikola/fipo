@@ -8,8 +8,8 @@
       >
         Standort suchen
       </label>
-      <div class="flex gap-2">
-        <div class="relative flex-1">
+      <div class="flex flex-wrap gap-2">
+        <div class="relative flex-grow min-w-[200px] w-full sm:w-auto">
           <Input
             id="searchLocation"
             name="searchLocation"
@@ -27,7 +27,7 @@
           @click="searchLocation"
           :disabled="!searchQuery || isSearching"
           size="normal"
-          class="rounded-2xl liquid-glass text-white border border-white/20"
+          class="rounded-2xl liquid-glass text-white border border-white/20 min-w-[120px] flex-shrink-0"
         >
           {{ isSearching ? "Suche läuft..." : "Suchen" }}
         </Button>
@@ -35,7 +35,7 @@
           @click="getCurrentLocation"
           :disabled="isGettingLocation"
           size="normal"
-          class="rounded-2xl liquid-glass text-white border border-white/20"
+          class="rounded-2xl liquid-glass text-white border border-white/20 min-w-[120px] flex-shrink-0"
         >
           <Icon name="location-dot" class="w-4 h-4 mr-1 text-white" />
           {{

@@ -314,7 +314,9 @@
 
         <!-- Aktionen -->
         <div class="liquid-glass text-white rounded-4xl p-8 shadow-lg">
-          <div class="flex items-center justify-end space-x-4">
+          <div
+            class="flex flex-col sm:flex-row items-center sm:justify-end space-y-3 sm:space-y-0 sm:space-x-4"
+          >
             <Button
               type="button"
               size="normal"
@@ -341,18 +343,15 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch, onMounted, onUnmounted } from "vue";
-import { useForm, Link, usePage, router } from "@inertiajs/vue3";
+import { ref, watch } from "vue";
+import { useForm, usePage } from "@inertiajs/vue3";
 import { route } from "ziggy-js";
 import Icon from "@/components/Icon.vue";
 import DashboardNavbar from "@/components/DashboardNavbar.vue";
 import InputError from "@/components/InputError.vue";
 import LocationPicker from "@/components/LocationPicker.vue";
 import { useCategories } from "@/composables/useCategories";
-import { useTranslations } from "@/composables/useTranslations";
 import { useImageCompression } from "@/composables/useImageCompression";
-
-const page = usePage();
 
 const navigationLinks = [
   {

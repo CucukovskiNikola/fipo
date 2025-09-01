@@ -83,7 +83,7 @@ const logout = () => {
     />
   </Head>
 
-  <div class="min-h-screen text-white p-2 bg-black bg-image">
+  <div class="min-h-screen text-white p-2 bg-image">
     <!-- Navigation -->
     <DashboardNavbar
       title="Profileinstellungen"
@@ -126,7 +126,7 @@ const logout = () => {
       <!-- Settings Tabs -->
       <div class="liquid-glass text-white rounded-4xl p-8 shadow-lg">
         <div class="border-b border-white/20 mb-6">
-          <nav class="flex space-x-8">
+          <nav class="flex space-x-8 overflow-x-auto -mx-2 px-2">
             <button
               @click="activeTab = 'profile'"
               :class="[

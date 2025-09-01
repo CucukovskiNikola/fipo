@@ -361,7 +361,9 @@
 
         <!-- Aktionen -->
         <div class="liquid-glass text-white rounded-4xl p-8 shadow-lg">
-          <div class="flex items-center justify-end space-x-4">
+          <div
+            class="flex flex-col sm:flex-row items-center sm:justify-end space-y-3 sm:space-y-0 sm:space-x-4"
+          >
             <Button
               type="button"
               class="bg-white/20 border border-white/20 text-white"
