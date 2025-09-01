@@ -55,7 +55,7 @@
                       <div
                         class="w-10 h-10 gradient-color rounded-lg flex items-center justify-center"
                       >
-                        <i class="pi pi-shield-check text-white text-sm"></i>
+                        <Icon name="cookie" class="h-5 w-5" />
                       </div>
                       <div>
                         <h3 class="font-semibold text-white text-sm">
@@ -106,7 +106,7 @@
                       <div
                         class="w-10 h-10 gradient-color rounded-lg flex items-center justify-center"
                       >
-                        <i class="pi pi-cog text-white text-sm"></i>
+                        <Icon name="cookie" class="h-5 w-5" />
                       </div>
                       <div>
                         <h3 class="font-semibold text-white text-sm">
@@ -160,7 +160,7 @@
                       <div
                         class="w-10 h-10 gradient-color rounded-lg flex items-center justify-center"
                       >
-                        <i class="pi pi-chart-line text-white text-sm"></i>
+                        <Icon name="cookie" class="h-5 w-5" />
                       </div>
                       <div>
                         <h3 class="font-semibold text-white text-sm">
@@ -214,7 +214,7 @@
                       <div
                         class="w-10 h-10 gradient-color rounded-lg flex items-center justify-center"
                       >
-                        <i class="pi pi-bullseye text-white text-sm"></i>
+                        <Icon name="cookie" class="h-5 w-5" />
                       </div>
                       <div>
                         <h3 class="font-semibold text-white text-sm">
@@ -353,6 +353,7 @@ import { useCookieTranslations } from "@/composables/useCookieTranslations";
 import { useCookieManager, COOKIE_TYPES } from "@/composables/useCookieManager";
 import CookieToggle from "./CookieToggle.vue";
 import CookieAuditTrail from "./CookieAuditTrail.vue";
+import Icon from "./Icon.vue";
 
 const props = defineProps({
   show: {

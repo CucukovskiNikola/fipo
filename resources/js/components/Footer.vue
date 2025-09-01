@@ -117,7 +117,6 @@
           {{ trans("home.all_rights_reserved") }}
         </p>
         <div class="flex items-center space-x-4 text-xs text-gray-400">
-          <span>{{ trans("home.made_with_love") }}</span>
           <div class="w-1 h-1 bg-gray-500 rounded-full"></div>
           <span>v1.0.0</span>
         </div>

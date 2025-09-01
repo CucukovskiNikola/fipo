@@ -1,17 +1,17 @@
 <template>
   <Head>
     <title>
-      {{ meta?.title || trans('business.find_local_partners') + ' - findemich' }}
+      {{
+        meta?.title || trans("business.find_local_partners") + " - findemich"
+      }}
     </title>
     <meta
       name="description"
-      :content="
-        meta?.description || trans('business.find_partners_near_you')
-      "
+      :content="meta?.description || trans('business.find_partners_near_you')"
     />
   </Head>
 
-  <div class="min-h-screen text-white p-2 bg-black bg-image">
+  <div class="min-h-screen text-white p-2">
     <Navbar :activeSection="activeSection" @change-section="changeSection" />
     <Overview
       v-if="activeSection === 'overview'"

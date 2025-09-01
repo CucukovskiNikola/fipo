@@ -11,9 +11,18 @@
     <!-- Preload critical resources -->
     <link rel="preload" as="image" href="/images/bg.webp" />
     <link rel="preconnect" href="/api/translate" />
-    <link v-if="currentImageUrl" rel="preload" as="image" :href="currentImageUrl" />
+    <link
+      v-if="currentImageUrl"
+      rel="preload"
+      as="image"
+      :href="currentImageUrl"
+    />
     <!-- Leaflet CSS is critical for map rendering -->
-    <link rel="preload" as="style" href="/node_modules/leaflet/dist/leaflet.css" />
+    <link
+      rel="preload"
+      as="style"
+      href="/node_modules/leaflet/dist/leaflet.css"
+    />
   </Head>
 
   <div
@@ -262,7 +271,10 @@
                 <p v-if="displayDescription || !shouldTranslate">
                   {{ displayDescription }}
                 </p>
-                <div v-else-if="isTranslatingDescription" class="animate-pulse space-y-2">
+                <div
+                  v-else-if="isTranslatingDescription"
+                  class="animate-pulse space-y-2"
+                >
                   <!-- Skeleton placeholder to prevent layout shift -->
                   <div class="h-5 bg-white/20 rounded w-full"></div>
                   <div class="h-5 bg-white/20 rounded w-11/12"></div>
@@ -400,23 +412,20 @@ const shouldTranslateShow = computed(() => {
 });
 
 // Translation composable with shared logic
-const { 
-  displayDescription, 
-  shouldTranslate, 
-  isTranslatingDescription 
-} = usePartnerTranslation({
-  partner: props.partner,
-  enableTranslation: shouldTranslateShow.value,
-  priority: 'high',
-  contextPrefix: 'show'
-});
+const { displayDescription, shouldTranslate, isTranslatingDescription } =
+  usePartnerTranslation({
+    partner: props.partner,
+    enableTranslation: shouldTranslateShow.value,
+    priority: "high",
+    contextPrefix: "show",
+  });
 
 // Get category icon and name (categories are already localized through Laravel)
 const categoryInfo = computed(() => {
   const category = categories.value.find(
     (cat) => cat.id === props.partner.category
   );
-  
+
   // Categories are already localized through Laravel translations
   const name = category ? category.name : props.partner.category;
 

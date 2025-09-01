@@ -25,6 +25,7 @@ import {
   House,
   Cookie,
   Mail,
+  Phone,
 } from "lucide-vue-next";
 
 interface Props {
@@ -66,6 +67,7 @@ const iconMap: Record<string, any> = {
   home: House,
   cookie: Cookie,
   mail: Mail,
+  phone: Phone,
 };
 
 const icon = computed(() => {

@@ -10,7 +10,7 @@
         :model-value="searchTerm"
         @update:model-value="$emit('update:searchTerm', $event)"
         :placeholder="trans('home.search_placeholder')"
-        class="w-full pl-10 pr-4 h-14 rounded-3xl bg-white/10 border border-white/10 backdrop-blur-sm text-white placeholder:text-white"
+        class="w-full pl-10 h-14 rounded-3xl bg-white/10 border border-white/10 backdrop-blur-sm text-white placeholder:text-white"
       />
     </div>
 

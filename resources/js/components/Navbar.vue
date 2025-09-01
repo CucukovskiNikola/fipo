@@ -192,6 +192,7 @@
               :href="route('login')"
               class="inline-block rounded-4xl px-5 py-2 text-sm text-[#EDEDEC] bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700"
             >
+              {{ trans("common.login") }}
             </Link>
           </template>
         </div>
