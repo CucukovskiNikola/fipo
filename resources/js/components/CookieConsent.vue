@@ -22,9 +22,9 @@
             <Icon name="cookie" class="h-6 w-6" />
           </div>
           <div>
-            <h3 class="text-white font-semibold text-sm mb-2">
+            <h1 class="text-white font-semibold text-sm mb-2">
               {{ cookieTrans("title") }}
-            </h3>
+            </h1>
             <p class="text-white/70 text-xs leading-relaxed">
               {{ cookieTrans("description") }}
             </p>
