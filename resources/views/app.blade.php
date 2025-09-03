@@ -45,11 +45,16 @@
         <meta property="og:type" content="website">
         <meta property="og:url" content="{{ request()->url() }}">
         <meta property="og:site_name" content="findemich">
+        <meta property="og:image" content="{{ asset('/og_image.webp') }}">
+        <meta property="og:image:width" content="1200">
+        <meta property="og:image:height" content="630">
+        <meta property="og:locale" content="{{ str_replace('_', '-', app()->getLocale()) }}">
         
         {{-- Twitter Card Meta Tags --}}
         <meta name="twitter:card" content="summary">
         <meta name="twitter:title" content="{{ $page['props']['meta']['title'] ?? config('app.name') }}">
         <meta name="twitter:description" content="{{ $page['props']['meta']['description'] }}">
+        <meta name="twitter:image" content="{{ asset('/og_image.webp') }}">
     @else
         <meta name="description" content="findemich - Connect with trusted local business partners and discover quality services in your area.">
         <meta name="keywords" content="local business partners, verified companies, business networking, service providers, business directory">
@@ -73,13 +78,17 @@
     @endif
 
     <!-- Standard favicon -->
-<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
-<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
 <link rel="icon" href="/favicon.ico" sizes="any">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="icon" type="image/png" sizes="96x96" href="/favicon-96x96.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
 
 <!-- Apple Touch Icon -->
 <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<meta name="apple-mobile-web-app-title" content="findemich">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 
 <!-- Android/Chrome -->
 <link rel="manifest" href="/site.webmanifest">

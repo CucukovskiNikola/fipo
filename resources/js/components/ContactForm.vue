@@ -48,11 +48,11 @@
                 <p class="font-semibold text-white">
                   {{ trans("contact.phone_number") }}
                 </p>
-                <p class="text-white/50">+1 (555) 123-4567</p>
+                <p class="text-white/50">+49 15750778415</p>
               </div>
             </div>
 
-            <div class="flex items-center space-x-3">
+            <!-- <div class="flex items-center space-x-3">
               <div
                 class="w-13 h-13 gradient-color rounded-full flex items-center justify-center"
               >
@@ -66,7 +66,7 @@
                   123 Business St, Suite 100<br />City, State 12345
                 </p>
               </div>
-            </div>
+            </div> -->
           </div>
         </div>
 

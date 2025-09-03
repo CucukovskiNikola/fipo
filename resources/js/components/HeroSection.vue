@@ -54,12 +54,16 @@ const handleContactClick = () => {
               class="w-8 h-8 object-cover rounded-full border-2 border-white shadow-md"
               src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=100&q=80"
               alt="Business partner"
+              width="28"
+              height="42"
               fetchpriority="high"
             />
             <img
               class="w-8 h-8 object-cover rounded-full border-2 border-white shadow-md"
               src="https://images.unsplash.com/photo-1527980965255-d3b416303d12?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=100&q=80"
               alt="Business partner"
+              width="28"
+              height="28"
               fetchpriority="high"
             />
           </div>

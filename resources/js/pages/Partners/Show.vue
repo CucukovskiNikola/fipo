@@ -17,12 +17,6 @@
       as="image"
       :href="currentImageUrl"
     />
-    <!-- Leaflet CSS is critical for map rendering -->
-    <link
-      rel="preload"
-      as="style"
-      href="/node_modules/leaflet/dist/leaflet.css"
-    />
   </Head>
 
   <div
@@ -43,7 +37,7 @@
       leave-to-class="opacity-0 scale-95"
     >
       <section
-        class="liquid-glass text-white max-w-6xl mx-auto rounded-4xl p-8 mt-4 shadow-lg"
+        class="liquid-glass text-white max-w-6xl mx-auto rounded-4xl p-3 lg:p-8 mt-4 shadow-lg"
       >
         <!-- Back Button -->
         <div class="mb-6">
@@ -64,7 +58,7 @@
         </div>
 
         <div
-          class="grid grid-cols-1 lg:grid-cols-2 gap-8 bg-white/10 p-2 rounded-3xl"
+          class="grid grid-cols-1 lg:grid-cols-2 gap-2 bg-white/10 p-2 rounded-3xl"
         >
           <!-- Left Side: Images + Owner Info + Rating -->
           <div class="space-y-6">
@@ -150,7 +144,7 @@
             </div>
 
             <!-- Owner & Rating Info -->
-            <div class="rounded-3xl p-6 space-y-4">
+            <div class="rounded-3xl p-3 lg:p-6 space-y-6">
               <!-- Owner -->
               <div
                 v-if="partner.name_of_owner"
@@ -172,7 +166,7 @@
           </div>
 
           <!-- Right Side: Title, Description, Category -->
-          <div class="rounded-3xl p-6 space-y-6">
+          <div class="rounded-3xl p-3 lg:p-6 space-y-6">
             <!-- Header -->
             <div>
               <h1 class="text-3xl font-bold text-white mb-4">
@@ -242,7 +236,7 @@
 
     <!-- Full Width Map Section -->
     <section
-      class="liquid-glass text-white max-w-6xl mx-auto rounded-4xl p-8 mt-4 shadow-lg"
+      class="liquid-glass text-white max-w-6xl mx-auto rounded-4xl p-3 lg:p-8 mt-4 shadow-lg"
     >
       <div class="space-y-6">
         <!-- Map Header -->
