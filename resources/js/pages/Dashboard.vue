@@ -1,11 +1,9 @@
 <script setup lang="ts">
-import { type BreadcrumbItem, type User } from "@/types";
-import { Link, Head, usePage, router } from "@inertiajs/vue3";
+import { type BreadcrumbItem } from "@/types";
+import { Link, Head } from "@inertiajs/vue3";
 import Icon from "@/components/Icon.vue";
 import DashboardNavbar from "@/components/DashboardNavbar.vue";
 import { route } from "ziggy-js";
-
-const page = usePage();
 
 // Navigationskonfiguration
 const navigationLinks = [
@@ -52,13 +50,6 @@ interface Props {
 }
 
 const props = defineProps<Props>();
-
-const breadcrumbs: BreadcrumbItem[] = [
-  {
-    title: "Dashboard",
-    href: "/dashboard",
-  },
-];
 
 const quickActions = [
   {
@@ -140,8 +131,10 @@ const formatTimeAgo = (dateString: string) => {
 
     <div class="space-y-6 max-w-6xl mx-auto">
       <!-- Welcome Section -->
-      <div class="liquid-glass text-white rounded-4xl p-4 sm:p-6 lg:p-8 mt-4 shadow-lg">
-        <h1 class="mb-2 text-lg sm:text-xl lg:text-2xl font-semibold text-white break-words">
+      <div
+        class="liquid-glass text-white rounded-4xl p-4 sm:p-6 lg:p-8 mt-4 shadow-lg"
+      >
+        <h1 class="mb-2 text-2xl font-semibold text-white truncate">
           Partner‑Verwaltungs‑Dashboard
         </h1>
         <p class="text-sm sm:text-base text-gray-300">

@@ -375,10 +375,7 @@ const logout = () => {
                   :href="route('partners.index')"
                   class="flex items-center p-3 bg-white/10 rounded-md hover:bg-white/20 transition-colors"
                 >
-                  <Icon
-                    name="building-office"
-                    class="h-5 w-5 text-white mr-3"
-                  />
+                  <Icon name="users" class="h-5 w-5 text-white mr-3" />
                   <span class="text-white">Partner verwalten</span>
                 </Link>
 
@@ -386,10 +383,7 @@ const logout = () => {
                   @click="logout"
                   class="flex items-center w-full p-3 bg-red-600/20 border border-red-500/40 rounded-md hover:bg-red-600/30 transition-colors"
                 >
-                  <Icon
-                    name="arrow-right-on-rectangle"
-                    class="h-5 w-5 text-red-400 mr-3"
-                  />
+                  <Icon name="logout" class="h-5 w-5 text-red-400 mr-3" />
                   <span class="text-red-400">Abmelden</span>
                 </button>
               </div>

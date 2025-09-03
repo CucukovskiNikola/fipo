@@ -10,7 +10,7 @@
 
     <div class="space-y-6 max-w-6xl mx-auto">
       <div class="liquid-glass text-white rounded-4xl p-8 mt-4 shadow-lg">
-        <h1 class="mb-2 text-2xl font-semibold text-white">
+        <h1 class="mb-2 text-2xl font-semibold text-white truncate">
           Partner‑Verwaltungs‑Dashboard
         </h1>
         <p class="text-gray-300">
