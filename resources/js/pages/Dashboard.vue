@@ -140,11 +140,11 @@ const formatTimeAgo = (dateString: string) => {
 
     <div class="space-y-6 max-w-6xl mx-auto">
       <!-- Welcome Section -->
-      <div class="liquid-glass text-white rounded-4xl p-8 mt-4 shadow-lg">
-        <h1 class="mb-2 text-2xl font-semibold text-white">
-          Partnerverwaltungs-Dashboard
+      <div class="liquid-glass text-white rounded-4xl p-4 sm:p-6 lg:p-8 mt-4 shadow-lg">
+        <h1 class="mb-2 text-lg sm:text-xl lg:text-2xl font-semibold text-white break-words">
+          Partner‑Verwaltungs‑Dashboard
         </h1>
-        <p class="text-gray-300">
+        <p class="text-sm sm:text-base text-gray-300">
           Verwalten Sie Ihre Partnerstandorte, Kategorien und Analysen von
           dieser zentralen Stelle aus.
         </p>

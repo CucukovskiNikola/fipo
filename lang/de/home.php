@@ -21,7 +21,7 @@ return [
     'all_partners_loaded' => 'Alle :total Partner geladen',
     
     // Search and Filters
-    'search_placeholder' => 'Partner nach Name, Kategorie oder Stadt suchen...',
+    'search_placeholder' => 'Suche nach Partnern..',
     'categories' => 'Kategorien',
     'cities' => 'Städte',
     'reset_filters' => 'Filter zurücksetzen',

@@ -2,15 +2,15 @@
   <div class="flex gap-3 items-center">
     <!-- Search Bar -->
     <div class="flex-1 relative">
-      <Search
-        class="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-white"
-      />
+      <div class="absolute left-3 top-1/2 transform -translate-y-1/2 pointer-events-none z-10">
+        <Icon name="search" class="h-5 w-5 text-white/70" />
+      </div>
       <Input
         name="searchTerm"
         :model-value="searchTerm"
         @update:model-value="$emit('update:searchTerm', $event)"
         :placeholder="trans('home.search_placeholder')"
-        class="w-full pl-10 h-14 rounded-3xl bg-white/10 border border-white/10 backdrop-blur-sm text-white placeholder:text-white"
+        class="w-full pl-10 sm:pl-11 h-14 rounded-3xl bg-white/10 border border-white/10 backdrop-blur-sm text-white placeholder:text-white"
       />
     </div>
 
@@ -174,7 +174,8 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { Search, X, MapPin } from "lucide-vue-next";
+import { X, MapPin } from "lucide-vue-next";
+import Icon from "@/components/Icon.vue";
 import { useCategories } from "@/composables/useCategories";
 import { useTranslations } from "@/composables/useTranslations";
 

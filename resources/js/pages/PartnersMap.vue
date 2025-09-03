@@ -41,8 +41,8 @@
       </div>
 
       <!-- Partners List -->
-      <div class="liquid-glass text-white rounded-4xl p-8 shadow-lg">
-        <h3 class="text-lg font-semibold text-white mb-4">Partner Directory</h3>
+      <div class="liquid-glass text-white rounded-4xl p-4 sm:p-6 lg:p-8 shadow-lg">
+        <h3 class="text-base sm:text-lg font-semibold text-white mb-4">Partner Directory</h3>
 
         <div v-if="filteredPartners.length === 0" class="text-center py-8">
           <Icon name="map-pin" class="mx-auto h-12 w-12 text-gray-400 mb-4" />
@@ -55,45 +55,45 @@
           </p>
         </div>
 
-        <div v-else class="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+        <div v-else class="grid gap-3 sm:gap-4 sm:grid-cols-2 lg:grid-cols-3">
           <div
             v-for="partner in filteredPartners"
             :key="partner.id"
-            class="rounded-lg border border-white/20 p-6 transition-all hover:border-white/40 hover:bg-white/10 backdrop-blur-sm"
+            class="rounded-lg border border-white/20 p-3 sm:p-4 lg:p-6 transition-all hover:border-white/40 hover:bg-white/10 backdrop-blur-sm"
           >
             <!-- Partner Image -->
             <div v-if="getPartnerImage(partner)" class="mb-3">
               <img
                 :src="getPartnerImage(partner)!"
                 :alt="partner.title"
-                class="w-full h-32 object-cover rounded-lg"
+                class="w-full h-24 sm:h-32 object-cover rounded-lg"
               />
             </div>
 
             <!-- Partner Info -->
             <div class="space-y-2">
-              <div class="flex items-start justify-between">
-                <h4 class="font-semibold text-white text-sm truncate">
+              <div class="flex items-start justify-between gap-2">
+                <h4 class="font-semibold text-white text-sm truncate min-w-0 flex-1">
                   {{ partner.title }}
                 </h4>
                 <span
-                  class="text-xs px-2 py-1 rounded-full bg-white/10 text-gray-300"
+                  class="text-xs px-2 py-1 rounded-full bg-white/10 text-gray-300 whitespace-nowrap flex-shrink-0"
                 >
                   {{ getCategoryName(partner.category) }}
                 </span>
               </div>
 
-              <p v-if="partner.name_of_owner" class="text-xs text-gray-300">
+              <p v-if="partner.name_of_owner" class="text-xs text-gray-300 truncate">
                 Owner: {{ partner.name_of_owner }}
               </p>
 
-              <p class="text-xs text-gray-300 min-h-6 truncate">
+              <p class="text-xs text-gray-300 min-h-6 line-clamp-2 sm:line-clamp-3">
                 {{ partner.description }}
               </p>
 
               <div class="flex items-center text-xs text-gray-300">
-                <Icon name="map-pin" class="mr-1 h-3 w-3" />
-                {{ partner.city }}, {{ partner.zip_code }}
+                <Icon name="map-pin" class="mr-1 h-3 w-3 flex-shrink-0" />
+                <span class="truncate">{{ partner.city }}, {{ partner.zip_code }}</span>
               </div>
 
               <!-- Actions -->
@@ -102,10 +102,11 @@
                   variant="default"
                   size="normal"
                   @click="centerOnPartner(partner)"
-                  class="text-xs min-w-24 text-gray-300 hover:text-white hover:bg-white/10"
+                  class="text-xs px-2 sm:px-3 py-1 sm:py-2 text-gray-300 hover:text-white hover:bg-white/10"
                 >
-                  <Icon name="map-pin" class="h-3 w-3 mr-1" />
-                  View on Map
+                  <Icon name="map-pin" class="h-3 w-3 mr-1 flex-shrink-0" />
+                  <span class="hidden sm:inline">View on Map</span>
+                  <span class="sm:hidden">Map</span>
                 </Button>
               </div>
             </div>

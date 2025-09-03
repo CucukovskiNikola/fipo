@@ -51,7 +51,7 @@
                 Profileinstellungen
               </Link>
               <Link
-                :href="route('home')"
+                href="/"
                 class="flex items-center px-4 py-2 text-sm text-white hover:bg-white/10 transition-colors"
               >
                 <Icon name="home" class="h-4 w-4 mr-3" />
